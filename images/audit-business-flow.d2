@@ -1,0 +1,129 @@
+direction: right
+
+审计人员: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+}
+
+迎审人员: {
+  shape: rectangle
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+}
+
+开始: {
+  shape: oval
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+}
+
+创建审计项目: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+}
+
+执行审计作业: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+  label: "执行审计作业\n(准备/实施/报告)"
+}
+
+下发整改问题: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+}
+
+接收整改问题: {
+  shape: rectangle
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+  label: "接收整改问题\n(接收人员)"
+}
+
+提交整改方案: {
+  shape: rectangle
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+}
+
+执行整改: {
+  shape: rectangle
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+  label: "执行整改\n(经办人员)"
+}
+
+反馈整改进展: {
+  shape: rectangle
+  style: {
+    fill: "#d5e8d4"
+    stroke: "#82b366"
+  }
+}
+
+跟踪整改进展: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+}
+
+验收整改结果: {
+  shape: diamond
+  style: {
+    fill: "#fff2cc"
+    stroke: "#d6b656"
+  }
+}
+
+生成整改报告: {
+  shape: rectangle
+  style: {
+    fill: "#dae8fc"
+    stroke: "#6c8ebf"
+  }
+}
+
+结束: {
+  shape: oval
+  style: {
+    fill: "#f8cecc"
+    stroke: "#b85450"
+  }
+}
+
+开始 -> 创建审计项目
+创建审计项目 -> 执行审计作业
+执行审计作业 -> 下发整改问题
+下发整改问题 -> 接收整改问题: {style.stroke-dash: 3}
+接收整改问题 -> 提交整改方案
+提交整改方案 -> 执行整改
+执行整改 -> 反馈整改进展
+反馈整改进展 -> 跟踪整改进展: {style.stroke-dash: 3}
+跟踪整改进展 -> 验收整改结果
+验收整改结果 -> 生成整改报告: "通过"
+验收整改结果 -> 执行整改: "不通过" {style.stroke-dash: 3}
+生成整改报告 -> 结束

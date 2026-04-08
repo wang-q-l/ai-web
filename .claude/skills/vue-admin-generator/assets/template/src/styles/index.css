@@ -1,0 +1,74 @@
+:root {
+  --primary-color: #409eff;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --info-color: #909399;
+  --bg-color: #f0f2f5;
+  --sidebar-bg: #001529;
+  --sidebar-text: #fff;
+  --sidebar-active-bg: #1890ff;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-color);
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 卡片统一样式 */
+.el-card {
+  border: none !important;
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+/* 页面容器 */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* Element Plus 滚动条样式定制 */
+.el-scrollbar__bar {
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.el-scrollbar__bar:hover {
+  opacity: 1;
+}
+
+.el-scrollbar__thumb {
+  background-color: rgb(144 147 153 / 30%);
+  border-radius: 4px;
+}
+
+.el-scrollbar__thumb:hover {
+  background-color: rgb(144 147 153 / 50%);
+}
+
+/* 隐藏所有原生滚动条 */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

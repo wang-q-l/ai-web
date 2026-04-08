@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+}
+
+#app {
+  height: 100vh;
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+.container {
+  max-width: var(--container-width);
+  padding: 0 var(--spacing-md);
+  margin: 0 auto;
+}
+
+.page-content {
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  padding: var(--spacing-xl) 0;
+}
+
+/* 响应式 */
+@media (width <= 768px) {
+  :root {
+    --container-width: 100%;
+    --header-height: 50px;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .page-content {
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+/* Element Plus 滚动条样式定制 */
+.el-scrollbar__bar {
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.el-scrollbar__bar:hover {
+  opacity: 1;
+}
+
+.el-scrollbar__thumb {
+  background-color: rgb(144 147 153 / 30%);
+  border-radius: 4px;
+}
+
+.el-scrollbar__thumb:hover {
+  background-color: rgb(144 147 153 / 50%);
+}
+
+/* 隐藏所有原生滚动条 */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

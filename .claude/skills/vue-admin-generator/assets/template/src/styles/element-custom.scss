@@ -1,0 +1,112 @@
+// Element Plus 自定义样式
+// 统一的组件样式定制，所有项目都会应用这些样式
+
+// 输入框样式
+.el-input__wrapper {
+  border-radius: 8px !important;
+  transition: all 0.3s;
+}
+
+// 按钮样式
+.el-button {
+  font-weight: 500;
+  border-radius: 8px !important;
+  transition: all 0.3s;
+}
+
+// 卡片样式
+.el-card {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+// 对话框样式
+.el-dialog {
+  border-radius: 12px !important;
+}
+
+// 下拉框样式
+.el-select-dropdown {
+  border-radius: 8px !important;
+}
+
+// 日期选择器样式
+.el-picker-panel {
+  border-radius: 8px !important;
+}
+
+// 表格样式
+.el-table {
+  border-radius: 8px !important;
+
+  // 表头背景色和高度
+  .el-table__header-wrapper {
+    .el-table__header {
+      th {
+        height: 46px !important;
+        color: #1d2129 !important;
+        background-color: #f1f1f4 !important;
+      }
+    }
+  }
+
+  th.el-table__cell {
+    background-color: #fafafa !important;
+  }
+}
+
+// 分页器样式
+.el-pagination {
+  .el-pager li {
+    border-radius: 6px !important;
+  }
+
+  .btn-prev,
+  .btn-next {
+    border-radius: 6px !important;
+  }
+}
+
+// 标签页样式
+.el-tabs__item {
+  border-radius: 6px 6px 0 0 !important;
+}
+
+// 消息提示样式
+.el-message {
+  border-radius: 8px !important;
+}
+
+.el-notification {
+  border-radius: 8px !important;
+}
+
+// 抽屉样式
+.el-drawer {
+  border-radius: 12px 0 0 12px !important;
+
+  &.rtl {
+    border-radius: 0 12px 12px 0 !important;
+  }
+}
+
+// 弹出框样式
+.el-popover {
+  border-radius: 8px !important;
+}
+
+// 工具提示样式
+.el-tooltip__popper {
+  border-radius: 6px !important;
+}
+
+// 菜单样式
+.el-menu {
+  border-radius: 8px !important;
+}
+
+// 下拉菜单样式
+.el-dropdown-menu {
+  border-radius: 8px !important;
+}

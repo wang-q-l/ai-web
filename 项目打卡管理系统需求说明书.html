@@ -1,0 +1,1063 @@
+<!doctype html>
+<html>
+  <head>
+    <title>项目打卡管理系统需求说明书.md</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+    <style>
+      /* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+      /*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+      body {
+        font-family: var(
+          --vscode-markdown-font-family,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe WPC',
+          'Segoe UI',
+          'Ubuntu',
+          'Droid Sans',
+          sans-serif
+        );
+        font-size: var(--vscode-markdown-font-size, 14px);
+        padding: 0 26px;
+        line-height: var(--vscode-markdown-line-height, 22px);
+        word-wrap: break-word;
+      }
+
+      #code-csp-warning {
+        position: fixed;
+        top: 0;
+        right: 0;
+        color: white;
+        margin: 16px;
+        text-align: center;
+        font-size: 12px;
+        font-family: sans-serif;
+        background-color: #444444;
+        cursor: pointer;
+        padding: 6px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+      }
+
+      #code-csp-warning:hover {
+        text-decoration: none;
+        background-color: #007acc;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+      }
+
+      body.scrollBeyondLastLine {
+        margin-bottom: calc(100vh - 22px);
+      }
+
+      body.showEditorSelection .code-line {
+        position: relative;
+      }
+
+      body.showEditorSelection .code-active-line:before,
+      body.showEditorSelection .code-line:hover:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -12px;
+        height: 100%;
+      }
+
+      body.showEditorSelection li.code-active-line:before,
+      body.showEditorSelection li.code-line:hover:before {
+        left: -30px;
+      }
+
+      .vscode-light.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.15);
+      }
+
+      .vscode-light.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(0, 0, 0, 0.4);
+      }
+
+      .vscode-light.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+      }
+
+      .vscode-dark.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .vscode-dark.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(255, 255, 255, 0.6);
+      }
+
+      .vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+      }
+
+      .vscode-high-contrast.showEditorSelection .code-active-line:before {
+        border-left: 3px solid rgba(255, 160, 0, 0.7);
+      }
+
+      .vscode-high-contrast.showEditorSelection .code-line:hover:before {
+        border-left: 3px solid rgba(255, 160, 0, 1);
+      }
+
+      .vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+        border-left: none;
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a:focus,
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 1px solid -webkit-focus-ring-color;
+        outline-offset: -1px;
+      }
+
+      hr {
+        border: 0;
+        height: 2px;
+        border-bottom: 2px solid;
+      }
+
+      h1 {
+        padding-bottom: 0.3em;
+        line-height: 1.2;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: normal;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      table > thead > tr > th {
+        text-align: left;
+        border-bottom: 1px solid;
+      }
+
+      table > thead > tr > th,
+      table > thead > tr > td,
+      table > tbody > tr > th,
+      table > tbody > tr > td {
+        padding: 5px 10px;
+      }
+
+      table > tbody > tr + tr > td {
+        border-top: 1px solid;
+      }
+
+      blockquote {
+        margin: 0 7px 0 5px;
+        padding: 0 16px 0 10px;
+        border-left-width: 5px;
+        border-left-style: solid;
+      }
+
+      code {
+        font-family:
+          Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace,
+          'Droid Sans Fallback';
+        font-size: 1em;
+        line-height: 1.357em;
+      }
+
+      body.wordWrap pre {
+        white-space: pre-wrap;
+      }
+
+      pre:not(.hljs),
+      pre.hljs code > div {
+        padding: 16px;
+        border-radius: 3px;
+        overflow: auto;
+      }
+
+      pre code {
+        color: var(--vscode-editor-foreground);
+        tab-size: 4;
+      }
+
+      /** Theming */
+
+      .vscode-light pre {
+        background-color: rgba(220, 220, 220, 0.4);
+      }
+
+      .vscode-dark pre {
+        background-color: rgba(10, 10, 10, 0.4);
+      }
+
+      .vscode-high-contrast pre {
+        background-color: rgb(0, 0, 0);
+      }
+
+      .vscode-high-contrast h1 {
+        border-color: rgb(0, 0, 0);
+      }
+
+      .vscode-light table > thead > tr > th {
+        border-color: rgba(0, 0, 0, 0.69);
+      }
+
+      .vscode-dark table > thead > tr > th {
+        border-color: rgba(255, 255, 255, 0.69);
+      }
+
+      .vscode-light h1,
+      .vscode-light hr,
+      .vscode-light table > tbody > tr + tr > td {
+        border-color: rgba(0, 0, 0, 0.18);
+      }
+
+      .vscode-dark h1,
+      .vscode-dark hr,
+      .vscode-dark table > tbody > tr + tr > td {
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+    </style>
+
+    <style>
+      /* Tomorrow Theme */
+      /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+      /* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+      /* Tomorrow Comment */
+      .hljs-comment,
+      .hljs-quote {
+        color: #8e908c;
+      }
+
+      /* Tomorrow Red */
+      .hljs-variable,
+      .hljs-template-variable,
+      .hljs-tag,
+      .hljs-name,
+      .hljs-selector-id,
+      .hljs-selector-class,
+      .hljs-regexp,
+      .hljs-deletion {
+        color: #c82829;
+      }
+
+      /* Tomorrow Orange */
+      .hljs-number,
+      .hljs-built_in,
+      .hljs-builtin-name,
+      .hljs-literal,
+      .hljs-type,
+      .hljs-params,
+      .hljs-meta,
+      .hljs-link {
+        color: #f5871f;
+      }
+
+      /* Tomorrow Yellow */
+      .hljs-attribute {
+        color: #eab700;
+      }
+
+      /* Tomorrow Green */
+      .hljs-string,
+      .hljs-symbol,
+      .hljs-bullet,
+      .hljs-addition {
+        color: #718c00;
+      }
+
+      /* Tomorrow Blue */
+      .hljs-title,
+      .hljs-section {
+        color: #4271ae;
+      }
+
+      /* Tomorrow Purple */
+      .hljs-keyword,
+      .hljs-selector-tag {
+        color: #8959a8;
+      }
+
+      .hljs {
+        display: block;
+        overflow-x: auto;
+        color: #4d4d4c;
+        padding: 0.5em;
+      }
+
+      .hljs-emphasis {
+        font-style: italic;
+      }
+
+      .hljs-strong {
+        font-weight: bold;
+      }
+    </style>
+
+    <style>
+      /*
+ * Markdown PDF CSS
+ */
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans',
+          sans-serif, 'Meiryo';
+        padding: 0 12px;
+      }
+
+      pre {
+        background-color: #f8f8f8;
+        border: 1px solid #cccccc;
+        border-radius: 3px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+      }
+
+      pre:not(.hljs) {
+        padding: 23px;
+        line-height: 19px;
+      }
+
+      blockquote {
+        background: rgba(127, 127, 127, 0.1);
+        border-color: rgba(0, 122, 204, 0.5);
+      }
+
+      .emoji {
+        height: 1.4em;
+      }
+
+      code {
+        font-size: 14px;
+        line-height: 19px;
+      }
+
+      /* for inline code */
+      :not(pre):not(.hljs) > code {
+        color: #c9ae75; /* Change the old color so it seems less like an error */
+        font-size: inherit;
+      }
+
+      /* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+      .page {
+        page-break-after: always;
+      }
+    </style>
+
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+  </head>
+  <body>
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme:
+          document.body.classList.contains('vscode-dark') ||
+          document.body.classList.contains('vscode-high-contrast')
+            ? 'dark'
+            : 'default'
+      })
+    </script>
+    <h1
+      id="%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8D%A1%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E%E4%B9%A6"
+      >项目打卡管理系统需求说明书</h1
+    >
+    <h2 id="%E4%B8%80%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0">一、系统概述</h2>
+    <p
+      >项目打卡管理系统是一个基于 Web
+      的审计项目考勤管理平台，用于管理审计项目中各类人员（审计组长、项目经理、中介人员）的现场打卡、考勤统计、请假补卡等业务。系统支持多角色权限管理，提供甘特图可视化、打卡记录明细、请假补卡审批、考勤统计分析等核心功能。</p
+    >
+    <h2 id="%E4%BA%8C%E7%94%A8%E6%88%B7%E8%A7%92%E8%89%B2">二、用户角色</h2>
+    <h3 id="21-%E5%AE%A1%E8%AE%A1%E7%BB%84%E9%95%BF">2.1 审计组长</h3>
+    <ul>
+      <li><strong>权限</strong>：查看所有项目和所有人员数据</li>
+      <li><strong>功能</strong>：项目切换、全员考勤监控、请假补卡审批、考勤统计分析</li>
+      <li><strong>数据范围</strong>：可查看负责的所有审计项目</li>
+    </ul>
+    <h3 id="22-%E9%A1%B9%E7%9B%AE%E7%BB%8F%E7%90%86">2.2 项目经理</h3>
+    <ul>
+      <li><strong>权限</strong>：查看所管理项目的数据（不含审计组长数据）</li>
+      <li><strong>功能</strong>：项目人员考勤监控、请假补卡审批、考勤统计</li>
+      <li><strong>数据范围</strong>：仅查看自己管理的项目</li>
+    </ul>
+    <h3 id="23-%E4%B8%AD%E4%BB%8B%E4%BA%BA%E5%91%98">2.3 中介人员</h3>
+    <ul>
+      <li><strong>权限</strong>：仅查看个人数据</li>
+      <li><strong>功能</strong>：个人打卡记录查看、请假申请、补卡申请</li>
+      <li><strong>数据范围</strong>：仅查看自己所属的单个项目</li>
+    </ul>
+    <h2 id="%E4%B8%89%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97">三、核心功能模块</h2>
+    <h3 id="31-%E8%A7%92%E8%89%B2%E5%88%87%E6%8D%A2%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86"
+      >3.1 角色切换与项目管理</h3
+    >
+    <h4 id="311-%E8%A7%92%E8%89%B2%E5%88%87%E6%8D%A2%E5%99%A8">3.1.1 角色切换器</h4>
+    <p><strong>位置</strong>：页面右上角</p>
+    <p><strong>展示内容</strong>：</p>
+    <ul>
+      <li>当前角色头像（姓氏首字）</li>
+      <li>当前角色姓名</li>
+      <li>当前角色标签（审计组长/项目经理/中介人员）</li>
+    </ul>
+    <p><strong>交互方式</strong>：下拉菜单选择角色</p>
+    <p><strong>切换效果</strong>：切换后页面数据自动过滤</p>
+    <h4 id="312-%E9%A1%B9%E7%9B%AE%E4%BF%A1%E6%81%AF%E6%A0%8F">3.1.2 项目信息栏</h4>
+    <p><strong>展示内容</strong>：</p>
+    <ul>
+      <li>项目名称</li>
+      <li>审计组长姓名（带图标）</li>
+      <li>项目经理姓名（带图标）</li>
+      <li>中介机构名称（带图标）</li>
+      <li>中介人员数量（带图标）</li>
+    </ul>
+    <p><strong>角色差异</strong>：</p>
+    <ul>
+      <li>审计组长：右上角显示项目切换下拉框（搜索框左侧）</li>
+      <li>项目经理/中介人员：无项目切换功能，固定显示所属项目</li>
+    </ul>
+    <h4 id="313-%E9%A1%B9%E7%9B%AE%E6%90%9C%E7%B4%A2">3.1.3 项目搜索</h4>
+    <ul>
+      <li><strong>位置</strong>：页面右上角</li>
+      <li><strong>功能</strong>：按项目名称关键词搜索</li>
+      <li><strong>宽度</strong>：220px</li>
+      <li><strong>支持清空</strong></li>
+    </ul>
+    <h3 id="32-%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8D%A1%E7%94%98%E7%89%B9%E5%9B%BE"
+      >3.2 项目打卡甘特图</h3
+    >
+    <h4 id="321-%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0">3.2.1 功能概述</h4>
+    <p>以甘特图形式展示项目成员每日打卡情况，支持按月查看，提供直观的考勤状态可视化。</p>
+    <h4 id="322-%E5%9B%BE%E4%BE%8B%E8%AF%B4%E6%98%8E">3.2.2 图例说明</h4>
+    <ul>
+      <li><strong>正常</strong>：绿色，工时达标（≥8小时）</li>
+      <li><strong>加班</strong>：蓝色，工时超过8小时</li>
+      <li><strong>工时不足</strong>：橙色，有打卡但工时&lt;8小时</li>
+      <li><strong>漏打卡</strong>：红色，上班或下班未打卡</li>
+      <li><strong>请假</strong>：紫色，当日请假</li>
+      <li><strong>休息日</strong>：灰色，周末无打卡</li>
+    </ul>
+    <h4 id="323-%E6%93%8D%E4%BD%9C%E5%8A%9F%E8%83%BD">3.2.3 操作功能</h4>
+    <ul>
+      <li><strong>现场打卡按钮</strong>：触发打卡操作</li>
+      <li><strong>月份切换</strong>：上个月/下个月按钮，当前月份禁用&quot;下个月&quot;</li>
+      <li><strong>当前月份显示</strong>：格式&quot;YYYY年MM月&quot;</li>
+    </ul>
+    <h4 id="324-%E7%94%98%E7%89%B9%E5%9B%BE%E8%A1%A8%E6%A0%BC">3.2.4 甘特图表格</h4>
+    <p><strong>表头</strong>：</p>
+    <ul>
+      <li>姓名列（固定列）</li>
+      <li>日期列（每日一列）：显示日期和星期</li>
+      <li>今日高亮：蓝色背景</li>
+      <li>周末标识：灰色背景</li>
+    </ul>
+    <p><strong>表体</strong>：</p>
+    <ul>
+      <li>每行代表一个人员</li>
+      <li>姓名显示格式：姓名（角色）</li>
+      <li>每个单元格显示当日打卡状态色块</li>
+    </ul>
+    <p><strong>悬浮提示</strong>：</p>
+    <ul>
+      <li>显示姓名、日期、上班时间、下班时间、工时</li>
+      <li>漏打卡时显示&quot;申请补卡&quot;按钮</li>
+    </ul>
+    <h4 id="325-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">3.2.5 数据过滤规则</h4>
+    <ul>
+      <li><strong>审计组长</strong>：查看所有人员</li>
+      <li><strong>项目经理</strong>：查看除审计组长外的所有人员</li>
+      <li><strong>中介人员</strong>：仅查看本人</li>
+    </ul>
+    <h3 id="33-%E6%89%93%E5%8D%A1%E8%AE%B0%E5%BD%95%E6%98%8E%E7%BB%86">3.3 打卡记录明细</h3>
+    <h4 id="331-%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0">3.3.1 功能概述</h4>
+    <p>以列表形式展示详细的打卡记录，包括上下班时间、工时、打卡地点、状态等信息。</p>
+    <h4 id="332-%E7%AD%9B%E9%80%89%E6%9D%A1%E4%BB%B6">3.3.2 筛选条件</h4>
+    <ul>
+      <li><strong>姓名</strong>：输入框，支持模糊搜索</li>
+      <li
+        ><strong>日期范围</strong
+        >：日期选择器，支持快捷选项（今天、最近一周、最近一个月、最近三个月）</li
+      >
+      <li><strong>打卡状态</strong>：下拉选择（全部/正常/加班/工时不足/漏打卡）</li>
+      <li><strong>操作按钮</strong>：搜索、重置</li>
+    </ul>
+    <h4 id="333-%E5%88%97%E8%A1%A8%E5%AD%97%E6%AE%B5">3.3.3 列表字段</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>字段名称</th>
+          <th>显示格式</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>姓名</td>
+          <td>姓名（角色）</td>
+          <td>显示人员姓名和角色</td>
+        </tr>
+        <tr>
+          <td>日期</td>
+          <td>YYYY-MM-DD</td>
+          <td>打卡日期</td>
+        </tr>
+        <tr>
+          <td>上班打卡时间</td>
+          <td>HH:mm</td>
+          <td>上班打卡时间</td>
+        </tr>
+        <tr>
+          <td>下班打卡时间</td>
+          <td>HH:mm</td>
+          <td>下班打卡时间</td>
+        </tr>
+        <tr>
+          <td>工时</td>
+          <td>X.Xh</td>
+          <td>当日工作时长</td>
+        </tr>
+        <tr>
+          <td>打卡地点</td>
+          <td>地址信息</td>
+          <td>打卡位置</td>
+        </tr>
+        <tr>
+          <td>打卡状态</td>
+          <td>标签显示</td>
+          <td>正常/加班/工时不足/漏打卡</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>打卡状态标签颜色</strong>：</p>
+    <ul>
+      <li>正常：绿色</li>
+      <li>加班：蓝色</li>
+      <li>工时不足：橙色</li>
+      <li>漏打卡：红色</li>
+    </ul>
+    <h4 id="334-%E5%88%97%E5%AE%BD%E5%88%86%E9%85%8D">3.3.4 列宽分配</h4>
+    <p>所有列使用 min-width 平均分布，表格全宽显示无右侧留白。</p>
+    <h4 id="335-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">3.3.5 数据过滤规则</h4>
+    <ul>
+      <li><strong>审计组长</strong>：查看所有人员</li>
+      <li><strong>项目经理</strong>：查看除审计组长外的所有人员</li>
+      <li><strong>中介人员</strong>：仅查看本人</li>
+    </ul>
+    <h3 id="34-%E8%AF%B7%E5%81%87%E8%AE%B0%E5%BD%95">3.4 请假记录</h3>
+    <h4 id="341-%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0">3.4.1 功能概述</h4>
+    <p>管理项目成员的请假申请、审批流程和记录查询。</p>
+    <h4 id="342-%E8%AF%B7%E5%81%87%E7%94%B3%E8%AF%B7">3.4.2 请假申请</h4>
+    <p><strong>触发入口</strong>：甘特图中点击日期单元格&quot;申请请假&quot;</p>
+    <p><strong>申请表单</strong>：</p>
+    <ul>
+      <li>姓名：自动填充当前用户</li>
+      <li>请假日期：日期选择器</li>
+      <li>请假类型：下拉选择（事假/病假/年假/调休）</li>
+      <li>请假原因：多行文本输入</li>
+    </ul>
+    <p><strong>提交后状态</strong>：待审批</p>
+    <h4 id="343-%E8%AF%B7%E5%81%87%E8%AE%B0%E5%BD%95%E5%88%97%E8%A1%A8">3.4.3 请假记录列表</h4>
+    <p><strong>列表字段</strong>：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>字段名称</th>
+          <th>显示格式</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>姓名</td>
+          <td>文本</td>
+          <td>申请人姓名</td>
+        </tr>
+        <tr>
+          <td>请假日期</td>
+          <td>YYYY-MM-DD</td>
+          <td>请假日期</td>
+        </tr>
+        <tr>
+          <td>请假类型</td>
+          <td>标签</td>
+          <td>事假/病假/年假/调休</td>
+        </tr>
+        <tr>
+          <td>请假原因</td>
+          <td>文本</td>
+          <td>支持溢出省略</td>
+        </tr>
+        <tr>
+          <td>申请时间</td>
+          <td>YYYY-MM-DD HH:mm:ss</td>
+          <td>申请提交时间</td>
+        </tr>
+        <tr>
+          <td>审批人</td>
+          <td>文本</td>
+          <td>审批人姓名</td>
+        </tr>
+        <tr>
+          <td>审批状态</td>
+          <td>标签</td>
+          <td>待审批/已通过/已拒绝</td>
+        </tr>
+        <tr>
+          <td>审批意见</td>
+          <td>文本</td>
+          <td>支持溢出省略</td>
+        </tr>
+        <tr>
+          <td>操作</td>
+          <td>按钮</td>
+          <td>审批按钮（待审批状态）</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>请假类型标签颜色</strong>：</p>
+    <ul>
+      <li>事假：默认色</li>
+      <li>病假：红色</li>
+      <li>年假：绿色</li>
+      <li>调休：蓝色</li>
+    </ul>
+    <p><strong>审批状态标签颜色</strong>：</p>
+    <ul>
+      <li>待审批：橙色</li>
+      <li>已通过：绿色</li>
+      <li>已拒绝：红色</li>
+    </ul>
+    <h4 id="344-%E8%AF%B7%E5%81%87%E5%AE%A1%E6%89%B9">3.4.4 请假审批</h4>
+    <p><strong>审批权限</strong>：项目经理、审计组长</p>
+    <p><strong>审批弹窗</strong>：</p>
+    <ul>
+      <li>显示请假详情（姓名、日期、类型、原因）</li>
+      <li>审批结果：单选（通过/拒绝）</li>
+      <li>审批意见：多行文本输入</li>
+    </ul>
+    <p><strong>审批后状态更新</strong>：审批完成后，列表状态自动更新</p>
+    <h4 id="345-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">3.4.5 数据过滤规则</h4>
+    <ul>
+      <li><strong>审计组长</strong>：查看所有人员</li>
+      <li><strong>项目经理</strong>：查看所有人员</li>
+      <li><strong>中介人员</strong>：仅查看本人</li>
+    </ul>
+    <h3 id="35-%E8%A1%A5%E5%8D%A1%E8%AE%B0%E5%BD%95">3.5 补卡记录</h3>
+    <h4 id="351-%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0">3.5.1 功能概述</h4>
+    <p>管理漏打卡人员的补卡申请、审批流程和记录查询。</p>
+    <h4 id="352-%E8%A1%A5%E5%8D%A1%E7%94%B3%E8%AF%B7">3.5.2 补卡申请</h4>
+    <p><strong>触发入口</strong>：甘特图悬浮提示中&quot;申请补卡&quot;按钮</p>
+    <p><strong>申请表单</strong>：</p>
+    <ul>
+      <li>姓名：自动填充</li>
+      <li>补卡日期：自动填充</li>
+      <li>打卡类型：单选（上班打卡/下班打卡）</li>
+      <li>补卡时间：时间选择器（HH:mm）</li>
+      <li>补卡原因：多行文本输入</li>
+    </ul>
+    <p><strong>提交后状态</strong>：待审批</p>
+    <h4 id="353-%E8%A1%A5%E5%8D%A1%E8%AE%B0%E5%BD%95%E5%88%97%E8%A1%A8">3.5.3 补卡记录列表</h4>
+    <p><strong>列表字段</strong>：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>字段名称</th>
+          <th>显示格式</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>姓名</td>
+          <td>文本</td>
+          <td>申请人姓名</td>
+        </tr>
+        <tr>
+          <td>补卡日期</td>
+          <td>YYYY-MM-DD</td>
+          <td>补卡日期</td>
+        </tr>
+        <tr>
+          <td>打卡类型</td>
+          <td>标签</td>
+          <td>上班打卡/下班打卡</td>
+        </tr>
+        <tr>
+          <td>补卡时间</td>
+          <td>HH:mm</td>
+          <td>补卡时间</td>
+        </tr>
+        <tr>
+          <td>补卡原因</td>
+          <td>文本</td>
+          <td>支持溢出省略</td>
+        </tr>
+        <tr>
+          <td>申请时间</td>
+          <td>YYYY-MM-DD HH:mm:ss</td>
+          <td>申请提交时间</td>
+        </tr>
+        <tr>
+          <td>审批人</td>
+          <td>文本</td>
+          <td>审批人姓名</td>
+        </tr>
+        <tr>
+          <td>审批状态</td>
+          <td>标签</td>
+          <td>待审批/已通过/已拒绝</td>
+        </tr>
+        <tr>
+          <td>审批意见</td>
+          <td>文本</td>
+          <td>支持溢出省略</td>
+        </tr>
+        <tr>
+          <td>操作</td>
+          <td>按钮</td>
+          <td>审批按钮（待审批状态）</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>打卡类型标签颜色</strong>：</p>
+    <ul>
+      <li>上班打卡：绿色</li>
+      <li>下班打卡：橙色</li>
+    </ul>
+    <p><strong>审批状态标签颜色</strong>：</p>
+    <ul>
+      <li>待审批：橙色</li>
+      <li>已通过：绿色</li>
+      <li>已拒绝：红色</li>
+    </ul>
+    <h4 id="354-%E8%A1%A5%E5%8D%A1%E5%AE%A1%E6%89%B9">3.5.4 补卡审批</h4>
+    <p><strong>审批权限</strong>：项目经理、审计组长</p>
+    <p><strong>审批弹窗</strong>：</p>
+    <ul>
+      <li>显示补卡详情（姓名、日期、类型、时间、原因）</li>
+      <li>审批结果：单选（通过/拒绝）</li>
+      <li>审批意见：多行文本输入</li>
+    </ul>
+    <p><strong>审批通过后</strong>：补卡记录生效，甘特图状态更新</p>
+    <h4 id="355-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">3.5.5 数据过滤规则</h4>
+    <ul>
+      <li><strong>审计组长</strong>：查看所有人员</li>
+      <li><strong>项目经理</strong>：查看所有人员</li>
+      <li><strong>中介人员</strong>：仅查看本人</li>
+    </ul>
+    <h3 id="36-%E6%89%93%E5%8D%A1%E7%BB%9F%E8%AE%A1">3.6 打卡统计</h3>
+    <h4 id="361-%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0">3.6.1 功能概述</h4>
+    <p>按月统计项目成员的考勤情况，提供多维度的考勤数据分析。</p>
+    <h4 id="362-%E7%BB%9F%E8%AE%A1%E7%BB%B4%E5%BA%A6">3.6.2 统计维度</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>统计项</th>
+          <th>说明</th>
+          <th>颜色标识</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>姓名</td>
+          <td>显示格式&quot;姓名（角色）&quot;</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>应打卡天数</td>
+          <td>本月工作日总数</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>实际出勤天数</td>
+          <td>实际有打卡记录的天数</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>全勤天数</td>
+          <td>工时≥8小时的天数</td>
+          <td>绿色高亮</td>
+        </tr>
+        <tr>
+          <td>工时不足天数</td>
+          <td>有打卡但工时&lt;8小时的天数</td>
+          <td>红色高亮</td>
+        </tr>
+        <tr>
+          <td>缺勤天数</td>
+          <td>应打卡但未打卡的天数</td>
+          <td>红色高亮</td>
+        </tr>
+        <tr>
+          <td>漏打卡次数</td>
+          <td>上班或下班未打卡的次数</td>
+          <td>橙色高亮</td>
+        </tr>
+        <tr>
+          <td>补卡次数</td>
+          <td>已通过的补卡申请次数</td>
+          <td>蓝色高亮</td>
+        </tr>
+        <tr>
+          <td>请假天数</td>
+          <td>已通过的请假天数</td>
+          <td>紫色高亮</td>
+        </tr>
+        <tr>
+          <td>日均工时</td>
+          <td>平均每日工时（X.Xh）</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>总工时</td>
+          <td>本月累计工时（X.Xh）</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4 id="363-%E5%88%97%E5%AE%BD%E5%88%86%E9%85%8D">3.6.3 列宽分配</h4>
+    <p>所有列使用 min-width 平均分布，表格全宽显示。</p>
+    <h4 id="364-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">3.6.4 数据过滤规则</h4>
+    <ul>
+      <li><strong>审计组长</strong>：查看所有人员</li>
+      <li><strong>项目经理</strong>：查看除审计组长外的所有人员</li>
+      <li><strong>中介人员</strong>：仅查看本人</li>
+    </ul>
+    <h2 id="%E5%9B%9B%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80%E8%A7%84%E8%8C%83">四、界面布局规范</h2>
+    <h3 id="41-%E9%A1%B5%E9%9D%A2%E7%BB%93%E6%9E%84">4.1 页面结构</h3>
+    <ul>
+      <li><strong>页面标题</strong>：左上角&quot;项目打卡&quot;</li>
+      <li
+        ><strong>右上角区域</strong>：
+        <ul>
+          <li>项目名称搜索框（220px）</li>
+          <li>项目切换下拉框（280px，仅审计组长）</li>
+          <li>角色切换器</li>
+        </ul>
+      </li>
+      <li><strong>项目信息栏</strong>：卡片形式，展示项目基本信息</li>
+      <li
+        ><strong>页签切换</strong
+        >：5个页签（甘特图、打卡记录明细、请假记录、补卡记录、打卡统计）</li
+      >
+      <li><strong>内容区域</strong>：根据页签显示对应内容</li>
+    </ul>
+    <h3 id="42-%E5%8D%A1%E7%89%87%E6%A0%B7%E5%BC%8F">4.2 卡片样式</h3>
+    <ul>
+      <li>无边框：border: none</li>
+      <li>无阴影：box-shadow: none</li>
+      <li>圆角：border-radius: 12px</li>
+      <li>卡片间距：16px</li>
+    </ul>
+    <h3 id="43-%E9%A1%B9%E7%9B%AE%E4%BF%A1%E6%81%AF%E6%A0%8F">4.3 项目信息栏</h3>
+    <p><strong>布局</strong>：横向排列，flex 布局</p>
+    <p><strong>内容</strong>：</p>
+    <ul>
+      <li>项目名称（加粗，15px）</li>
+      <li>分隔线（竖线）</li>
+      <li>审计组长（带图标）</li>
+      <li>项目经理（带图标）</li>
+      <li>中介机构（带图标）</li>
+      <li>中介人员数量（带图标）</li>
+    </ul>
+    <p><strong>样式</strong>：</p>
+    <ul>
+      <li>图标颜色：主题色</li>
+      <li>图标大小：15px</li>
+      <li>间距：24px</li>
+    </ul>
+    <h3 id="44-%E8%A1%A8%E6%A0%BC%E6%A0%B7%E5%BC%8F">4.4 表格样式</h3>
+    <ul>
+      <li>无竖边框：不使用 border 属性</li>
+      <li>固定表头：height=&quot;100%&quot;</li>
+      <li>全宽显示：width=&quot;100%&quot;</li>
+      <li>列宽：使用 min-width 平均分布</li>
+    </ul>
+    <h2 id="%E4%BA%94%E4%BA%A4%E4%BA%92%E8%A7%84%E8%8C%83">五、交互规范</h2>
+    <h3 id="51-%E8%A7%92%E8%89%B2%E5%88%87%E6%8D%A2">5.1 角色切换</h3>
+    <ol>
+      <li>点击右上角角色切换器</li>
+      <li>下拉菜单显示所有可切换角色</li>
+      <li>选择角色后页面数据自动过滤</li>
+      <li>当前角色显示勾选图标</li>
+    </ol>
+    <h3 id="52-%E9%A1%B9%E7%9B%AE%E5%88%87%E6%8D%A2%E5%AE%A1%E8%AE%A1%E7%BB%84%E9%95%BF"
+      >5.2 项目切换（审计组长）</h3
+    >
+    <ol>
+      <li>点击右上角项目下拉框</li>
+      <li>选择项目后页面数据自动切换</li>
+      <li>项目信息栏同步更新</li>
+    </ol>
+    <h3 id="53-%E6%9C%88%E4%BB%BD%E5%88%87%E6%8D%A2">5.3 月份切换</h3>
+    <ol>
+      <li>点击&quot;上个月&quot;/&quot;下个月&quot;按钮</li>
+      <li>甘特图数据自动更新</li>
+      <li>当前月份禁用&quot;下个月&quot;按钮</li>
+    </ol>
+    <h3 id="54-%E6%89%93%E5%8D%A1%E6%93%8D%E4%BD%9C">5.4 打卡操作</h3>
+    <ol>
+      <li>点击&quot;现场打卡&quot;按钮</li>
+      <li>弹出打卡确认提示</li>
+      <li>打卡成功后甘特图实时更新</li>
+    </ol>
+    <h3 id="55-%E8%AF%B7%E5%81%87%E8%A1%A5%E5%8D%A1%E7%94%B3%E8%AF%B7">5.5 请假/补卡申请</h3>
+    <ol>
+      <li>点击对应入口打开申请弹窗</li>
+      <li>填写表单信息</li>
+      <li>提交后显示成功提示</li>
+      <li>列表自动刷新</li>
+    </ol>
+    <h3 id="56-%E5%AE%A1%E6%89%B9%E6%93%8D%E4%BD%9C">5.6 审批操作</h3>
+    <ol>
+      <li>点击&quot;审批&quot;按钮打开审批弹窗</li>
+      <li>选择审批结果并填写意见</li>
+      <li>提交后显示成功提示</li>
+      <li>列表状态自动更新</li>
+    </ol>
+    <h2 id="%E5%85%AD%E6%95%B0%E6%8D%AE%E8%A7%84%E5%88%99">六、数据规则</h2>
+    <h3 id="61-%E5%B7%A5%E6%97%B6%E8%AE%A1%E7%AE%97">6.1 工时计算</h3>
+    <ul>
+      <li><strong>正常</strong>：≥8小时</li>
+      <li><strong>加班</strong>：&gt;8小时</li>
+      <li><strong>工时不足</strong>：&lt;8小时且有打卡记录</li>
+      <li><strong>漏打卡</strong>：上班或下班未打卡</li>
+    </ul>
+    <h3 id="62-%E8%80%83%E5%8B%A4%E7%8A%B6%E6%80%81%E4%BC%98%E5%85%88%E7%BA%A7"
+      >6.2 考勤状态优先级</h3
+    >
+    <ol>
+      <li>请假（最高优先级）</li>
+      <li>休息日</li>
+      <li>漏打卡</li>
+      <li>工时不足</li>
+      <li>加班</li>
+      <li>正常</li>
+    </ol>
+    <h3 id="63-%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99">6.3 数据过滤规则</h3>
+    <ul>
+      <li><strong>审计组长</strong>：所有数据</li>
+      <li><strong>项目经理</strong>：排除审计组长的数据</li>
+      <li><strong>中介人员</strong>：仅本人数据</li>
+    </ul>
+    <h3 id="64-%E9%A1%B9%E7%9B%AE%E6%95%B0%E6%8D%AE%E8%8C%83%E5%9B%B4">6.4 项目数据范围</h3>
+    <ul>
+      <li><strong>审计组长</strong>：负责的所有项目</li>
+      <li><strong>项目经理</strong>：管理的项目（managerId 匹配）</li>
+      <li><strong>中介人员</strong>：所属的单个项目（projectId 固定）</li>
+    </ul>
+    <h2 id="%E4%B8%83%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0">七、技术实现</h2>
+    <h3 id="71-%E6%8A%80%E6%9C%AF%E6%A0%88">7.1 技术栈</h3>
+    <ul>
+      <li><strong>前端框架</strong>：Vue 3 + TypeScript</li>
+      <li><strong>UI 组件库</strong>：Element Plus</li>
+      <li><strong>构建工具</strong>：Vite</li>
+      <li><strong>状态管理</strong>：Pinia</li>
+      <li><strong>路由</strong>：Vue Router</li>
+    </ul>
+    <h3 id="72-%E6%95%B0%E6%8D%AE%E6%A8%A1%E6%8B%9F">7.2 数据模拟</h3>
+    <ul>
+      <li>使用 Mock.js 模拟后端数据</li>
+      <li>固定数据，不使用随机数据</li>
+      <li>API 延迟 300ms 返回结果</li>
+    </ul>
+    <h3 id="73-%E8%B7%AF%E7%94%B1%E9%85%8D%E7%BD%AE">7.3 路由配置</h3>
+    <ul>
+      <li><strong>路径</strong>：/checkin/statistics</li>
+      <li><strong>组件</strong>：src/views/checkin/statistics.vue</li>
+      <li><strong>菜单标题</strong>：menus.checkin.statistics</li>
+    </ul>
+    <h3 id="74-api-%E6%8E%A5%E5%8F%A3">7.4 API 接口</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>接口名称</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>getCheckinStatistics</td>
+          <td>获取打卡统计数据</td>
+        </tr>
+        <tr>
+          <td>getCheckinRecords</td>
+          <td>获取打卡记录明细</td>
+        </tr>
+        <tr>
+          <td>getLeaveRecords</td>
+          <td>获取请假记录</td>
+        </tr>
+        <tr>
+          <td>getMakeupRecords</td>
+          <td>获取补卡记录</td>
+        </tr>
+        <tr>
+          <td>applyLeave</td>
+          <td>申请请假</td>
+        </tr>
+        <tr>
+          <td>applyMakeup</td>
+          <td>申请补卡</td>
+        </tr>
+        <tr>
+          <td>approveLeave</td>
+          <td>审批请假</td>
+        </tr>
+        <tr>
+          <td>approveMakeup</td>
+          <td>审批补卡</td>
+        </tr>
+        <tr>
+          <td>checkin</td>
+          <td>现场打卡</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2 id="%E5%85%AB%E9%9D%9E%E5%8A%9F%E8%83%BD%E6%80%A7%E9%9C%80%E6%B1%82">八、非功能性需求</h2>
+    <h3 id="81-%E6%80%A7%E8%83%BD%E8%A6%81%E6%B1%82">8.1 性能要求</h3>
+    <ul>
+      <li>页面加载时间：&lt;2秒</li>
+      <li>角色切换响应时间：&lt;500ms</li>
+      <li>表格数据渲染：&lt;1秒</li>
+    </ul>
+    <h3 id="82-%E5%85%BC%E5%AE%B9%E6%80%A7%E8%A6%81%E6%B1%82">8.2 兼容性要求</h3>
+    <ul>
+      <li><strong>浏览器</strong>：Chrome 90+、Firefox 88+、Safari 14+、Edge 90+</li>
+      <li><strong>分辨率</strong>：1920x1080 及以上</li>
+    </ul>
+    <h3 id="83-%E5%AE%89%E5%85%A8%E8%A6%81%E6%B1%82">8.3 安全要求</h3>
+    <ul>
+      <li>角色权限严格控制</li>
+      <li>数据过滤在前端和后端双重验证</li>
+      <li>敏感操作需要二次确认</li>
+    </ul>
+    <h3 id="84-%E5%8F%AF%E7%94%A8%E6%80%A7%E8%A6%81%E6%B1%82">8.4 可用性要求</h3>
+    <ul>
+      <li>界面简洁直观</li>
+      <li>操作流程清晰</li>
+      <li>错误提示友好</li>
+      <li>支持键盘快捷操作</li>
+    </ul>
+  </body>
+</html>

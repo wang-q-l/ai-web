@@ -1,0 +1,28 @@
+graph TD
+    Start([开始]) --> CreateProject[创建审计项目]
+    CreateProject --> AuditWork[执行审计作业<br/>准备/实施/报告]
+    AuditWork --> IssueCorrection[下发整改问题]
+    
+    IssueCorrection -.-> ReceiveIssue[接收整改问题<br/>接收人员]
+    ReceiveIssue --> SubmitPlan[提交整改方案]
+    SubmitPlan --> ExecuteCorrection[执行整改<br/>经办人员]
+    ExecuteCorrection --> FeedbackProgress[反馈整改进展]
+    
+    FeedbackProgress -.-> TrackProgress[跟踪整改进展]
+    TrackProgress --> AcceptResult{验收整改结果}
+    AcceptResult -->|通过| GenerateReport[生成整改报告]
+    AcceptResult -.->|不通过| ExecuteCorrection
+    GenerateReport --> End([结束])
+    
+    style Start fill:#d5e8d4,stroke:#82b366
+    style CreateProject fill:#dae8fc,stroke:#6c8ebf
+    style AuditWork fill:#dae8fc,stroke:#6c8ebf
+    style IssueCorrection fill:#dae8fc,stroke:#6c8ebf
+    style ReceiveIssue fill:#d5e8d4,stroke:#82b366
+    style SubmitPlan fill:#d5e8d4,stroke:#82b366
+    style ExecuteCorrection fill:#d5e8d4,stroke:#82b366
+    style FeedbackProgress fill:#d5e8d4,stroke:#82b366
+    style TrackProgress fill:#dae8fc,stroke:#6c8ebf
+    style AcceptResult fill:#fff2cc,stroke:#d6b656
+    style GenerateReport fill:#dae8fc,stroke:#6c8ebf
+    style End fill:#f8cecc,stroke:#b85450

@@ -1,0 +1,27 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam swimlaneWidth 280
+
+|审计人员|
+start
+:创建审计项目;
+:准备阶段;
+:实施阶段;
+:报告阶段;
+:下发整改问题;
+
+|迎审人员（接收人员）|
+:接收整改问题;
+:分配给经办人员;
+
+|迎审人员（经办人员）|
+:提交整改方案;
+:反馈整改进展;
+:提交整改报告;
+
+|审计人员|
+:审核整改结果;
+:后续审计;
+stop
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+
+start
+:用户登录系统;
+:选择角色;
+note right
+  可选择：
+  - 审计人员
+  - 迎审人员
+end note
+
+if (选择审计人员?) then (是)
+  :加载审计人员权限;
+  :显示项目管理和整改管理功能;
+else (否)
+  :加载迎审人员权限;
+  :显示整改反馈相关功能;
+endif
+
+:进入系统主界面;
+
+:用户可在顶部导航切换角色;
+note right
+  切换后系统会：
+  1. 重新加载权限
+  2. 刷新菜单和界面
+  3. 保持登录状态
+end note
+
+stop
+
+@enduml
