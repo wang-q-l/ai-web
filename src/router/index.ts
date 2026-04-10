@@ -12,7 +12,7 @@ const allRoutes = USE_MOCK ? [...staticRoutes, ...asyncRoutes] : staticRoutes
 
 // 创建路由实例
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: allRoutes as any
 })
 
