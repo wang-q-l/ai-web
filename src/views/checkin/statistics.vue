@@ -945,7 +945,6 @@ const generateMonthDates = () => {
 
   const dates: string[] = []
   for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day)
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     dates.push(dateStr)
   }
@@ -996,10 +995,10 @@ const handleNextMonth = () => {
 }
 
 // 项目切换
-const handleSwitchProject = () => {
-  // TODO: 打开项目选择对话框
-  console.log('切换项目')
-}
+// const handleSwitchProject = () => {
+//   // TODO: 打开项目选择对话框
+//   console.log('切换项目')
+// }
 
 // 查询
 const handleSearch = async () => {
@@ -1029,16 +1028,16 @@ const handleSearch = async () => {
         if (!user.records) return
         const dateMap = new Map<string, { clockIn: string; clockOut: string; duration: string; hours: number }>()
         user.records.forEach((record: CheckinRecord) => {
-          const date = record.checkinTime.split(' ')[0]
+          const recordDate = record.checkinTime.split(' ')[0]
           const time = record.checkinTime.split(' ')[1].substring(0, 5)
-          if (!dateMap.has(date)) {
-            dateMap.set(date, { clockIn: '', clockOut: '', duration: '—', hours: 0 })
+          if (!dateMap.has(recordDate)) {
+            dateMap.set(recordDate, { clockIn: '', clockOut: '', duration: '—', hours: 0 })
           }
-          const entry = dateMap.get(date)!
+          const entry = dateMap.get(recordDate)!
           if (record.checkinType === 1) entry.clockIn = time
           else entry.clockOut = time
         })
-        dateMap.forEach((entry, date) => {
+        dateMap.forEach((entry, dateKey) => {
           if (entry.clockIn && entry.clockOut) {
             const [ih, im] = entry.clockIn.split(':').map(Number)
             const [oh, om] = entry.clockOut.split(':').map(Number)
@@ -1048,7 +1047,7 @@ const handleSearch = async () => {
             const m = Math.round((entry.hours - h) * 60)
             entry.duration = `${h}h${m > 0 ? m + 'm' : ''}`
           }
-          dailyRows.push({ userName: user.userName, date, ...entry })
+          dailyRows.push({ userName: user.userName, date: dateKey, ...entry })
         })
       })
       dailyRows.sort((a, b) => b.date.localeCompare(a.date))
@@ -1088,15 +1087,15 @@ const buildGanttData = (data: CheckinStatistics) => {
     // 按日期分组打卡记录
     const dateRecords = new Map<string, CheckinRecord[]>()
     user.records.forEach((record) => {
-      const date = record.checkinTime.split(' ')[0]
-      if (!dateRecords.has(date)) {
-        dateRecords.set(date, [])
+      const recordDate = record.checkinTime.split(' ')[0]
+      if (!dateRecords.has(recordDate)) {
+        dateRecords.set(recordDate, [])
       }
-      dateRecords.get(date)!.push(record)
+      dateRecords.get(recordDate)!.push(record)
     })
 
     // 计算每天的工时
-    dateRecords.forEach((records, date) => {
+    dateRecords.forEach((records, dateKey) => {
       const clockInRecord = records.find(r => r.checkinType === 1)
       const clockOutRecord = records.find(r => r.checkinType === 2)
 
@@ -1121,7 +1120,7 @@ const buildGanttData = (data: CheckinStatistics) => {
           duration = `${h}h${m}m`
         }
 
-        ganttUser.dateMap[date] = {
+        ganttUser.dateMap[dateKey] = {
           clockIn,
           clockOut,
           duration,
@@ -1252,12 +1251,12 @@ const handleCheckinToday = () => {
 }
 
 // 请假类型标签颜色映射
-const leaveTypeTagMap: Record<string, string> = {
+const leaveTypeTagMap: Record<string, 'success' | 'warning' | 'danger' | 'info'> = {
   年假: 'success',
   事假: 'warning',
   病假: 'danger',
   调休: 'info',
-  其他: ''
+  其他: 'info'
 }
 
 // 请假记录数据
