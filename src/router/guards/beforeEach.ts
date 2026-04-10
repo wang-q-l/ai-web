@@ -36,7 +36,7 @@ function buildMenuTreeFromRoutes(router: Router): AppRouteRecord[] {
   const staticRouteNames = ['Login', 'Exception403', 'Exception404', 'Exception500']
 
   // 过滤出顶层菜单路由（排除静态路由和根路径）
-  const topLevelRoutes = allRoutes.filter(route => {
+  const topLevelRoutes = allRoutes.filter((route) => {
     // 排除静态路由
     if (route.name && staticRouteNames.includes(route.name as string)) {
       return false
@@ -76,7 +76,7 @@ function buildMenuItemFromRoute(route: any, allRoutes: any[]): AppRouteRecord | 
   }
 
   // 查找子路由
-  const children = allRoutes.filter(r => {
+  const children = allRoutes.filter((r) => {
     // 子路由的路径应该以父路径开头，且比父路径多一层
     if (!r.path.startsWith(route.path + '/')) {
       return false
@@ -88,7 +88,7 @@ function buildMenuItemFromRoute(route: any, allRoutes: any[]): AppRouteRecord | 
 
   if (children.length > 0) {
     menuItem.children = children
-      .map(child => buildMenuItemFromRoute(child, allRoutes))
+      .map((child) => buildMenuItemFromRoute(child, allRoutes))
       .filter(Boolean) as AppRouteRecord[]
   }
 
@@ -326,7 +326,7 @@ async function processFrontendMenu(router: Router): Promise<void> {
  * 处理后端控制模式的菜单逻辑
  * 注意：Mock 模式下不使用此函数
  */
-async function processBackendMenu(router: Router): Promise<void> {
+async function processBackendMenu(): Promise<void> {
   // Mock 模式下已移除后端 API，此函数不应被调用
   throw new Error('后端菜单功能已移除，请使用 Mock 模式')
 }
@@ -428,9 +428,9 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
   if (to.path === '/') {
     const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
-    // Mock 模式：直接跳转到工作台
+    // Mock 模式：直接跳转到审计管理
     if (USE_MOCK) {
-      next({ path: '/workbench', replace: true })
+      next({ path: '/audit', replace: true })
       return true
     }
 
