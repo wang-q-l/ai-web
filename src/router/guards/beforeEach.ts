@@ -298,7 +298,7 @@ async function getMenuData(router: Router): Promise<void> {
   if (useCommon().isFrontendMode.value) {
     await processFrontendMenu(router)
   } else {
-    await processBackendMenu(router)
+    await processBackendMenu()
   }
 }
 

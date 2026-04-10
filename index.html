@@ -19,6 +19,15 @@
     </style>
 
     <script>
+      // GitHub Pages SPA 路由支持
+      ;(function () {
+        var redirect = sessionStorage.redirect
+        delete sessionStorage.redirect
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect)
+        }
+      })()
+
       // 初始化 html class 主题属性
       ;(function () {
         try {
