@@ -245,9 +245,18 @@
     },
     "audit": {
       "title": "项目管理",
+      "project": "项目管理",
       "detail": "项目详情",
       "create": "启动项目",
-      "work": "项目作业"
+      "work": "项目作业",
+      "items": "审计事项管理"
+    },
+    "auditItems": {
+      "title": "审计事项管理"
+    },
+    "auditDocument": {
+      "title": "审计文书编辑",
+      "edit": "编辑文书"
     },
     "checkin": {
       "title": "项目打卡",

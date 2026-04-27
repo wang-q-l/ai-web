@@ -245,9 +245,18 @@
     },
     "audit": {
       "title": "Project Management",
+      "project": "Project Management",
       "detail": "Project Detail",
       "create": "Launch Project",
-      "work": "Project Work"
+      "work": "Project Work",
+      "items": "Audit Items Management"
+    },
+    "auditItems": {
+      "title": "Audit Items Management"
+    },
+    "auditDocument": {
+      "title": "Audit Document Edit",
+      "edit": "Edit Document"
     },
     "checkin": {
       "title": "Project Check-in",

@@ -199,6 +199,45 @@ export interface AuditItem {
   createTime: string
 }
 
+/** 审计事项（扩展 - 用于事项管理页面） */
+export interface AuditItemExtended {
+  id: number
+  /** 排序编号（支持层级：1, 1.1, 1.1.1） */
+  sortNumber: string
+  /** 事项名称 */
+  name: string
+  /** 重点关注与风险点 */
+  riskPoints: string
+  /** 分配的审计人员 */
+  assignedMembers: AuditProjectMember[]
+  /** 状态：0-待开始 1-进行中 2-已完成 */
+  status: number
+  /** 开始时间 */
+  startTime: string
+  /** 结束时间 */
+  endTime?: string
+  /** 进度 0-100 */
+  progress?: number
+  /** 父级ID（用于树形结构） */
+  parentId?: number
+  /** 子项 */
+  children?: AuditItemExtended[]
+}
+
+/** 审计事项查询参数 */
+export interface AuditItemParams {
+  /** 事项名称 */
+  name?: string
+  /** 负责人ID */
+  memberId?: number | string | null
+  /** 只看我负责 */
+  onlyMine?: boolean
+  /** 页码 */
+  page: number
+  /** 每页大小 */
+  pageSize: number
+}
+
 /** 准备阶段子节点枚举 */
 export enum PrepareSubNode {
   /** 审计通知书 */

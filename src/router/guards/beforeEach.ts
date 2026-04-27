@@ -428,9 +428,9 @@ function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGua
   if (to.path === '/') {
     const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
-    // Mock 模式：直接跳转到审计管理
+    // Mock 模式：直接跳转到项目打卡
     if (USE_MOCK) {
-      next({ path: '/audit', replace: true })
+      next({ path: '/checkin', replace: true })
       return true
     }
 
