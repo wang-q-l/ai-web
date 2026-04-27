@@ -15,6 +15,16 @@ export const auditDocumentRoutes: AppRouteRecord = {
   },
   children: [
     {
+      path: '',
+      name: 'AuditDocumentIndex',
+      component: () => import('@/views/audit/document/edit.vue'),
+      meta: {
+        title: 'menus.auditDocument.title',
+        keepAlive: false,
+        isHide: true
+      }
+    },
+    {
       path: 'edit/:id',
       name: 'AuditDocumentEdit',
       component: () => import('@/views/audit/document/edit.vue'),
