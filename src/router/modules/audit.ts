@@ -45,6 +45,17 @@ export const auditRoutes: AppRouteRecord = {
         isHide: true,
         activePath: '/audit'
       }
+    },
+    {
+      path: 'personnel/transfer',
+      name: 'AuditPersonnelTransfer',
+      component: () => import('@/views/audit-management/personnel-transfer/index.vue'),
+      meta: {
+        title: 'menus.audit.personnelTransfer',
+        keepAlive: true,
+        isHide: true,
+        activePath: '/audit'
+      }
     }
   ]
 }

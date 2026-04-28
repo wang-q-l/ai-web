@@ -249,7 +249,8 @@
       "detail": "项目详情",
       "create": "启动项目",
       "work": "项目作业",
-      "items": "审计事项管理"
+      "items": "审计事项管理",
+      "personnelTransfer": "人员变更"
     },
     "auditItems": {
       "title": "审计事项管理"

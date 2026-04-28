@@ -60,6 +60,10 @@
         <div class="table-header">
           <span class="table-title">审计项目列表</span>
           <div class="header-buttons">
+            <el-button @click="handlePersonnelTransfer">
+              <el-icon><User /></el-icon>
+              人员变更
+            </el-button>
             <el-button type="primary" @click="handleAdd">
               <el-icon><Plus /></el-icon>
               新增项目
@@ -74,12 +78,7 @@
           <el-table-column label="项目编号" prop="code" width="190" />
           <el-table-column label="项目名称" prop="name" min-width="180">
             <template #default="{ row }">
-              <el-button
-                v-if="row.status > 0"
-                link
-                type="primary"
-                @click="handleWork(row)"
-              >
+              <el-button v-if="row.status > 0" link type="primary" @click="handleWork(row)">
                 {{ row.name }}
               </el-button>
               <span v-else class="name-plain">{{ row.name }}</span>
@@ -107,27 +106,11 @@
           <el-table-column label="操作" width="200" fixed="right">
             <template #default="{ row }">
               <el-button link type="primary" @click="handleDetail(row)">查看详情</el-button>
-              <el-button
-                v-if="row.status === 0"
-                link
-                type="primary"
-                @click="handleLaunch(row)"
-              >
+              <el-button v-if="row.status === 0" link type="primary" @click="handleLaunch(row)">
                 启动项目
               </el-button>
-              <el-button
-                v-if="row.status === 0"
-                link
-                @click="handleEdit(row)"
-              >
-                编辑
-              </el-button>
-              <el-button
-                v-if="row.status === 0"
-                link
-                type="danger"
-                @click="handleDelete(row)"
-              >
+              <el-button v-if="row.status === 0" link @click="handleEdit(row)"> 编辑 </el-button>
+              <el-button v-if="row.status === 0" link type="danger" @click="handleDelete(row)">
                 删除
               </el-button>
             </template>
@@ -151,12 +134,7 @@
       width="600px"
       :close-on-click-modal="false"
     >
-      <el-form
-        ref="projectFormRef"
-        :model="projectForm"
-        :rules="projectRules"
-        label-width="100px"
-      >
+      <el-form ref="projectFormRef" :model="projectForm" :rules="projectRules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="项目名称" prop="name">
@@ -277,10 +255,7 @@
           <!-- 完全委托/内外联合才显示中介机构 -->
           <el-col :span="24" v-if="needIntermediary">
             <el-form-item label="中介机构" prop="intermediaryName">
-              <el-input
-                v-model="launchForm.intermediaryName"
-                placeholder="请输入中介机构名称"
-              />
+              <el-input v-model="launchForm.intermediaryName" placeholder="请输入中介机构名称" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -344,9 +319,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="member-empty" v-if="launchForm.members.length === 0">
-            请添加项目成员
-          </div>
+          <div class="member-empty" v-if="launchForm.members.length === 0"> 请添加项目成员 </div>
         </div>
       </el-form>
       <template #footer>
@@ -360,128 +333,122 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
-import { getProjectList, addProject, updateProject, deleteProject, launchProject } from '@/api/audit'
-import { ProjectStatus, OrganizationType } from '@/types/audit'
-import type { AuditProject, AuditProjectForm, LaunchProjectForm, AuditProjectMember, MemberRole } from '@/types/audit'
+  import { ref, reactive, computed } from 'vue'
+  import { useRouter } from 'vue-router'
+  import type { FormInstance, FormRules } from 'element-plus'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { Plus, User } from '@element-plus/icons-vue'
+  import {
+    getProjectList,
+    addProject,
+    updateProject,
+    deleteProject,
+    launchProject
+  } from '@/api/audit'
+  import { ProjectStatus, OrganizationType } from '@/types/audit'
+  import type {
+    AuditProject,
+    AuditProjectForm,
+    LaunchProjectForm,
+    AuditProjectMember,
+    MemberRole
+  } from '@/types/audit'
 
-defineOptions({ name: 'AuditProject' })
+  defineOptions({ name: 'AuditProject' })
 
-const router = useRouter()
+  const router = useRouter()
 
-// ---- 列表 ----
-const loading = ref(false)
-const tableData = ref<AuditProject[]>([])
-const total = ref(0)
+  // ---- 列表 ----
+  const loading = ref(false)
+  const tableData = ref<AuditProject[]>([])
+  const total = ref(0)
 
-const currentYear = new Date().getFullYear()
-const yearOptions = Array.from({ length: 6 }, (_, i) => String(currentYear - 2 + i))
+  const currentYear = new Date().getFullYear()
+  const yearOptions = Array.from({ length: 6 }, (_, i) => String(currentYear - 2 + i))
 
-const queryParams = reactive({
-  name: '',
-  year: '',
-  status: null as number | null,
-  auditedUnit: '',
-  page: 1,
-  pageSize: 10
-})
+  const queryParams = reactive({
+    name: '',
+    year: '',
+    status: null as number | null,
+    auditedUnit: '',
+    page: 1,
+    pageSize: 10
+  })
 
-const statusMap: Record<number, { label: string; type: 'primary' | 'success' | 'info' | 'warning' | 'danger' | '' }> = {
-  [ProjectStatus.Pending]: { label: '未启动', type: 'info' },
-  [ProjectStatus.Preparing]: { label: '准备中', type: 'warning' },
-  [ProjectStatus.Executing]: { label: '实施中', type: 'primary' },
-  [ProjectStatus.Reporting]: { label: '报告中', type: '' },
-  [ProjectStatus.Completed]: { label: '已完成', type: 'success' }
-}
-
-function getStatusLabel(status: number) {
-  return statusMap[status]?.label || '未知'
-}
-function getStatusTagType(status: number) {
-  return statusMap[status]?.type || 'info'
-}
-
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await getProjectList(queryParams)
-    tableData.value = res.data.list
-    total.value = res.data.total
-  } finally {
-    loading.value = false
+  const statusMap: Record<
+    number,
+    { label: string; type: 'primary' | 'success' | 'info' | 'warning' | 'danger' | '' }
+  > = {
+    [ProjectStatus.Pending]: { label: '未启动', type: 'info' },
+    [ProjectStatus.Preparing]: { label: '准备中', type: 'warning' },
+    [ProjectStatus.Executing]: { label: '实施中', type: 'primary' },
+    [ProjectStatus.Reporting]: { label: '报告中', type: '' },
+    [ProjectStatus.Completed]: { label: '已完成', type: 'success' }
   }
-}
 
-function handleSearch() {
-  queryParams.page = 1
-  loadData()
-}
+  function getStatusLabel(status: number) {
+    return statusMap[status]?.label || '未知'
+  }
+  function getStatusTagType(status: number) {
+    return statusMap[status]?.type || 'info'
+  }
 
-function handleReset() {
-  queryParams.name = ''
-  queryParams.year = ''
-  queryParams.status = null
-  queryParams.auditedUnit = ''
-  queryParams.page = 1
-  loadData()
-}
+  async function loadData() {
+    loading.value = true
+    try {
+      const res = await getProjectList(queryParams)
+      tableData.value = res.data.list
+      total.value = res.data.total
+    } finally {
+      loading.value = false
+    }
+  }
 
-function handleWork(row: AuditProject) {
-  router.push(`/audit/project/work/${row.id}`)
-}
-
-function handleDetail(row: AuditProject) {
-  router.push(`/audit/project/detail/${row.id}`)
-}
-
-async function handleDelete(row: AuditProject) {
-  try {
-    await ElMessageBox.confirm(`确认删除项目"${row.name}"？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    await deleteProject(row.id)
-    ElMessage.success('删除成功')
+  function handleSearch() {
+    queryParams.page = 1
     loadData()
-  } catch {
-    // 用户取消
   }
-}
 
-// ---- 新增/编辑弹窗 ----
-const projectDialogVisible = ref(false)
-const projectDialogTitle = ref('新增项目')
-const projectSubmitting = ref(false)
-const projectFormRef = ref<FormInstance>()
-const isEdit = ref(false)
+  function handleReset() {
+    queryParams.name = ''
+    queryParams.year = ''
+    queryParams.status = null
+    queryParams.auditedUnit = ''
+    queryParams.page = 1
+    loadData()
+  }
 
-const projectForm = reactive<AuditProjectForm>({
-  name: '',
-  year: String(currentYear),
-  type: '',
-  description: '',
-  auditedUnit: '',
-  auditGoal: ''
-})
+  function handleWork(row: AuditProject) {
+    router.push(`/audit/project/work/${row.id}`)
+  }
 
-const projectRules: FormRules = {
-  name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
-  year: [{ required: true, message: '请选择年度', trigger: 'change' }],
-  type: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
-  auditedUnit: [{ required: true, message: '请输入被审计单位', trigger: 'blur' }],
-  auditGoal: [{ required: true, message: '请输入审计目标', trigger: 'blur' }]
-}
+  function handleDetail(row: AuditProject) {
+    router.push(`/audit/project/detail/${row.id}`)
+  }
 
-function handleAdd() {
-  isEdit.value = false
-  projectDialogTitle.value = '新增项目'
-  Object.assign(projectForm, {
-    id: undefined,
+  async function handleDelete(row: AuditProject) {
+    try {
+      await ElMessageBox.confirm(`确认删除项目"${row.name}"？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      await deleteProject(row.id)
+      ElMessage.success('删除成功')
+      loadData()
+    } catch {
+      // 用户取消
+    }
+  }
+
+  // ---- 新增/编辑弹窗 ----
+  const projectDialogVisible = ref(false)
+  const projectDialogTitle = ref('新增项目')
+  const projectSubmitting = ref(false)
+  const projectFormRef = ref<FormInstance>()
+  const isEdit = ref(false)
+
+  const projectForm = reactive<AuditProjectForm>({
     name: '',
     year: String(currentYear),
     type: '',
@@ -489,89 +456,79 @@ function handleAdd() {
     auditedUnit: '',
     auditGoal: ''
   })
-  projectFormRef.value?.clearValidate()
-  projectDialogVisible.value = true
-}
 
-function handleEdit(row: AuditProject) {
-  isEdit.value = true
-  projectDialogTitle.value = '编辑项目'
-  Object.assign(projectForm, {
-    id: row.id,
-    name: row.name,
-    year: row.year,
-    type: row.type,
-    description: row.description,
-    auditedUnit: row.auditedUnit,
-    auditGoal: row.auditGoal
-  })
-  projectFormRef.value?.clearValidate()
-  projectDialogVisible.value = true
-}
-
-async function handleProjectSubmit() {
-  const valid = await projectFormRef.value?.validate().catch(() => false)
-  if (!valid) return
-  projectSubmitting.value = true
-  try {
-    if (isEdit.value) {
-      await updateProject(projectForm)
-      ElMessage.success('编辑成功')
-    } else {
-      await addProject(projectForm)
-      ElMessage.success('新增成功')
-    }
-    projectDialogVisible.value = false
-    loadData()
-  } finally {
-    projectSubmitting.value = false
+  const projectRules: FormRules = {
+    name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
+    year: [{ required: true, message: '请选择年度', trigger: 'change' }],
+    type: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
+    auditedUnit: [{ required: true, message: '请输入被审计单位', trigger: 'blur' }],
+    auditGoal: [{ required: true, message: '请输入审计目标', trigger: 'blur' }]
   }
-}
 
-// ---- 启动项目弹窗 ----
-const launchDialogVisible = ref(false)
-const launchSubmitting = ref(false)
-const launchFormRef = ref<FormInstance>()
-const launchTargetProject = ref<AuditProject | null>(null)
-let memberNextId = 200
+  function handleAdd() {
+    isEdit.value = false
+    projectDialogTitle.value = '新增项目'
+    Object.assign(projectForm, {
+      id: undefined,
+      name: '',
+      year: String(currentYear),
+      type: '',
+      description: '',
+      auditedUnit: '',
+      auditGoal: ''
+    })
+    projectFormRef.value?.clearValidate()
+    projectDialogVisible.value = true
+  }
 
-const launchForm = reactive<LaunchProjectForm>({
-  organizationType: OrganizationType.Self,
-  auditOrganization: '',
-  auditPeriodStart: '',
-  auditPeriodEnd: '',
-  intermediaryName: '',
-  members: []
-})
+  // 人员变更
+  function handlePersonnelTransfer() {
+    router.push('/audit/personnel/transfer')
+  }
 
-const needIntermediary = computed(
-  () =>
-    launchForm.organizationType === OrganizationType.FullDelegate ||
-    launchForm.organizationType === OrganizationType.Joint
-)
+  function handleEdit(row: AuditProject) {
+    isEdit.value = true
+    projectDialogTitle.value = '编辑项目'
+    Object.assign(projectForm, {
+      id: row.id,
+      name: row.name,
+      year: row.year,
+      type: row.type,
+      description: row.description,
+      auditedUnit: row.auditedUnit,
+      auditGoal: row.auditGoal
+    })
+    projectFormRef.value?.clearValidate()
+    projectDialogVisible.value = true
+  }
 
-const launchRules: FormRules = {
-  organizationType: [{ required: true, message: '请选择组织形式', trigger: 'change' }],
-  auditOrganization: [{ required: true, message: '请输入审计实施机构', trigger: 'blur' }],
-  auditPeriodStart: [{ required: true, message: '请选择审计期间开始日期', trigger: 'change' }],
-  auditPeriodEnd: [{ required: true, message: '请选择审计期间结束日期', trigger: 'change' }],
-  intermediaryName: [
-    {
-      validator: (_rule, _value, callback) => {
-        if (needIntermediary.value && !launchForm.intermediaryName) {
-          callback(new Error('请输入中介机构名称'))
-        } else {
-          callback()
-        }
-      },
-      trigger: 'blur'
+  async function handleProjectSubmit() {
+    const valid = await projectFormRef.value?.validate().catch(() => false)
+    if (!valid) return
+    projectSubmitting.value = true
+    try {
+      if (isEdit.value) {
+        await updateProject(projectForm)
+        ElMessage.success('编辑成功')
+      } else {
+        await addProject(projectForm)
+        ElMessage.success('新增成功')
+      }
+      projectDialogVisible.value = false
+      loadData()
+    } finally {
+      projectSubmitting.value = false
     }
-  ]
-}
+  }
 
-function handleLaunch(row: AuditProject) {
-  launchTargetProject.value = row
-  Object.assign(launchForm, {
+  // ---- 启动项目弹窗 ----
+  const launchDialogVisible = ref(false)
+  const launchSubmitting = ref(false)
+  const launchFormRef = ref<FormInstance>()
+  const launchTargetProject = ref<AuditProject | null>(null)
+  let memberNextId = 200
+
+  const launchForm = reactive<LaunchProjectForm>({
     organizationType: OrganizationType.Self,
     auditOrganization: '',
     auditPeriodStart: '',
@@ -579,194 +536,230 @@ function handleLaunch(row: AuditProject) {
     intermediaryName: '',
     members: []
   })
-  launchFormRef.value?.clearValidate()
-  launchDialogVisible.value = true
-}
 
-function handleOrgTypeChange() {
-  // 切换组织形式时，移除不合适的角色成员
-  if (!needIntermediary.value) {
-    launchForm.members = launchForm.members.filter(
-      (m) => m.role !== '项目经理' && m.role !== '中介人员'
-    )
-  }
-  launchForm.intermediaryName = ''
-  launchFormRef.value?.clearValidate()
-}
+  const needIntermediary = computed(
+    () =>
+      launchForm.organizationType === OrganizationType.FullDelegate ||
+      launchForm.organizationType === OrganizationType.Joint
+  )
 
-function handleAddMember() {
-  const member: AuditProjectMember = {
-    id: memberNextId++,
-    name: '',
-    role: '组员' as MemberRole,
-    department: '',
-    phone: ''
-  }
-  launchForm.members.push(member)
-}
-
-function handleRemoveMember(index: number) {
-  launchForm.members.splice(index, 1)
-}
-
-async function handleLaunchSubmit() {
-  const valid = await launchFormRef.value?.validate().catch(() => false)
-  if (!valid) return
-
-  if (launchForm.members.length === 0) {
-    ElMessage.warning('请至少添加一名项目成员')
-    return
-  }
-  const hasLeader = launchForm.members.some((m) => m.role === '组长')
-  if (!hasLeader) {
-    ElMessage.warning('项目成员中必须包含组长')
-    return
-  }
-  const emptyName = launchForm.members.some((m) => !m.name.trim())
-  if (emptyName) {
-    ElMessage.warning('请填写所有成员的姓名')
-    return
+  const launchRules: FormRules = {
+    organizationType: [{ required: true, message: '请选择组织形式', trigger: 'change' }],
+    auditOrganization: [{ required: true, message: '请输入审计实施机构', trigger: 'blur' }],
+    auditPeriodStart: [{ required: true, message: '请选择审计期间开始日期', trigger: 'change' }],
+    auditPeriodEnd: [{ required: true, message: '请选择审计期间结束日期', trigger: 'change' }],
+    intermediaryName: [
+      {
+        validator: (_rule, _value, callback) => {
+          if (needIntermediary.value && !launchForm.intermediaryName) {
+            callback(new Error('请输入中介机构名称'))
+          } else {
+            callback()
+          }
+        },
+        trigger: 'blur'
+      }
+    ]
   }
 
-  launchSubmitting.value = true
-  try {
-    await launchProject(launchTargetProject.value!.id, launchForm)
-    ElMessage.success('项目启动成功')
-    launchDialogVisible.value = false
-    loadData()
-  } finally {
-    launchSubmitting.value = false
+  function handleLaunch(row: AuditProject) {
+    launchTargetProject.value = row
+    Object.assign(launchForm, {
+      organizationType: OrganizationType.Self,
+      auditOrganization: '',
+      auditPeriodStart: '',
+      auditPeriodEnd: '',
+      intermediaryName: '',
+      members: []
+    })
+    launchFormRef.value?.clearValidate()
+    launchDialogVisible.value = true
   }
-}
 
-loadData()
+  function handleOrgTypeChange() {
+    // 切换组织形式时，移除不合适的角色成员
+    if (!needIntermediary.value) {
+      launchForm.members = launchForm.members.filter(
+        (m) => m.role !== '项目经理' && m.role !== '中介人员'
+      )
+    }
+    launchForm.intermediaryName = ''
+    launchFormRef.value?.clearValidate()
+  }
+
+  function handleAddMember() {
+    const member: AuditProjectMember = {
+      id: memberNextId++,
+      name: '',
+      role: '组员' as MemberRole,
+      department: '',
+      phone: ''
+    }
+    launchForm.members.push(member)
+  }
+
+  function handleRemoveMember(index: number) {
+    launchForm.members.splice(index, 1)
+  }
+
+  async function handleLaunchSubmit() {
+    const valid = await launchFormRef.value?.validate().catch(() => false)
+    if (!valid) return
+
+    if (launchForm.members.length === 0) {
+      ElMessage.warning('请至少添加一名项目成员')
+      return
+    }
+    const hasLeader = launchForm.members.some((m) => m.role === '组长')
+    if (!hasLeader) {
+      ElMessage.warning('项目成员中必须包含组长')
+      return
+    }
+    const emptyName = launchForm.members.some((m) => !m.name.trim())
+    if (emptyName) {
+      ElMessage.warning('请填写所有成员的姓名')
+      return
+    }
+
+    launchSubmitting.value = true
+    try {
+      await launchProject(launchTargetProject.value!.id, launchForm)
+      ElMessage.success('项目启动成功')
+      launchDialogVisible.value = false
+      loadData()
+    } finally {
+      launchSubmitting.value = false
+    }
+  }
+
+  loadData()
 </script>
 
 <style scoped lang="scss">
-.audit-project-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.filter-card {
-  flex-shrink: 0;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-
-  :deep(.el-card__body) {
-    padding: 12px 20px;
-  }
-
-  .filter-form-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-
-    :deep(.el-form-item) {
-      margin-bottom: 0;
-    }
-  }
-
-  .filter-buttons {
-    display: flex;
-
-    .el-button:not(:first-child) {
-      margin-left: 12px;
-    }
-  }
-}
-
-.data-card {
-  flex: 1;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  :deep(.el-card__body) {
-    padding: 0 20px 20px;
-    flex: 1;
+  .audit-project-page {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    gap: 16px;
+    height: 100%;
   }
 
-  .table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .filter-card {
+    flex-shrink: 0;
+    border: none !important;
+    border-radius: 12px;
+    box-shadow: none !important;
 
-    .table-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #303133;
+    :deep(.el-card__body) {
+      padding: 12px 20px;
     }
 
-    .header-buttons {
+    .filter-form-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+
+      :deep(.el-form-item) {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-buttons {
+      display: flex;
+
       .el-button:not(:first-child) {
         margin-left: 12px;
       }
     }
   }
 
-  .table-container {
-    flex: 1;
-    overflow: hidden;
-    margin-top: 16px;
-  }
-
-  .el-pagination {
-    flex-shrink: 0;
-    margin-top: 16px;
-    justify-content: flex-end;
-  }
-}
-
-.name-plain {
-  font-size: 13px;
-  color: #303133;
-}
-
-// 启动弹窗
-.launch-project-name {
-  padding: 10px 16px;
-  background: #f5f7fa;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #606266;
-  margin-bottom: 4px;
-}
-
-.member-section {
-  margin-top: 16px;
-  border: 1px solid #ebeef5;
-  border-radius: 8px;
-  padding: 12px 16px;
-
-  .member-section-header {
+  .data-card {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 4px;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    border: none !important;
+    border-radius: 12px;
+    box-shadow: none !important;
 
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #303133;
+    :deep(.el-card__body) {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 0 20px 20px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .table-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #303133;
+      }
+
+      .header-buttons {
+        .el-button:not(:first-child) {
+          margin-left: 12px;
+        }
+      }
+    }
+
+    .table-container {
+      flex: 1;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .el-pagination {
+      flex-shrink: 0;
+      justify-content: flex-end;
+      margin-top: 16px;
     }
   }
 
-  .member-empty {
-    padding: 16px;
-    text-align: center;
-    color: #c0c4cc;
+  .name-plain {
     font-size: 13px;
+    color: #303133;
   }
-}
+
+  // 启动弹窗
+  .launch-project-name {
+    padding: 10px 16px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: #606266;
+    background: #f5f7fa;
+    border-radius: 6px;
+  }
+
+  .member-section {
+    padding: 12px 16px;
+    margin-top: 16px;
+    border: 1px solid #ebeef5;
+    border-radius: 8px;
+
+    .member-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+
+      .section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #303133;
+      }
+    }
+
+    .member-empty {
+      padding: 16px;
+      font-size: 13px;
+      color: #c0c4cc;
+      text-align: center;
+    }
+  }
 </style>

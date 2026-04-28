@@ -249,7 +249,8 @@
       "detail": "Project Detail",
       "create": "Launch Project",
       "work": "Project Work",
-      "items": "Audit Items Management"
+      "items": "Audit Items Management",
+      "personnelTransfer": "Personnel Transfer"
     },
     "auditItems": {
       "title": "Audit Items Management"
