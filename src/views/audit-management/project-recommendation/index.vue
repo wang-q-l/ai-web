@@ -1,5 +1,13 @@
 <template>
   <div class="ai-chat-container">
+    <!-- 查看推荐列表按钮 -->
+    <div class="view-recommendations-btn">
+      <el-button type="primary" @click="handleViewRecommendations">
+        <el-icon><List /></el-icon>
+        查看推荐列表
+      </el-button>
+    </div>
+
     <!-- 聊天消息区域 -->
     <div class="chat-main">
       <el-scrollbar ref="scrollbarRef" class="chat-scrollbar">
@@ -39,59 +47,6 @@
             </div>
             <div class="message-bubble">
               <div class="message-text" v-html="message.content.replace(/\n/g, '<br>')"></div>
-
-              <!-- 推荐列表 -->
-              <div
-                v-if="message.recommendations && message.recommendations.length > 0"
-                class="recommendations-list"
-              >
-                <el-table
-                  ref="tableRef"
-                  :data="message.recommendations"
-                  style="width: 100%; margin-top: 16px"
-                  max-height="500"
-                  @selection-change="handleSelectionChange"
-                >
-                  <el-table-column type="selection" width="55" />
-                  <el-table-column label="优先级" width="100" align="center">
-                    <template #default="{ row }">
-                      <el-tag :type="getPriorityType(row.priority)" size="small">
-                        {{ row.priority }}
-                      </el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="单位名称" prop="unitName" min-width="180" />
-                  <el-table-column
-                    label="被审计对象"
-                    prop="auditeeName"
-                    width="120"
-                    align="center"
-                  />
-                  <el-table-column label="职务" prop="position" width="150" />
-                  <el-table-column label="推荐原因" prop="reason" min-width="200" />
-                  <el-table-column label="上次审计年度" width="120" align="center">
-                    <template #default="{ row }">
-                      {{ row.lastAuditYear || '-' }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="距离周期结束（年）" width="150" align="center">
-                    <template #default="{ row }">
-                      {{ row.yearsToDeadline !== undefined ? row.yearsToDeadline : '-' }}
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <div class="action-buttons">
-                  <el-button type="primary" @click="handleAddAllToPlan(message.recommendations)">
-                    <el-icon><Plus /></el-icon>
-                    全部列入计划
-                  </el-button>
-                  <el-button @click="handleAddSelectedToPlan">
-                    <el-icon><Select /></el-icon>
-                    选择部分列入计划
-                  </el-button>
-                </div>
-              </div>
-
               <div class="message-time">{{ formatTime(message.timestamp) }}</div>
             </div>
           </div>
@@ -155,11 +110,85 @@
       </div>
       <div class="input-tip">按 Enter 发送，Shift + Enter 换行</div>
     </div>
+
+    <!-- 推荐列表弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="审计项目推荐清单"
+      width="80%"
+      :close-on-click-modal="false"
+      class="recommendations-dialog"
+    >
+      <div class="dialog-content">
+        <!-- 统计信息 -->
+        <div class="statistics-info">
+          <el-tag type="info" size="large">
+            共 {{ currentRecommendations.length }} 个推荐项目
+          </el-tag>
+          <el-tag v-if="p0Count > 0" type="danger" size="large">
+            离任审计 {{ p0Count }} 项（P0）
+          </el-tag>
+          <el-tag v-if="p1Count > 0" type="warning" size="large">
+            从未审计 {{ p1Count }} 项（P1）
+          </el-tag>
+          <el-tag v-if="p2Count > 0" type="warning" size="large">
+            轮审到期 {{ p2Count }} 项（P2）
+          </el-tag>
+          <el-tag v-if="p3Count > 0" type="info" size="large">
+            即将到期 {{ p3Count }} 项（P3）
+          </el-tag>
+        </div>
+
+        <!-- 推荐列表表格 -->
+        <el-table
+          ref="tableRef"
+          :data="currentRecommendations"
+          style="width: 100%; margin-top: 20px"
+          max-height="500"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" width="55" />
+          <el-table-column label="优先级" width="100" align="center">
+            <template #default="{ row }">
+              <el-tag :type="getPriorityType(row.priority)" size="small">
+                {{ row.priority }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="单位名称" prop="unitName" min-width="180" />
+          <el-table-column label="被审计对象" prop="auditeeName" width="120" align="center" />
+          <el-table-column label="职务" prop="position" width="150" />
+          <el-table-column label="推荐原因" prop="reason" min-width="200" />
+          <el-table-column label="上次审计年度" width="120" align="center">
+            <template #default="{ row }">
+              {{ row.lastAuditYear || '-' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="距离周期结束（年）" width="150" align="center">
+            <template #default="{ row }">
+              {{ row.yearsToDeadline !== undefined ? row.yearsToDeadline : '-' }}
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 操作按钮 -->
+        <div class="dialog-actions">
+          <el-button type="primary" @click="handleAddAllToPlan(currentRecommendations)">
+            <el-icon><Plus /></el-icon>
+            全部列入计划
+          </el-button>
+          <el-button @click="handleAddSelectedToPlan">
+            <el-icon><Select /></el-icon>
+            选择部分列入计划
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, nextTick } from 'vue'
+  import { ref, nextTick, computed } from 'vue'
   import {
     ChatDotRound,
     User,
@@ -167,7 +196,8 @@
     Loading,
     ChatLineRound,
     Plus,
-    Select
+    Select,
+    List
   } from '@element-plus/icons-vue'
   import { chat } from '@/api/audit-management/project-recommendation'
   import type {
@@ -214,6 +244,26 @@
 
   // 选中的推荐项
   const selectedRecommendations = ref<RecommendationItem[]>([])
+
+  // 当前推荐列表
+  const currentRecommendations = ref<RecommendationItem[]>([])
+
+  // 弹窗显示状态
+  const dialogVisible = ref(false)
+
+  // 统计信息
+  const p0Count = computed(
+    () => currentRecommendations.value.filter((item) => item.priority === 'P0').length
+  )
+  const p1Count = computed(
+    () => currentRecommendations.value.filter((item) => item.priority === 'P1').length
+  )
+  const p2Count = computed(
+    () => currentRecommendations.value.filter((item) => item.priority === 'P2').length
+  )
+  const p3Count = computed(
+    () => currentRecommendations.value.filter((item) => item.priority === 'P3').length
+  )
 
   /**
    * 获取优先级标签类型
@@ -361,6 +411,17 @@
   }
 
   /**
+   * 查看推荐列表
+   */
+  const handleViewRecommendations = () => {
+    if (currentRecommendations.value.length === 0) {
+      ElMessage.warning('暂无推荐记录')
+      return
+    }
+    dialogVisible.value = true
+  }
+
+  /**
    * 快捷问题点击
    */
   const handleQuickQuestion = (question: string) => {
@@ -400,6 +461,11 @@
       if (response.code === 200) {
         const { reply, recommendations, thinkingSteps: steps } = response.data
 
+        // 保存推荐列表
+        if (recommendations && recommendations.length > 0) {
+          currentRecommendations.value = recommendations
+        }
+
         // 显示思考步骤（临时动画）
         if (steps && steps.length > 0) {
           await showThinkingSteps(steps)
@@ -411,20 +477,21 @@
         // 合并思考过程和结果到一条消息
         let fullContent = ''
         if (steps && steps.length > 0) {
-          fullContent = steps.join('\n') + '\n\n' + reply
+          fullContent = steps.join('\n') + (reply ? '\n\n' + reply : '')
         } else {
           fullContent = reply
         }
 
         // 打字机效果显示完整内容
-        await typewriterEffect(fullContent)
+        if (fullContent) {
+          await typewriterEffect(fullContent)
+        }
 
         // 添加助手消息
         const assistantMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'assistant',
           content: typingMessage.value.replace(/<br>/g, '\n'),
-          recommendations,
           timestamp: Date.now()
         }
         messages.value.push(assistantMessage)
@@ -433,6 +500,13 @@
         typingMessage.value = ''
 
         await scrollToBottom()
+
+        // 自动打开推荐列表弹窗
+        if (recommendations && recommendations.length > 0) {
+          setTimeout(() => {
+            dialogVisible.value = true
+          }, 500)
+        }
       } else {
         ElMessage.error(response.message || '请求失败')
         thinkingSteps.value = []
@@ -792,6 +866,33 @@
 
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  // 查看推荐按钮
+  .view-recommendations-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+  }
+
+  // 推荐列表弹窗
+  .recommendations-dialog {
+    .dialog-content {
+      .statistics-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .dialog-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 20px;
+      }
     }
   }
 </style>
