@@ -220,36 +220,58 @@ async function request<T = any>(
 /** API方法集合 */
 // GET 方法
 function get<T>(config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }): Promise<T>
-function get<T>(config: ExtendedAxiosRequestConfig): Promise<{ code: number; message: string; data: T }>
-function get<T>(config: ExtendedAxiosRequestConfig): Promise<T | { code: number; message: string; data: T }> {
+function get<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<{ code: number; message: string; data: T }>
+function get<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<T | { code: number; message: string; data: T }> {
   return retryRequest<T>({ ...config, method: 'GET' } as any)
 }
 
 // POST 方法
 function post<T>(config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }): Promise<T>
-function post<T>(config: ExtendedAxiosRequestConfig): Promise<{ code: number; message: string; data: T }>
-function post<T>(config: ExtendedAxiosRequestConfig): Promise<T | { code: number; message: string; data: T }> {
+function post<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<{ code: number; message: string; data: T }>
+function post<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<T | { code: number; message: string; data: T }> {
   return retryRequest<T>({ ...config, method: 'POST' } as any)
 }
 
 // PUT 方法
 function put<T>(config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }): Promise<T>
-function put<T>(config: ExtendedAxiosRequestConfig): Promise<{ code: number; message: string; data: T }>
-function put<T>(config: ExtendedAxiosRequestConfig): Promise<T | { code: number; message: string; data: T }> {
+function put<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<{ code: number; message: string; data: T }>
+function put<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<T | { code: number; message: string; data: T }> {
   return retryRequest<T>({ ...config, method: 'PUT' } as any)
 }
 
 // DELETE 方法
 function del<T>(config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }): Promise<T>
-function del<T>(config: ExtendedAxiosRequestConfig): Promise<{ code: number; message: string; data: T }>
-function del<T>(config: ExtendedAxiosRequestConfig): Promise<T | { code: number; message: string; data: T }> {
+function del<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<{ code: number; message: string; data: T }>
+function del<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<T | { code: number; message: string; data: T }> {
   return retryRequest<T>({ ...config, method: 'DELETE' } as any)
 }
 
 // REQUEST 方法
-function requestMethod<T>(config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }): Promise<T>
-function requestMethod<T>(config: ExtendedAxiosRequestConfig): Promise<{ code: number; message: string; data: T }>
-function requestMethod<T>(config: ExtendedAxiosRequestConfig): Promise<T | { code: number; message: string; data: T }> {
+function requestMethod<T>(
+  config: ExtendedAxiosRequestConfig & { skipResponseValidation: true }
+): Promise<T>
+function requestMethod<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<{ code: number; message: string; data: T }>
+function requestMethod<T>(
+  config: ExtendedAxiosRequestConfig
+): Promise<T | { code: number; message: string; data: T }> {
   return retryRequest<T>(config as any)
 }
 

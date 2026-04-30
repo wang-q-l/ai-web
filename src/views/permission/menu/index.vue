@@ -139,202 +139,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
-import type { Menu } from '@/types/api'
-import { getMenuList, addMenu, updateMenu, deleteMenu, updateMenuStatus } from '@/api/organization'
+  import { ref, reactive, onMounted, computed } from 'vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { Search, Plus } from '@element-plus/icons-vue'
+  import type { FormInstance, FormRules } from 'element-plus'
+  import type { Menu } from '@/types/api'
+  import {
+    getMenuList,
+    addMenu,
+    updateMenu,
+    deleteMenu,
+    updateMenuStatus
+  } from '@/api/organization'
 
-defineOptions({ name: 'PermissionMenu' })
+  defineOptions({ name: 'PermissionMenu' })
 
-// 筛选表单
-const filterForm = reactive({
-  name: '',
-  status: undefined as number | undefined
-})
-
-// 表格数据
-const loading = ref(false)
-const tableData = ref<Menu[]>([])
-const isExpanded = ref(true)
-const tableRef = ref()
-const tableKey = ref(0)
-
-// 对话框
-const dialogVisible = ref(false)
-const dialogTitle = ref('')
-const formRef = ref<FormInstance>()
-const form = reactive<Partial<Menu>>({
-  type: 'menu',
-  title: '',
-  name: '',
-  path: '',
-  component: '',
-  icon: '',
-  permission: '',
-  sort: 0,
-  status: 1,
-  parentId: undefined
-})
-
-// 表单验证规则
-const formRules: FormRules = {
-  type: [{ required: true, message: '请选择菜单类型', trigger: 'change' }],
-  title: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
-  name: [{ required: true, message: '请输入路由名称', trigger: 'blur' }],
-  path: [{ required: true, message: '请输入路由路径', trigger: 'blur' }],
-  component: [{ required: true, message: '请输入组件路径', trigger: 'blur' }],
-  permission: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
-}
-
-// 菜单树选项（用于上级菜单选择）
-const menuTreeOptions = computed(() => {
-  // 过滤掉按钮类型的菜单，只显示目录和菜单
-  const filterButtons = (menus: Menu[]): Menu[] => {
-    return menus
-      .filter((menu) => menu.type !== 'button')
-      .map((menu) => ({
-        ...menu,
-        children: menu.children ? filterButtons(menu.children) : undefined
-      }))
-  }
-  return filterButtons(tableData.value)
-})
-
-// 获取菜单列表
-const fetchMenuList = async () => {
-  loading.value = true
-  try {
-    const params = {
-      name: filterForm.name || undefined,
-      status: filterForm.status
-    }
-    const res = await getMenuList(params)
-    if (res.code === 200) {
-      tableData.value = res.data || []
-    }
-  } catch (error) {
-    console.error('获取菜单列表失败:', error)
-    ElMessage.error('获取菜单列表失败')
-  } finally {
-    loading.value = false
-  }
-}
-
-// 搜索
-const handleSearch = () => {
-  fetchMenuList()
-}
-
-// 展开/折叠
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value
-  tableKey.value++
-}
-
-// 新增
-const handleAdd = (parentId?: number) => {
-  dialogTitle.value = '新增菜单'
-  form.parentId = parentId
-  dialogVisible.value = true
-}
-
-// 编辑
-const handleEdit = (row: Menu) => {
-  dialogTitle.value = '编辑菜单'
-  Object.assign(form, {
-    id: row.id,
-    type: row.type,
-    title: row.title,
-    name: row.name,
-    path: row.path,
-    component: row.component,
-    icon: row.icon,
-    permission: row.permission,
-    sort: row.sort,
-    status: row.status,
-    parentId: row.parentId
+  // 筛选表单
+  const filterForm = reactive({
+    name: '',
+    status: undefined as number | undefined
   })
-  dialogVisible.value = true
-}
 
-// 删除
-const handleDelete = async (row: Menu) => {
-  try {
-    await ElMessageBox.confirm('确定要删除该菜单吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
+  // 表格数据
+  const loading = ref(false)
+  const tableData = ref<Menu[]>([])
+  const isExpanded = ref(true)
+  const tableRef = ref()
+  const tableKey = ref(0)
 
-    const res = await deleteMenu(row.id)
-    if (res.code === 200) {
-      ElMessage.success('删除成功')
-      fetchMenuList()
-    } else {
-      ElMessage.error(res.message || '删除失败')
-    }
-  } catch (error: any) {
-    if (error !== 'cancel') {
-      console.error('删除菜单失败:', error)
-      ElMessage.error(error.message || '删除失败')
-    }
-  }
-}
-
-// 状态切换
-const handleStatusChange = async (row: Menu) => {
-  try {
-    const res = await updateMenuStatus(row.id, row.status!)
-    if (res.code === 200) {
-      ElMessage.success('状态更新成功')
-    } else {
-      ElMessage.error(res.message || '状态更新失败')
-      row.status = row.status === 1 ? 0 : 1
-    }
-  } catch (error) {
-    console.error('更新状态失败:', error)
-    ElMessage.error('状态更新失败')
-    row.status = row.status === 1 ? 0 : 1
-  }
-}
-
-// 提交表单
-const handleSubmit = async () => {
-  if (!formRef.value) return
-
-  await formRef.value.validate(async (valid) => {
-    if (valid) {
-      try {
-        const data = { ...form }
-        let res
-        if (form.id) {
-          res = await updateMenu(form.id, data)
-        } else {
-          res = await addMenu(data)
-        }
-
-        if (res.code === 200) {
-          ElMessage.success(form.id ? '更新成功' : '新增成功')
-          dialogVisible.value = false
-          fetchMenuList()
-        } else {
-          ElMessage.error(res.message || '操作失败')
-        }
-      } catch (error) {
-        console.error('提交失败:', error)
-        ElMessage.error('操作失败')
-      }
-    }
-  })
-}
-
-// 重置表单
-const resetForm = () => {
-  formRef.value?.resetFields()
-  Object.assign(form, {
-    id: undefined,
+  // 对话框
+  const dialogVisible = ref(false)
+  const dialogTitle = ref('')
+  const formRef = ref<FormInstance>()
+  const form = reactive<Partial<Menu>>({
     type: 'menu',
     title: '',
     name: '',
@@ -346,79 +183,248 @@ const resetForm = () => {
     status: 1,
     parentId: undefined
   })
-}
 
-// 初始化
-onMounted(() => {
-  fetchMenuList()
-})
-</script>
+  // 表单验证规则
+  const formRules: FormRules = {
+    type: [{ required: true, message: '请选择菜单类型', trigger: 'change' }],
+    title: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+    name: [{ required: true, message: '请输入路由名称', trigger: 'blur' }],
+    path: [{ required: true, message: '请输入路由路径', trigger: 'blur' }],
+    component: [{ required: true, message: '请输入组件路径', trigger: 'blur' }],
+    permission: [{ required: true, message: '请输入权限标识', trigger: 'blur' }]
+  }
 
-<style lang="scss" scoped>
-.permission-menu {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 140px);
-  overflow: hidden;
-  padding: 0;
-
-  .filter-card {
-    margin-bottom: 16px;
-    border-radius: 12px;
-    border: none !important;
-    box-shadow: none !important;
-    flex-shrink: 0;
-
-    :deep(.el-card__body) {
-      padding: 12px 20px;
+  // 菜单树选项（用于上级菜单选择）
+  const menuTreeOptions = computed(() => {
+    // 过滤掉按钮类型的菜单，只显示目录和菜单
+    const filterButtons = (menus: Menu[]): Menu[] => {
+      return menus
+        .filter((menu) => menu.type !== 'button')
+        .map((menu) => ({
+          ...menu,
+          children: menu.children ? filterButtons(menu.children) : undefined
+        }))
     }
+    return filterButtons(tableData.value)
+  })
 
-    .filter-form {
-      margin-bottom: 0;
-      display: flex;
-      align-items: center;
+  // 获取菜单列表
+  const fetchMenuList = async () => {
+    loading.value = true
+    try {
+      const params = {
+        name: filterForm.name || undefined,
+        status: filterForm.status
+      }
+      const res = await getMenuList(params)
+      if (res.code === 200) {
+        tableData.value = res.data || []
+      }
+    } catch (error) {
+      console.error('获取菜单列表失败:', error)
+      ElMessage.error('获取菜单列表失败')
+    } finally {
+      loading.value = false
+    }
+  }
 
-      :deep(.el-form-item) {
-        margin-bottom: 0;
+  // 搜索
+  const handleSearch = () => {
+    fetchMenuList()
+  }
+
+  // 展开/折叠
+  const toggleExpand = () => {
+    isExpanded.value = !isExpanded.value
+    tableKey.value++
+  }
+
+  // 新增
+  const handleAdd = (parentId?: number) => {
+    dialogTitle.value = '新增菜单'
+    form.parentId = parentId
+    dialogVisible.value = true
+  }
+
+  // 编辑
+  const handleEdit = (row: Menu) => {
+    dialogTitle.value = '编辑菜单'
+    Object.assign(form, {
+      id: row.id,
+      type: row.type,
+      title: row.title,
+      name: row.name,
+      path: row.path,
+      component: row.component,
+      icon: row.icon,
+      permission: row.permission,
+      sort: row.sort,
+      status: row.status,
+      parentId: row.parentId
+    })
+    dialogVisible.value = true
+  }
+
+  // 删除
+  const handleDelete = async (row: Menu) => {
+    try {
+      await ElMessageBox.confirm('确定要删除该菜单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+
+      const res = await deleteMenu(row.id)
+      if (res.code === 200) {
+        ElMessage.success('删除成功')
+        fetchMenuList()
+      } else {
+        ElMessage.error(res.message || '删除失败')
+      }
+    } catch (error: any) {
+      if (error !== 'cancel') {
+        console.error('删除菜单失败:', error)
+        ElMessage.error(error.message || '删除失败')
       }
     }
   }
 
-  .table-card {
-    flex: 1;
+  // 状态切换
+  const handleStatusChange = async (row: Menu) => {
+    try {
+      const res = await updateMenuStatus(row.id, row.status!)
+      if (res.code === 200) {
+        ElMessage.success('状态更新成功')
+      } else {
+        ElMessage.error(res.message || '状态更新失败')
+        row.status = row.status === 1 ? 0 : 1
+      }
+    } catch (error) {
+      console.error('更新状态失败:', error)
+      ElMessage.error('状态更新失败')
+      row.status = row.status === 1 ? 0 : 1
+    }
+  }
+
+  // 提交表单
+  const handleSubmit = async () => {
+    if (!formRef.value) return
+
+    await formRef.value.validate(async (valid) => {
+      if (valid) {
+        try {
+          const data = { ...form }
+          let res
+          if (form.id) {
+            res = await updateMenu(form.id, data)
+          } else {
+            res = await addMenu(data)
+          }
+
+          if (res.code === 200) {
+            ElMessage.success(form.id ? '更新成功' : '新增成功')
+            dialogVisible.value = false
+            fetchMenuList()
+          } else {
+            ElMessage.error(res.message || '操作失败')
+          }
+        } catch (error) {
+          console.error('提交失败:', error)
+          ElMessage.error('操作失败')
+        }
+      }
+    })
+  }
+
+  // 重置表单
+  const resetForm = () => {
+    formRef.value?.resetFields()
+    Object.assign(form, {
+      id: undefined,
+      type: 'menu',
+      title: '',
+      name: '',
+      path: '',
+      component: '',
+      icon: '',
+      permission: '',
+      sort: 0,
+      status: 1,
+      parentId: undefined
+    })
+  }
+
+  // 初始化
+  onMounted(() => {
+    fetchMenuList()
+  })
+</script>
+
+<style lang="scss" scoped>
+  .permission-menu {
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 140px);
     overflow: hidden;
-    border-radius: 12px;
-    border: none !important;
-    box-shadow: none !important;
+    padding: 0;
 
-    :deep(.el-card__body) {
+    .filter-card {
+      margin-bottom: 16px;
+      border-radius: 12px;
+      border: none !important;
+      box-shadow: none !important;
+      flex-shrink: 0;
+
+      :deep(.el-card__body) {
+        padding: 12px 20px;
+      }
+
+      .filter-form {
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+
+        :deep(.el-form-item) {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .table-card {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      padding: 16px;
-    }
+      border-radius: 12px;
+      border: none !important;
+      box-shadow: none !important;
 
-    .table-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
+      :deep(.el-card__body) {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 16px;
+      }
 
-      .el-button:not(:first-child) {
-        margin-left: 12px;
+      .table-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .el-button:not(:first-child) {
+          margin-left: 12px;
+        }
+      }
+
+      .table-container {
+        flex: 1;
+        overflow: auto;
       }
     }
 
-    .table-container {
-      flex: 1;
-      overflow: auto;
+    .iconfont-sys {
+      font-size: 18px;
     }
   }
-
-  .iconfont-sys {
-    font-size: 18px;
-  }
-}
 </style>

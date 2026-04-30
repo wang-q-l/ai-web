@@ -57,6 +57,7 @@ template/
 ## 功能特性
 
 ### 公开页面
+
 - 首页 - 展示企业形象和核心特性
 - 产品中心 - 产品展示
 - 解决方案 - 解决方案展示
@@ -65,12 +66,14 @@ template/
 - 联系我们 - 联系方式和在线留言
 
 ### 用户中心（需要登录）
+
 - 个人资料 - 查看和编辑个人信息
 - 订单管理 - 查看订单列表
 - 我的收藏 - 管理收藏的内容
 - 消息通知 - 查看系统消息
 
 ### 认证功能
+
 - 用户登录
 - 用户注册
 - 路由守卫（自动跳转到登录页）
@@ -79,29 +82,21 @@ template/
 
 ### 安装依赖
 
-\`\`\`bash
-npm install
-\`\`\`
+\`\`\`bash npm install \`\`\`
 
 ### 开发模式
 
-\`\`\`bash
-npm run dev
-\`\`\`
+\`\`\`bash npm run dev \`\`\`
 
 访问 http://localhost:3000
 
 ### 构建生产版本
 
-\`\`\`bash
-npm run build
-\`\`\`
+\`\`\`bash npm run build \`\`\`
 
 ### 预览生产版本
 
-\`\`\`bash
-npm run preview
-\`\`\`
+\`\`\`bash npm run preview \`\`\`
 
 ## 配置说明
 
@@ -138,6 +133,7 @@ npm run preview
 ## 路由说明
 
 ### 公开路由
+
 - `/` - 首页
 - `/products` - 产品中心
 - `/solutions` - 解决方案
@@ -146,10 +142,12 @@ npm run preview
 - `/contact` - 联系我们
 
 ### 认证路由
+
 - `/login` - 登录
 - `/register` - 注册
 
 ### 用户路由（需要登录）
+
 - `/user/profile` - 个人资料
 - `/user/orders` - 订单管理
 - `/user/favorites` - 我的收藏

@@ -10,6 +10,7 @@ description: 官网前台框架生成器。采用 Vue3 + Element Plus + Vite + T
 根据用户描述的需求（导航结构、页面类型、主题颜色等）或提供的设计稿，快速生成一个完整的 Vue3 + Element Plus 官网前台项目，包含完整的项目结构、路由配置、Mock 数据，开箱即用。
 
 **支持两种输入方式：**
+
 1. 文字描述：用户直接描述需求
 2. 设计稿：分析图片中的布局结构、配色方案、导航结构
 
@@ -24,11 +25,13 @@ description: 官网前台框架生成器。采用 Vue3 + Element Plus + Vite + T
 从用户描述中提取以下信息：
 
 **必需信息：**
+
 - 网站类型：企业官网 / 产品官网 / 个人网站 / 其他
 - 功能列表：用户需要哪些功能页面（如：首页、产品展示、服务介绍、关于我们、新闻资讯、联系我们、用户中心等）
 - 权限要求：哪些页面需要登录才能访问，哪些页面公开访问
 
 **可选信息：**
+
 - 主题色：默认 `#409eff`
 - 导航栏背景色：默认 `#ffffff`
 - 导航栏文字色：默认 `#333333`
@@ -55,6 +58,7 @@ description: 官网前台框架生成器。采用 Vue3 + Element Plus + Vite + T
    - 账户设置
 
 **询问用户的问题：**
+
 1. "请描述您需要哪些功能页面？"
 2. "哪些页面需要用户登录后才能访问？"
 3. "是否需要用户注册/登录功能？"
@@ -95,6 +99,7 @@ description: 官网前台框架生成器。采用 Vue3 + Element Plus + Vite + T
    - 动画效果
 
 **分析步骤：**
+
 1. 仔细观察图片，识别布局结构
 2. 使用取色工具或视觉估计提取主要颜色
 3. 列出所有导航菜单项
@@ -102,6 +107,7 @@ description: 官网前台框架生成器。采用 Vue3 + Element Plus + Vite + T
 5. 向用户确认分析结果是否准确
 
 **注意事项：**
+
 - 页面内容区域的具体内容不需要实现，只需要创建基础页面结构
 - 重点关注布局结构、配色方案、导航结构
 - 如果图片不清晰或信息不完整，询问用户补充
@@ -119,11 +125,13 @@ cp -r assets/template/* ./
 ```
 
 **注意事项：**
+
 - 直接在当前目录创建项目文件，不要使用 `/path/to/new-project/` 这样的子目录
 - 如果当前目录已有文件，先确认是否可以覆盖
 - 项目创建后，所有文件应该与技能所在的 `.claude` 目录同级
 
 模板包含：
+
 - 完整的项目配置（package.json、vite.config.ts、tsconfig.json）
 - 基础布局组件（导航栏、页脚、主布局）
 - 路由配置（模块化路由）
@@ -142,7 +150,7 @@ cp -r assets/template/* ./
 ```css
 :root {
   /* 主题色 */
-  --primary-color: #409eff;  /* 根据需求修改 */
+  --primary-color: #409eff; /* 根据需求修改 */
 
   /* 导航栏 */
   --nav-bg-color: #ffffff;
@@ -168,20 +176,20 @@ const mainRoutes: RouteRecordRaw[] = [
     path: '/',
     name: 'Home',
     component: () => import('@/views/home/index.vue'),
-    meta: { title: '首页' },
+    meta: { title: '首页' }
   },
   {
     path: '/products',
     name: 'Products',
     component: () => import('@/views/products/index.vue'),
-    meta: { title: '产品中心' },
+    meta: { title: '产品中心' }
   },
   {
     path: '/about',
     name: 'About',
     component: () => import('@/views/about/index.vue'),
-    meta: { title: '关于我们' },
-  },
+    meta: { title: '关于我们' }
+  }
   // 根据需求添加更多路由...
 ]
 
@@ -199,7 +207,7 @@ export const menuConfig = [
   { name: '解决方案', path: '/solutions' },
   { name: '关于我们', path: '/about' },
   { name: '新闻动态', path: '/news' },
-  { name: '联系我们', path: '/contact' },
+  { name: '联系我们', path: '/contact' }
 ]
 ```
 
@@ -218,15 +226,15 @@ export const siteConfig = {
   contact: {
     phone: '400-xxx-xxxx',
     email: 'contact@example.com',
-    address: '公司地址',
+    address: '公司地址'
   },
 
   // 社交媒体
   social: {
     wechat: '',
     weibo: '',
-    linkedin: '',
-  },
+    linkedin: ''
+  }
 }
 ```
 
@@ -257,16 +265,16 @@ touch src/views/contact/index.vue
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const title = ref('页面标题')
+  const title = ref('页面标题')
 </script>
 
 <style scoped>
-.page-container {
-  padding: 40px 20px;
-  min-height: 500px;
-}
+  .page-container {
+    padding: 40px 20px;
+    min-height: 500px;
+  }
 </style>
 ```
 
@@ -275,23 +283,27 @@ const title = ref('页面标题')
 项目创建完成后，按以下顺序执行命令：
 
 **步骤 1: 安装依赖**
+
 ```bash
 cd /path/to/new-project
 npm install
 ```
 
 **步骤 2: 验证构建（重要！）**
+
 ```bash
 npm run build
 ```
 
 这一步非常重要，可以提前发现：
+
 - TypeScript 类型错误
 - 导入路径错误
 - 语法错误
 - 配置问题
 
 **如果构建失败：**
+
 1. 根据错误信息修复问题
 2. 再次运行 `npm run build` 验证
 3. 重复此过程直到构建成功
@@ -299,6 +311,7 @@ npm run build
 只有构建成功后，才进行下一步。
 
 **步骤 3: 启动开发服务器**
+
 ```bash
 npm run dev
 ```
@@ -425,6 +438,7 @@ project/
 ### Q: 如何添加新页面？
 
 A:
+
 1. 在 `src/views/` 下创建新页面目录和文件
 2. 在 `src/router/modules/` 中添加路由配置
 3. 在 `src/config/menu.ts` 中添加菜单项

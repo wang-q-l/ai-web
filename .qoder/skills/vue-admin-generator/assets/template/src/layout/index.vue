@@ -16,10 +16,7 @@
           router
         >
           <template v-for="route in menuRoutes" :key="route.path">
-            <el-menu-item
-              v-if="!route.children"
-              :index="'/' + route.path"
-            >
+            <el-menu-item v-if="!route.children" :index="'/' + route.path">
               <el-icon v-if="route.meta?.icon">
                 <component :is="route.meta.icon" />
               </el-icon>
@@ -79,107 +76,107 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+  import { ref, computed } from 'vue'
+  import { useRouter, useRoute } from 'vue-router'
+  import { ElMessage } from 'element-plus'
 
-const router = useRouter()
-const route = useRoute()
+  const router = useRouter()
+  const route = useRoute()
 
-const isCollapse = ref(false)
-const sidebarBg = ref('#001529')
-const sidebarText = ref('#ffffff')
-const sidebarActiveText = ref('#1890ff')
+  const isCollapse = ref(false)
+  const sidebarBg = ref('#001529')
+  const sidebarText = ref('#ffffff')
+  const sidebarActiveText = ref('#1890ff')
 
-const activeMenu = computed(() => route.path)
+  const activeMenu = computed(() => route.path)
 
-const menuRoutes = computed(() => {
-  return router.getRoutes().filter(route =>
-    route.path === '/' && route.children
-  )[0]?.children || []
-})
+  const menuRoutes = computed(() => {
+    return (
+      router.getRoutes().filter((route) => route.path === '/' && route.children)[0]?.children || []
+    )
+  })
 
-const toggleCollapse = () => {
-  isCollapse.value = !isCollapse.value
-}
-
-const handleCommand = (command: string) => {
-  if (command === 'logout') {
-    localStorage.removeItem('token')
-    ElMessage.success('退出成功')
-    router.push('/login')
+  const toggleCollapse = () => {
+    isCollapse.value = !isCollapse.value
   }
-}
+
+  const handleCommand = (command: string) => {
+    if (command === 'logout') {
+      localStorage.removeItem('token')
+      ElMessage.success('退出成功')
+      router.push('/login')
+    }
+  }
 </script>
 
 <style scoped>
-.layout-container {
-  width: 100%;
-  height: 100vh;
-}
+  .layout-container {
+    width: 100%;
+    height: 100vh;
+  }
 
-.el-container {
-  height: 100%;
-}
+  .el-container {
+    height: 100%;
+  }
 
-.sidebar {
-  background-color: v-bind(sidebarBg);
-  transition: width 0.3s;
-}
+  .sidebar {
+    background-color: v-bind(sidebarBg);
+    transition: width 0.3s;
+  }
 
-.logo {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+  .logo {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-.el-menu {
-  border-right: none;
-}
+  .el-menu {
+    border-right: none;
+  }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 0 20px;
-}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 20px;
+  }
 
-.header-left {
-  display: flex;
-  align-items: center;
-}
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
 
-.collapse-icon {
-  font-size: 20px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
+  .collapse-icon {
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
 
-.collapse-icon:hover {
-  color: #409eff;
-}
+  .collapse-icon:hover {
+    color: #409eff;
+  }
 
-.header-right {
-  display: flex;
-  align-items: center;
-}
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
 
-.main-content {
-  background-color: #f0f2f5;
-  padding: 20px;
-}
+  .main-content {
+    background-color: #f0f2f5;
+    padding: 20px;
+  }
 </style>

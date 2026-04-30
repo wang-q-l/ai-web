@@ -63,12 +63,14 @@ if (MOCK_ENABLED) {
       code: 200,
       data: {
         list: Mock.mock({
-          'list|10': [{
-            'id|+1': 1,
-            'name': '@cname',
-            'email': '@email',
-            'createTime': '@datetime'
-          }]
+          'list|10': [
+            {
+              'id|+1': 1,
+              name: '@cname',
+              email: '@email',
+              createTime: '@datetime'
+            }
+          ]
         }).list,
         total: 100
       }
@@ -132,12 +134,12 @@ export default defineConfig({
 
 ```typescript
 Mock.mock({
-  'string': '@string',
-  'number': '@integer(1, 100)',
-  'boolean': '@boolean',
-  'date': '@date',
-  'datetime': '@datetime',
-  'now': '@now',
+  string: '@string',
+  number: '@integer(1, 100)',
+  boolean: '@boolean',
+  date: '@date',
+  datetime: '@datetime',
+  now: '@now'
 })
 ```
 
@@ -145,10 +147,10 @@ Mock.mock({
 
 ```typescript
 Mock.mock({
-  'name': '@cname',          // 中文姓名
-  'title': '@ctitle',        // 中文标题
-  'sentence': '@csentence',  // 中文句子
-  'paragraph': '@cparagraph', // 中文段落
+  name: '@cname', // 中文姓名
+  title: '@ctitle', // 中文标题
+  sentence: '@csentence', // 中文句子
+  paragraph: '@cparagraph' // 中文段落
 })
 ```
 
@@ -156,10 +158,10 @@ Mock.mock({
 
 ```typescript
 Mock.mock({
-  'email': '@email',
-  'url': '@url',
-  'ip': '@ip',
-  'domain': '@domain',
+  email: '@email',
+  url: '@url',
+  ip: '@ip',
+  domain: '@domain'
 })
 ```
 
@@ -167,8 +169,8 @@ Mock.mock({
 
 ```typescript
 Mock.mock({
-  'avatar': '@image("200x200", "#50B347", "#FFF", "Avatar")',
-  'cover': '@image("800x600")',
+  avatar: '@image("200x200", "#50B347", "#FFF", "Avatar")',
+  cover: '@image("800x600")'
 })
 ```
 
@@ -176,11 +178,14 @@ Mock.mock({
 
 ```typescript
 Mock.mock({
-  'list|10': [{              // 生成 10 条数据
-    'id|+1': 1,             // id 自增
-    'name': '@cname',
-    'age|18-60': 1,         // 18-60 之间的随机数
-  }]
+  'list|10': [
+    {
+      // 生成 10 条数据
+      'id|+1': 1, // id 自增
+      name: '@cname',
+      'age|18-60': 1 // 18-60 之间的随机数
+    }
+  ]
 })
 ```
 

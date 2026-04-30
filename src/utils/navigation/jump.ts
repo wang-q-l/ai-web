@@ -46,7 +46,9 @@ export const handleMenuJump = (item: AppRouteRecord, jumpToFirst: boolean = fals
     }
     // 如果所有子菜单都隐藏，返回第一个（带完整路径）
     const firstItem = items[0]
-    const fullPath = firstItem.path.startsWith('/') ? firstItem.path : `${parentPath}/${firstItem.path}`
+    const fullPath = firstItem.path.startsWith('/')
+      ? firstItem.path
+      : `${parentPath}/${firstItem.path}`
     return { ...firstItem, path: fullPath }
   }
 

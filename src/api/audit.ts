@@ -143,11 +143,7 @@ export function getProjectStages(projectId: number) {
 }
 
 /** 保存阶段内容 */
-export function saveStageContent(
-  projectId: number,
-  stageId: number,
-  data: Partial<ProjectStage>
-) {
+export function saveStageContent(projectId: number, stageId: number, data: Partial<ProjectStage>) {
   if (USE_MOCK) {
     return new Promise<any>((resolve, reject) => {
       setTimeout(() => {

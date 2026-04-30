@@ -28,11 +28,13 @@ src/components/
 **定义**：与业务逻辑无关的基础 UI 组件，可在任何项目中复用。
 
 **适用场景**：
+
 - 自定义按钮、输入框等基础组件
 - 图标、加载动画等视觉元素
 - 空状态、错误提示等通用状态组件
 
 **示例**：
+
 ```vue
 <!-- components/common/CustomButton.vue -->
 <template>
@@ -42,21 +44,21 @@ src/components/
 </template>
 
 <script setup lang="ts">
-interface Props {
-  type?: 'primary' | 'success' | 'warning' | 'danger'
-}
+  interface Props {
+    type?: 'primary' | 'success' | 'warning' | 'danger'
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  type: 'primary'
-})
+  const props = withDefaults(defineProps<Props>(), {
+    type: 'primary'
+  })
 
-const emit = defineEmits<{
-  click: []
-}>()
+  const emit = defineEmits<{
+    click: []
+  }>()
 
-const handleClick = () => {
-  emit('click')
-}
+  const handleClick = () => {
+    emit('click')
+  }
 </script>
 ```
 
@@ -65,12 +67,14 @@ const handleClick = () => {
 **定义**：页面布局相关的组件，如头部、侧边栏等。
 
 **适用场景**：
+
 - 页面头部导航
 - 侧边栏菜单
 - 面包屑导航
 - 页面容器
 
 **示例**：
+
 ```vue
 <!-- components/layout/AppHeader.vue -->
 <template>
@@ -83,11 +87,11 @@ const handleClick = () => {
 </template>
 
 <script setup lang="ts">
-interface Props {
-  title: string
-}
+  interface Props {
+    title: string
+  }
 
-defineProps<Props>()
+  defineProps<Props>()
 </script>
 ```
 
@@ -96,12 +100,14 @@ defineProps<Props>()
 **定义**：与具体业务逻辑相关的组件，封装特定业务功能。
 
 **适用场景**：
+
 - 用户信息卡片
 - 数据表格
 - 搜索表单
 - 统计卡片
 
 **示例**：
+
 ```vue
 <!-- components/business/UserCard.vue -->
 <template>
@@ -117,33 +123,36 @@ defineProps<Props>()
 </template>
 
 <script setup lang="ts">
-interface User {
-  name: string
-  email: string
-  role: string
-}
+  interface User {
+    name: string
+    email: string
+    role: string
+  }
 
-interface Props {
-  user: User
-}
+  interface Props {
+    user: User
+  }
 
-defineProps<Props>()
+  defineProps<Props>()
 </script>
 ```
 
 ## 组件命名规范
 
 ### 文件命名
+
 - 使用 PascalCase（大驼峰）
 - 多个单词组合，清晰表达组件用途
 - 避免使用缩写
 
 **正确示例**：
+
 - `CustomButton.vue`
 - `UserProfileCard.vue`
 - `DataTable.vue`
 
 **错误示例**：
+
 - `button.vue`（应使用 PascalCase）
 - `usrCard.vue`（避免缩写）
 - `comp1.vue`（名称不清晰）
@@ -156,16 +165,16 @@ defineProps<Props>()
 
 ```vue
 <script setup lang="ts">
-interface Props {
-  title: string
-  count?: number
-  disabled?: boolean
-}
+  interface Props {
+    title: string
+    count?: number
+    disabled?: boolean
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  count: 0,
-  disabled: false
-})
+  const props = withDefaults(defineProps<Props>(), {
+    count: 0,
+    disabled: false
+  })
 </script>
 ```
 
@@ -175,11 +184,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 ```vue
 <script setup lang="ts">
-const emit = defineEmits<{
-  update: [value: string]
-  delete: [id: number]
-  change: [data: { name: string; value: any }]
-}>()
+  const emit = defineEmits<{
+    update: [value: string]
+    delete: [id: number]
+    change: [data: { name: string; value: any }]
+  }>()
 </script>
 ```
 
@@ -189,10 +198,10 @@ const emit = defineEmits<{
 
 ```vue
 <style scoped>
-.user-card {
-  padding: 20px;
-  border-radius: 8px;
-}
+  .user-card {
+    padding: 20px;
+    border-radius: 8px;
+  }
 </style>
 ```
 
@@ -221,14 +230,14 @@ const emit = defineEmits<{
 
 ```vue
 <script setup lang="ts">
-// 导入通用组件
-import CustomButton from '@/components/common/CustomButton.vue'
+  // 导入通用组件
+  import CustomButton from '@/components/common/CustomButton.vue'
 
-// 导入布局组件
-import AppHeader from '@/components/layout/AppHeader.vue'
+  // 导入布局组件
+  import AppHeader from '@/components/layout/AppHeader.vue'
 
-// 导入业务组件
-import UserCard from '@/components/business/UserCard.vue'
+  // 导入业务组件
+  import UserCard from '@/components/business/UserCard.vue'
 </script>
 ```
 
@@ -245,9 +254,7 @@ import UserCard from '@/components/business/UserCard.vue'
 
     <UserCard :user="userData" />
 
-    <CustomButton type="primary" @click="handleClick">
-      提交
-    </CustomButton>
+    <CustomButton type="primary" @click="handleClick"> 提交 </CustomButton>
   </div>
 </template>
 ```
@@ -275,6 +282,7 @@ import UserCard from '@/components/business/UserCard.vue'
 ### Q: 组件应该放在哪个目录？
 
 **A**: 根据组件的用途判断：
+
 - 与业务无关的基础组件 → `common/`
 - 页面布局相关 → `layout/`
 - 特定业务功能 → `business/`
@@ -282,6 +290,7 @@ import UserCard from '@/components/business/UserCard.vue'
 ### Q: 组件太多怎么办？
 
 **A**: 在各目录下继续细分子目录：
+
 ```
 components/
 └── business/

@@ -22,10 +22,10 @@ import { viteMockServe } from 'vite-plugin-mock'
 export default defineConfig({
   plugins: [
     viteMockServe({
-      mockPath: 'mock',      // mock 文件目录
-      enable: true,          // 是否启用
-    }),
-  ],
+      mockPath: 'mock', // mock 文件目录
+      enable: true // 是否启用
+    })
+  ]
 })
 ```
 
@@ -73,19 +73,19 @@ export default [
               id: 1,
               username: 'admin',
               nickname: '管理员',
-              avatar: 'https://via.placeholder.com/80',
-            },
+              avatar: 'https://via.placeholder.com/80'
+            }
           },
-          message: '登录成功',
+          message: '登录成功'
         }
       } else {
         return {
           code: 400,
           data: null,
-          message: '用户名或密码错误',
+          message: '用户名或密码错误'
         }
       }
-    },
+    }
   },
   // 获取用户信息
   {
@@ -100,12 +100,12 @@ export default [
           nickname: '管理员',
           avatar: 'https://via.placeholder.com/80',
           email: 'admin@example.com',
-          phone: '13800138000',
+          phone: '13800138000'
         },
-        message: '获取成功',
+        message: '获取成功'
       }
-    },
-  },
+    }
+  }
 ] as MockMethod[]
 ```
 
@@ -133,9 +133,9 @@ export default [
             desc: '@csentence(10, 30)',
             'price|10-500.2': 1,
             image: 'https://via.placeholder.com/80',
-            'stock|10-1000': 1,
-          },
-        ],
+            'stock|10-1000': 1
+          }
+        ]
       })
 
       return {
@@ -145,11 +145,11 @@ export default [
           total,
           page: Number(page),
           pageSize: Number(pageSize),
-          hasMore: Number(page) * Number(pageSize) < total,
+          hasMore: Number(page) * Number(pageSize) < total
         },
-        message: '获取成功',
+        message: '获取成功'
       }
-    },
+    }
   },
   // 商品详情
   {
@@ -170,13 +170,13 @@ export default [
           images: [
             'https://via.placeholder.com/300',
             'https://via.placeholder.com/300',
-            'https://via.placeholder.com/300',
-          ],
+            'https://via.placeholder.com/300'
+          ]
         }),
-        message: '获取成功',
+        message: '获取成功'
       }
-    },
-  },
+    }
+  }
 ] as MockMethod[]
 ```
 
@@ -241,33 +241,34 @@ import Mock from 'mockjs'
 // 生成随机数据
 const data = Mock.mock({
   // 字符串
-  'title': '@ctitle(5, 15)',        // 中文标题，5-15 个字
-  'name': '@cname',                 // 中文姓名
-  'email': '@email',                // 邮箱
-  'url': '@url',                    // URL
+  title: '@ctitle(5, 15)', // 中文标题，5-15 个字
+  name: '@cname', // 中文姓名
+  email: '@email', // 邮箱
+  url: '@url', // URL
 
   // 数字
-  'age|18-60': 1,                   // 18-60 之间的整数
-  'price|10-500.2': 1,              // 10-500 之间的小数，保留 2 位
+  'age|18-60': 1, // 18-60 之间的整数
+  'price|10-500.2': 1, // 10-500 之间的小数，保留 2 位
 
   // 布尔值
-  'isVip|1': true,                  // 随机布尔值
+  'isVip|1': true, // 随机布尔值
 
   // 日期
-  'date': '@date',                  // 日期
-  'time': '@time',                  // 时间
-  'datetime': '@datetime',          // 日期时间
+  date: '@date', // 日期
+  time: '@time', // 时间
+  datetime: '@datetime', // 日期时间
 
   // 图片
-  'image': '@image(200x200)',       // 图片
+  image: '@image(200x200)', // 图片
 
   // 数组
-  'list|10': [                      // 生成 10 个元素
+  'list|10': [
+    // 生成 10 个元素
     {
-      'id|+1': 1,                   // 自增 id
-      'title': '@ctitle',
-    },
-  ],
+      'id|+1': 1, // 自增 id
+      title: '@ctitle'
+    }
+  ]
 })
 ```
 
@@ -275,37 +276,37 @@ const data = Mock.mock({
 
 ```typescript
 // 中文
-'@ctitle'        // 中文标题
-'@cname'         // 中文姓名
-'@csentence'     // 中文句子
-'@cparagraph'    // 中文段落
+'@ctitle' // 中文标题
+'@cname' // 中文姓名
+'@csentence' // 中文句子
+'@cparagraph' // 中文段落
 
 // 英文
-'@title'         // 英文标题
-'@name'          // 英文姓名
-'@sentence'      // 英文句子
-'@paragraph'     // 英文段落
+'@title' // 英文标题
+'@name' // 英文姓名
+'@sentence' // 英文句子
+'@paragraph' // 英文段落
 
 // 数字
-'@integer(1, 100)'    // 1-100 的整数
-'@float(1, 100, 2)'   // 1-100 的小数，2 位小数
+'@integer(1, 100)' // 1-100 的整数
+'@float(1, 100, 2)' // 1-100 的小数，2 位小数
 
 // 日期
-'@date'          // 日期 YYYY-MM-DD
-'@time'          // 时间 HH:mm:ss
-'@datetime'      // 日期时间
-'@now'           // 当前时间
+'@date' // 日期 YYYY-MM-DD
+'@time' // 时间 HH:mm:ss
+'@datetime' // 日期时间
+'@now' // 当前时间
 
 // 图片
-'@image(200x200)'     // 200x200 的图片
-'@image(200x200, #ff0000)'  // 带背景色
+'@image(200x200)' // 200x200 的图片
+'@image(200x200, #ff0000)' // 带背景色
 
 // 其他
-'@email'         // 邮箱
-'@url'           // URL
-'@ip'            // IP 地址
-'@id'            // ID
-'@guid'          // GUID
+'@email' // 邮箱
+'@url' // URL
+'@ip' // IP 地址
+'@id' // ID
+'@guid' // GUID
 ```
 
 ## 延迟响应
@@ -461,9 +462,9 @@ export default defineConfig({
   plugins: [
     viteMockServe({
       mockPath: 'mock',
-      enable: process.env.NODE_ENV === 'development',  // 只在开发环境启用
-    }),
-  ],
+      enable: process.env.NODE_ENV === 'development' // 只在开发环境启用
+    })
+  ]
 })
 ```
 
@@ -472,10 +473,11 @@ export default defineConfig({
 ```typescript
 // src/utils/request.ts
 const request = axios.create({
-  baseURL: process.env.NODE_ENV === 'development'
-    ? '/api'                    // 开发环境使用 Mock
-    : 'https://api.example.com', // 生产环境使用真实 API
-  timeout: 10000,
+  baseURL:
+    process.env.NODE_ENV === 'development'
+      ? '/api' // 开发环境使用 Mock
+      : 'https://api.example.com', // 生产环境使用真实 API
+  timeout: 10000
 })
 ```
 

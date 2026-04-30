@@ -501,4 +501,3 @@ export interface StatisticsData {
     date: string
   }[]
 }
-

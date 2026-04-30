@@ -16,21 +16,21 @@ import type { AppRouteRecord } from '@/types'
 export const exampleRoutes: AppRouteRecord = {
   path: '/example',
   name: 'Example',
-  component: () => import('@/views/index/index.vue'),  // 固定写法
+  component: () => import('@/views/index/index.vue'), // 固定写法
   meta: {
-    title: 'menus.example.title',  // 菜单翻译键
-    icon: '&#xe88a;',  // 图标 Unicode
-    isFirstLevel: true  // 标识为一级菜单
+    title: 'menus.example.title', // 菜单翻译键
+    icon: '&#xe88a;', // 图标 Unicode
+    isFirstLevel: true // 标识为一级菜单
   },
   children: [
     {
-      path: '',  // 空字符串
+      path: '', // 空字符串
       name: 'ExamplePage',
       component: () => import('@/views/example/index.vue'),
       meta: {
         title: 'menus.example.title',
-        keepAlive: true,  // 页面缓存
-        isHide: true  // 隐藏子路由，避免菜单重复
+        keepAlive: true, // 页面缓存
+        isHide: true // 隐藏子路由，避免菜单重复
       }
     }
   ]
@@ -40,11 +40,13 @@ export const exampleRoutes: AppRouteRecord = {
 ### 关键点
 
 1. **父路由 component 固定写法**
+
    ```typescript
    component: () => import('@/views/index/index.vue')
    ```
 
 2. **子路由 path 为空字符串**
+
    ```typescript
    path: ''
    ```
@@ -58,19 +60,19 @@ export const exampleRoutes: AppRouteRecord = {
      ```typescript
      children: [
        {
-         path: '',  // 空路径子路由，正常
+         path: '', // 空路径子路由，正常
          name: 'ExamplePage',
          component: () => import('@/views/example/index.vue'),
          meta: { isHide: true }
        },
        {
-         path: 'create/new',  // ✅ 正确：包含 /
+         path: 'create/new', // ✅ 正确：包含 /
          name: 'ExampleCreate',
          component: () => import('@/views/example/create.vue'),
          meta: { isHide: true }
        },
        {
-         path: 'edit/:id',  // ✅ 正确：包含 /
+         path: 'edit/:id', // ✅ 正确：包含 /
          name: 'ExampleEdit',
          component: () => import('@/views/example/create.vue'),
          meta: { isHide: true }
@@ -111,14 +113,14 @@ export const questionBankRoutes: AppRouteRecord = {
       }
     },
     {
-      path: 'questions/:bankId',  // 带参数的路径
+      path: 'questions/:bankId', // 带参数的路径
       name: 'QuestionManagement',
       component: () => import('@/views/question-bank/question-list.vue'),
       meta: {
         title: 'menus.questionBank.questionManagement',
         keepAlive: true,
         isHide: true,
-        activePath: '/question-bank'  // 指定激活的菜单路径
+        activePath: '/question-bank' // 指定激活的菜单路径
       }
     }
   ]
@@ -128,17 +130,21 @@ export const questionBankRoutes: AppRouteRecord = {
 ### 关键点
 
 1. **路由参数**
+
    ```typescript
    path: 'questions/:bankId'
    ```
 
 2. **activePath 配置**
+
    ```typescript
    activePath: '/question-bank'
    ```
+
    确保访问二级页面时，一级菜单保持高亮状态。
 
 3. **页面中获取参数**
+
    ```typescript
    import { useRoute } from 'vue-router'
 
@@ -147,6 +153,7 @@ export const questionBankRoutes: AppRouteRecord = {
    ```
 
 4. **返回上级页面**
+
    ```typescript
    import { useRouter } from 'vue-router'
 
@@ -170,8 +177,8 @@ export const exampleRoutes: AppRouteRecord = {
     title: 'menus.example.title',
     icon: '&#xe88a;',
     isFirstLevel: true,
-    openInNewWindow: true,  // 启用新窗口打开
-    newWindowPath: '/example-full'  // 新窗口路径
+    openInNewWindow: true, // 启用新窗口打开
+    newWindowPath: '/example-full' // 新窗口路径
   },
   children: [
     {
@@ -215,7 +222,7 @@ import { exampleRoutes } from './modules/example'
 
 // 动态路由列表
 const dynamicRoutes: AppRouteRecord[] = [
-  exampleRoutes,
+  exampleRoutes
   // ... 其他路由
 ]
 ```
@@ -260,20 +267,24 @@ const dynamicRoutes: AppRouteRecord[] = [
 ## 常见问题
 
 ### 1. 菜单不显示
+
 - **检查子路由路径是否包含 `/`**：如果子路由路径不包含 `/`（如 `path: 'create'`），会导致父菜单被过滤掉。应改为包含 `/` 的路径（如 `path: 'create/new'` 或 `path: 'edit/:id'`）
 - 检查 `isHide` 是否设置正确
 - 检查路由是否正确注册
 - 检查翻译文件是否配置
 
 ### 2. 二级页面菜单不高亮
+
 - 确保配置了 `activePath`
 - `activePath` 值应为一级菜单的路径
 
 ### 3. 页面缓存不生效
+
 - 确保配置了 `keepAlive: true`
 - 确保组件使用了 `defineOptions({ name: 'ComponentName' })`
 
 ### 4. 路由参数获取失败
+
 - 使用 `useRoute()` 而不是 `this.$route`
 - 参数类型转换：`Number(route.params.id)`
 

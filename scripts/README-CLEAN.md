@@ -9,20 +9,25 @@
 脚本会清理以下内容：
 
 ### 1. Views（页面）
+
 - `src/views/question-bank/` - 题库管理示例页面
 
 ### 2. Router（路由）
+
 - `src/router/modules/question-bank.ts` - 题库管理路由
 - **自动更新** `src/router/modules/index.ts` - 移除已删除路由的导入和引用
 
 ### 3. API（接口）
+
 - `src/api/question-bank.ts` - 题库管理 API
 - `src/api/question.ts` - 题目 API
 
 ### 4. Mock（模拟数据）
+
 - `src/mock/question-bank.ts` - 题库管理 Mock 数据
 
 ### 5. I18n（国际化）
+
 - `src/locales/langs/zh.json` 中的 `menus.questionBank`
 - `src/locales/langs/en.json` 中的 `menus.questionBank`
 
@@ -85,8 +90,8 @@ npm run clean:demo
 const DEMO_MODULES = {
   views: [
     'question-bank',
-    'your-module'  // 添加你的模块
-  ],
+    'your-module' // 添加你的模块
+  ]
   // ...
 }
 ```
@@ -99,9 +104,9 @@ const DEMO_MODULES = {
 const KEEP_MODULES = {
   views: [
     'auth',
-    'exception',
+    'exception'
     // 添加或删除需要保留的模块
-  ],
+  ]
   // ...
 }
 ```
@@ -111,6 +116,7 @@ const KEEP_MODULES = {
 清理完成后，建议执行以下操作：
 
 1. **验证构建**：
+
    ```bash
    npm run build
    ```
@@ -132,10 +138,13 @@ const KEEP_MODULES = {
 ## 常见问题
 
 ### Q: 清理后项目无法启动？
+
 A: 检查是否有其他文件引用了被删除的模块，搜索项目中的 `question-bank` 关键词。
 
 ### Q: 如何恢复被删除的文件？
+
 A: 使用 git 恢复：
+
 ```bash
 git checkout HEAD -- src/views/question-bank
 git checkout HEAD -- src/router/modules/question-bank.ts
@@ -143,7 +152,9 @@ git checkout HEAD -- src/router/modules/question-bank.ts
 ```
 
 ### Q: 可以只清理部分内容吗？
+
 A: 可以，编辑脚本注释掉不需要清理的部分：
+
 ```javascript
 // cleanViews()     // 注释掉不清理 views
 cleanRouter()

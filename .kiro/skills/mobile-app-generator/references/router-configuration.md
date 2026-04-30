@@ -30,15 +30,12 @@ import baseRoutes from './modules/base'
 import tabbarRoutes from './modules/tabbar'
 
 // 合并所有路由
-const routes: RouteRecordRaw[] = [
-  ...baseRoutes,
-  tabbarRoutes,
-]
+const routes: RouteRecordRaw[] = [...baseRoutes, tabbarRoutes]
 
 // 创建路由实例
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
 export default router
@@ -59,8 +56,8 @@ const baseRoutes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
-    meta: { title: '登录' },
-  },
+    meta: { title: '登录' }
+  }
 ]
 
 export default baseRoutes
@@ -85,10 +82,10 @@ const tabbarRoutes: RouteRecordRaw = {
       path: 'home',
       name: 'Home',
       component: () => import('@/views/home/index.vue'),
-      meta: { title: '首页', icon: 'home-o', tabbar: true },
-    },
+      meta: { title: '首页', icon: 'home-o', tabbar: true }
+    }
     // 更多 Tabbar 页面...
-  ],
+  ]
 }
 
 export default tabbarRoutes
@@ -109,8 +106,8 @@ const userRoutes: RouteRecordRaw[] = [
     path: '/user/profile',
     name: 'UserProfile',
     component: () => import('@/views/user/profile.vue'),
-    meta: { title: '个人资料' },
-  },
+    meta: { title: '个人资料' }
+  }
 ]
 
 export default userRoutes
@@ -121,7 +118,7 @@ import userRoutes from './modules/user'
 const routes: RouteRecordRaw[] = [
   ...baseRoutes,
   tabbarRoutes,
-  ...userRoutes,  // 添加新模块
+  ...userRoutes // 添加新模块
 ]
 ```
 
@@ -138,7 +135,7 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
-    meta: { title: '登录' },
+    meta: { title: '登录' }
   },
   // Tabbar 路由（嵌套路由）
   {
@@ -151,22 +148,22 @@ const routes: RouteRecordRaw[] = [
         path: 'home',
         name: 'Home',
         component: () => import('@/views/home/index.vue'),
-        meta: { title: '首页', icon: 'home-o', tabbar: true },
+        meta: { title: '首页', icon: 'home-o', tabbar: true }
       },
       // 二级页面（不显示 Tabbar）
       {
         path: 'detail/:id',
         name: 'Detail',
         component: () => import('@/views/detail/index.vue'),
-        meta: { title: '详情', tabbar: false },
-      },
-    ],
-  },
+        meta: { title: '详情', tabbar: false }
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
 export default router
@@ -204,48 +201,48 @@ meta: {
 </template>
 
 <style>
-/* 左滑动画（前进） */
-.slide-left-enter-active,
-.slide-left-leave-active {
-  transition: all 0.3s ease;
-}
+  /* 左滑动画（前进） */
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    transition: all 0.3s ease;
+  }
 
-.slide-left-enter-from {
-  transform: translateX(100%);
-  opacity: 0;
-}
+  .slide-left-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 
-.slide-left-leave-to {
-  transform: translateX(-100%);
-  opacity: 0;
-}
+  .slide-left-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 
-/* 右滑动画（后退） */
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: all 0.3s ease;
-}
+  /* 右滑动画（后退） */
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    transition: all 0.3s ease;
+  }
 
-.slide-right-enter-from {
-  transform: translateX(-100%);
-  opacity: 0;
-}
+  .slide-right-enter-from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 
-.slide-right-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
+  .slide-right-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 
-/* 淡入淡出动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
+  /* 淡入淡出动画 */
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>
 ```
 
@@ -259,7 +256,7 @@ router.beforeEach((to, from, next) => {
   const fromDepth = from.path.split('/').length
 
   if (toDepth > fromDepth) {
-    to.meta.transition = 'slide-left'  // 前进
+    to.meta.transition = 'slide-left' // 前进
   } else {
     to.meta.transition = 'slide-right' // 后退
   }
@@ -301,7 +298,7 @@ import { showToast } from 'vant'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
 // 全局前置守卫
@@ -349,17 +346,18 @@ export default router
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+  import { computed } from 'vue'
+  import { useRouter } from 'vue-router'
 
-const router = useRouter()
+  const router = useRouter()
 
-// 需要缓存的页面
-const cachedViews = computed(() => {
-  return router.getRoutes()
-    .filter(route => route.meta.keepAlive)
-    .map(route => route.name as string)
-})
+  // 需要缓存的页面
+  const cachedViews = computed(() => {
+    return router
+      .getRoutes()
+      .filter((route) => route.meta.keepAlive)
+      .map((route) => route.name as string)
+  })
 </script>
 ```
 
@@ -383,18 +381,18 @@ const cachedViews = computed(() => {
 
 ```vue
 <script setup lang="ts">
-import { onActivated, onDeactivated } from 'vue'
+  import { onActivated, onDeactivated } from 'vue'
 
-// 页面激活时
-onActivated(() => {
-  console.log('页面激活')
-  // 刷新数据
-})
+  // 页面激活时
+  onActivated(() => {
+    console.log('页面激活')
+    // 刷新数据
+  })
 
-// 页面失活时
-onDeactivated(() => {
-  console.log('页面失活')
-})
+  // 页面失活时
+  onDeactivated(() => {
+    console.log('页面失活')
+  })
 </script>
 ```
 
@@ -490,13 +488,13 @@ router.replace('/home')
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
 
-const router = useRouter()
+  const router = useRouter()
 
-const goDetail = () => {
-  router.push('/detail/1')
-}
+  const goDetail = () => {
+    router.push('/detail/1')
+  }
 </script>
 ```
 

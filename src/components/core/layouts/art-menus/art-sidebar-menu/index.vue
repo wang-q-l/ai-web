@@ -7,9 +7,20 @@
   >
     <!-- 双列菜单（左侧） -->
     <div v-if="isDualMenu" class="dual-menu-left" :style="{ background: getMenuTheme.background }">
-      <ArtLogo v-if="frameworkType !== FrameworkTypeEnum.FRAMEWORK_TWO" class="logo" @click="navigateToHome" />
+      <ArtLogo
+        v-if="frameworkType !== FrameworkTypeEnum.FRAMEWORK_TWO"
+        class="logo"
+        @click="navigateToHome"
+      />
 
-      <ElScrollbar :style="{ height: frameworkType === FrameworkTypeEnum.FRAMEWORK_TWO ? 'calc(100% - 75px)' : 'calc(100% - 135px)' }">
+      <ElScrollbar
+        :style="{
+          height:
+            frameworkType === FrameworkTypeEnum.FRAMEWORK_TWO
+              ? 'calc(100% - 75px)'
+              : 'calc(100% - 135px)'
+        }"
+      >
         <ul>
           <li v-for="menu in firstLevelMenus" :key="menu.path" @click="handleMenuJump(menu, true)">
             <ElTooltip
@@ -62,7 +73,7 @@
     >
       <ElScrollbar style="height: calc(100% - 10px)">
         <!-- 框架二模式下的顶部间距 -->
-        <div v-if="frameworkType === FrameworkTypeEnum.FRAMEWORK_TWO" style="height: 20px;"></div>
+        <div v-if="frameworkType === FrameworkTypeEnum.FRAMEWORK_TWO" style="height: 20px"></div>
 
         <div
           v-if="frameworkType !== FrameworkTypeEnum.FRAMEWORK_TWO"
@@ -136,8 +147,15 @@
   const router = useRouter()
   const settingStore = useSettingStore()
 
-  const { getMenuOpenWidth, menuType, uniqueOpened, dualMenuShowText, menuOpen, getMenuTheme, frameworkType } =
-    storeToRefs(settingStore)
+  const {
+    getMenuOpenWidth,
+    menuType,
+    uniqueOpened,
+    dualMenuShowText,
+    menuOpen,
+    getMenuTheme,
+    frameworkType
+  } = storeToRefs(settingStore)
 
   // 组件内部状态
   const defaultOpenedMenus = ref<string[]>([])

@@ -19,17 +19,17 @@
 </template>
 
 <script setup lang="ts">
-import ListPage from '@/components/ListPage.vue'
+  import ListPage from '@/components/ListPage.vue'
 </script>
 ```
 
 ### Props 参数
 
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| title | string | '列表页' | 页面标题 |
-| showBack | boolean | false | 是否显示返回按钮 |
-| fetchApi | string | - | API 接口地址 |
+| 参数     | 类型    | 默认值   | 说明             |
+| -------- | ------- | -------- | ---------------- |
+| title    | string  | '列表页' | 页面标题         |
+| showBack | boolean | false    | 是否显示返回按钮 |
+| fetchApi | string  | -        | API 接口地址     |
 
 ### 自定义列表项
 
@@ -39,11 +39,7 @@ import ListPage from '@/components/ListPage.vue'
     <van-nav-bar :title="title" :left-arrow="showBack" @click-left="onBack" />
 
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list
-        v-model:loading="loading"
-        :finished="finished"
-        @load="onLoad"
-      >
+      <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
         <!-- 自定义列表项 -->
         <van-card
           v-for="item in list"
@@ -59,9 +55,9 @@ import ListPage from '@/components/ListPage.vue'
 </template>
 
 <script setup lang="ts">
-import { useList } from '@/composables/useList'
+  import { useList } from '@/composables/useList'
 
-const { list, loading, finished, refreshing, onLoad, onRefresh } = useList()
+  const { list, loading, finished, refreshing, onLoad, onRefresh } = useList()
 </script>
 ```
 
@@ -81,7 +77,7 @@ const { list, loading, finished, refreshing, onLoad, onRefresh } = useList()
 </template>
 
 <script setup lang="ts">
-import FormPage from '@/components/FormPage.vue'
+  import FormPage from '@/components/FormPage.vue'
 </script>
 ```
 
@@ -121,36 +117,34 @@ import FormPage from '@/components/FormPage.vue'
       </van-cell-group>
 
       <div class="submit-btn">
-        <van-button round block type="primary" native-type="submit">
-          保存
-        </van-button>
+        <van-button round block type="primary" native-type="submit"> 保存 </van-button>
       </div>
     </van-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { showToast } from 'vant'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { showToast } from 'vant'
 
-const router = useRouter()
+  const router = useRouter()
 
-const formData = ref({
-  name: '',
-  phone: '',
-  address: '',
-  isDefault: false,
-})
+  const formData = ref({
+    name: '',
+    phone: '',
+    address: '',
+    isDefault: false
+  })
 
-const onSubmit = async () => {
-  showToast('保存成功')
-  router.back()
-}
+  const onSubmit = async () => {
+    showToast('保存成功')
+    router.back()
+  }
 
-const onBack = () => {
-  router.back()
-}
+  const onBack = () => {
+    router.back()
+  }
 </script>
 ```
 
@@ -170,7 +164,7 @@ const onBack = () => {
 </template>
 
 <script setup lang="ts">
-import DetailPage from '@/components/DetailPage.vue'
+  import DetailPage from '@/components/DetailPage.vue'
 </script>
 ```
 
@@ -235,7 +229,7 @@ import DetailPage from '@/components/DetailPage.vue'
 </template>
 
 <script setup lang="ts">
-import SearchPage from '@/components/SearchPage.vue'
+  import SearchPage from '@/components/SearchPage.vue'
 </script>
 ```
 
@@ -263,19 +257,17 @@ import SearchPage from '@/components/SearchPage.vue'
         :key="item"
         plain
         size="large"
-        @click="keyword = item; onSearch()"
+        @click="
+          keyword = item
+          onSearch()
+        "
       >
         {{ item }}
       </van-tag>
     </div>
 
     <!-- 搜索结果 -->
-    <van-list
-      v-if="keyword"
-      v-model:loading="loading"
-      :finished="finished"
-      @load="onLoad"
-    >
+    <van-list v-if="keyword" v-model:loading="loading" :finished="finished" @load="onLoad">
       <van-cell
         v-for="item in list"
         :key="item.id"
@@ -286,10 +278,7 @@ import SearchPage from '@/components/SearchPage.vue'
     </van-list>
 
     <!-- 空状态 -->
-    <van-empty
-      v-if="keyword && !loading && list.length === 0"
-      description="暂无搜索结果"
-    />
+    <van-empty v-if="keyword && !loading && list.length === 0" description="暂无搜索结果" />
   </div>
 </template>
 ```
@@ -310,21 +299,21 @@ import { useList } from '@/composables/useList'
 
 const { list, loading, finished, refreshing, onLoad, onRefresh } = useList({
   fetchApi: '/api/products/list',
-  pageSize: 10,
+  pageSize: 10
 })
 ```
 
 ### 返回值
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| list | Ref<any[]> | 列表数据 |
-| loading | Ref<boolean> | 加载状态 |
-| finished | Ref<boolean> | 是否加载完成 |
-| refreshing | Ref<boolean> | 刷新状态 |
-| page | Ref<number> | 当前页码 |
-| onLoad | Function | 加载更多 |
-| onRefresh | Function | 下拉刷新 |
+| 属性       | 类型         | 说明         |
+| ---------- | ------------ | ------------ |
+| list       | Ref<any[]>   | 列表数据     |
+| loading    | Ref<boolean> | 加载状态     |
+| finished   | Ref<boolean> | 是否加载完成 |
+| refreshing | Ref<boolean> | 刷新状态     |
+| page       | Ref<number>  | 当前页码     |
+| onLoad     | Function     | 加载更多     |
+| onRefresh  | Function     | 下拉刷新     |
 
 ### 自定义 API 请求
 
@@ -373,10 +362,7 @@ export function useProductList() {
 
 ```vue
 <template>
-  <van-empty
-    v-if="!loading && list.length === 0"
-    description="暂无数据"
-  />
+  <van-empty v-if="!loading && list.length === 0" description="暂无数据" />
 </template>
 ```
 
@@ -384,13 +370,8 @@ export function useProductList() {
 
 ```vue
 <template>
-  <van-empty
-    image="https://via.placeholder.com/200"
-    description="暂无商品"
-  >
-    <van-button round type="primary" @click="goHome">
-      去首页看看
-    </van-button>
+  <van-empty image="https://via.placeholder.com/200" description="暂无商品">
+    <van-button round type="primary" @click="goHome"> 去首页看看 </van-button>
   </van-empty>
 </template>
 ```
@@ -413,7 +394,7 @@ import { showLoadingToast, closeToast } from 'vant'
 const loading = showLoadingToast({
   message: '加载中...',
   forbidClick: true,
-  duration: 0,
+  duration: 0
 })
 
 // 关闭加载

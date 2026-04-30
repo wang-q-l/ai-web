@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-// 页面逻辑
+  // 页面逻辑
 </script>
 ```
 
@@ -52,6 +52,7 @@
 ### 3. 菜单自动生成
 
 菜单会根据路由配置自动生成,`meta` 字段说明:
+
 - `title`: 菜单显示名称
 - `icon`: 菜单图标(Element Plus Icons)
 - `hidden`: 是否隐藏菜单(可选)
@@ -85,6 +86,7 @@
 ## 常用图标
 
 Element Plus Icons 常用图标名称:
+
 - `HomeFilled` - 首页
 - `User` - 用户
 - `Setting` - 设置
@@ -110,9 +112,9 @@ Element Plus Icons 常用图标名称:
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (to.path !== '/login' && !token) {
-    next('/login')  // 未登录跳转登录页
+    next('/login') // 未登录跳转登录页
   } else if (to.path === '/login' && token) {
-    next('/')  // 已登录跳转首页
+    next('/') // 已登录跳转首页
   } else {
     next()
   }
@@ -128,7 +130,7 @@ router.beforeEach((to, from, next) => {
 ```typescript
 // 获取用户权限后动态添加路由
 const addDynamicRoutes = (routes: RouteRecordRaw[]) => {
-  routes.forEach(route => {
+  routes.forEach((route) => {
     router.addRoute(route)
   })
 }

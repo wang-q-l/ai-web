@@ -59,58 +59,58 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Location, Phone, Message } from '@element-plus/icons-vue'
-import { siteConfig } from '@/config/site'
+  import { reactive } from 'vue'
+  import { ElMessage } from 'element-plus'
+  import { Location, Phone, Message } from '@element-plus/icons-vue'
+  import { siteConfig } from '@/config/site'
 
-const form = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  message: ''
-})
+  const form = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  })
 
-const handleSubmit = () => {
-  ElMessage.success('留言提交成功！')
-  Object.assign(form, { name: '', email: '', phone: '', message: '' })
-}
+  const handleSubmit = () => {
+    ElMessage.success('留言提交成功！')
+    Object.assign(form, { name: '', email: '', phone: '', message: '' })
+  }
 </script>
 
 <style scoped>
-h1 {
-  margin-bottom: var(--spacing-xl);
-}
+  h1 {
+    margin-bottom: var(--spacing-xl);
+  }
 
-h2 {
-  margin-bottom: var(--spacing-lg);
-}
+  h2 {
+    margin-bottom: var(--spacing-lg);
+  }
 
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
 
-.info-item {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: flex-start;
-}
+  .info-item {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+  }
 
-.info-item .el-icon {
-  font-size: 24px;
-  color: var(--primary-color);
-  margin-top: 4px;
-}
+  .info-item .el-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-top: 4px;
+  }
 
-.info-item strong {
-  display: block;
-  margin-bottom: var(--spacing-xs);
-}
+  .info-item strong {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+  }
 
-.info-item p {
-  color: var(--text-secondary);
-  margin: 0;
-}
+  .info-item p {
+    color: var(--text-secondary);
+    margin: 0;
+  }
 </style>

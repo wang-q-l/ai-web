@@ -11,16 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
 
-const router = useRouter()
+  const router = useRouter()
 </script>
 
 <style scoped>
-.not-found-page {
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .not-found-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>

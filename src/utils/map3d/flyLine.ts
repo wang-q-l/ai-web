@@ -15,10 +15,7 @@ function drawFlySpot(curve: THREE.QuadraticBezierCurve3) {
 }
 
 // 绘制两点之间的飞线
-export function drawLineBetween2Spot(
-  coordStart: [number, number],
-  coordEnd: [number, number]
-) {
+export function drawLineBetween2Spot(coordStart: [number, number], coordEnd: [number, number]) {
   const [x0, y0, z0] = [...coordStart, mapConfig.spotZIndex]
   const [x1, y1, z1] = [...coordEnd, mapConfig.spotZIndex]
 

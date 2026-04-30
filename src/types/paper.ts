@@ -267,4 +267,3 @@ export interface PaperPreview {
   /** 是否随机试卷样例 */
   isRandomSample?: boolean
 }
-

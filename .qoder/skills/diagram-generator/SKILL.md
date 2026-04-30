@@ -1,13 +1,7 @@
 ---
 name: diagram-generator
 description: >
-  生成流程图、架构图、时序图、泳道图等图表，并将图片嵌入到 Markdown 文档中。
-  优先使用 D2 语言（连线不重叠，路由最优，ELK 引擎）；
-  次选 draw.io CLI（支持复杂泳道和自定义形状）；
-  无本地工具时降级到 kroki.io 在线 API。
-  触发场景：(1) 用户要求在需求说明书、设计文档中插入流程图/架构图/时序图/泳道图，
-  (2) 用户说「画一个流程图」「生成架构图」「插入图表」「生成图片」「画个泳道图」，
-  (3) 需要将业务流程、系统架构、数据流向可视化并嵌入文档。
+  生成流程图、架构图、时序图、泳道图等图表，并将图片嵌入到 Markdown 文档中。 优先使用 D2 语言（连线不重叠，路由最优，ELK 引擎）； 次选 draw.io CLI（支持复杂泳道和自定义形状）； 无本地工具时降级到 kroki.io 在线 API。 触发场景：(1) 用户要求在需求说明书、设计文档中插入流程图/架构图/时序图/泳道图， (2) 用户说「画一个流程图」「生成架构图」「插入图表」「生成图片」「画个泳道图」， (3) 需要将业务流程、系统架构、数据流向可视化并嵌入文档。
 ---
 
 # Diagram Generator
@@ -39,6 +33,7 @@ d2 -l elk input.d2 output.png
 ```
 
 调用 draw.io 脚本：
+
 ```bash
 # draw.io XML → PNG（2x 清晰度）
 python3 scripts/render_drawio.py --file diagram.drawio --output images/xxx.png --scale 2
@@ -60,14 +55,14 @@ python3 scripts/render_diagram.py --type plantuml --file diagram.puml --output i
 
 ## 图表类型选择
 
-| 场景 | 推荐格式 | 说明 |
-|------|---------|------|
-| 业务流程图 | draw.io XML | 支持泳道、判断分支、子流程 |
-| 系统架构图 | draw.io XML | 支持分组、容器、各种形状 |
-| 泳道图 | draw.io XML | 多角色并行流程 |
-| 数据库 ER 图 | draw.io XML | 实体关系、外键连线 |
-| 时序图 | plantuml | 消息交互更清晰 |
-| 简单流程 | mermaid | 代码简洁 |
+| 场景         | 推荐格式    | 说明                       |
+| ------------ | ----------- | -------------------------- |
+| 业务流程图   | draw.io XML | 支持泳道、判断分支、子流程 |
+| 系统架构图   | draw.io XML | 支持分组、容器、各种形状   |
+| 泳道图       | draw.io XML | 多角色并行流程             |
+| 数据库 ER 图 | draw.io XML | 实体关系、外键连线         |
+| 时序图       | plantuml    | 消息交互更清晰             |
+| 简单流程     | mermaid     | 代码简洁                   |
 
 ## draw.io XML 模板
 

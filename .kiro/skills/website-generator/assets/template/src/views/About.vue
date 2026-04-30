@@ -42,73 +42,73 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const values = ref([
-  {
-    id: 1,
-    icon: 'Star',
-    title: '创新',
-    description: '持续创新，引领行业发展'
-  },
-  {
-    id: 2,
-    icon: 'Trophy',
-    title: '卓越',
-    description: '追求卓越，精益求精'
-  },
-  {
-    id: 3,
-    icon: 'User',
-    title: '客户至上',
-    description: '以客户需求为导向'
-  },
-  {
-    id: 4,
-    icon: 'Connection',
-    title: '合作共赢',
-    description: '携手合作，共创未来'
-  }
-])
+  const values = ref([
+    {
+      id: 1,
+      icon: 'Star',
+      title: '创新',
+      description: '持续创新，引领行业发展'
+    },
+    {
+      id: 2,
+      icon: 'Trophy',
+      title: '卓越',
+      description: '追求卓越，精益求精'
+    },
+    {
+      id: 3,
+      icon: 'User',
+      title: '客户至上',
+      description: '以客户需求为导向'
+    },
+    {
+      id: 4,
+      icon: 'Connection',
+      title: '合作共赢',
+      description: '携手合作，共创未来'
+    }
+  ])
 
-const milestones = ref([
-  { id: 1, year: '2020', event: '公司成立' },
-  { id: 2, year: '2022', event: '推出首款产品' },
-  { id: 3, year: '2024', event: '业务拓展至全国' },
-  { id: 4, year: '2026', event: '成为行业领先企业' }
-])
+  const milestones = ref([
+    { id: 1, year: '2020', event: '公司成立' },
+    { id: 2, year: '2022', event: '推出首款产品' },
+    { id: 3, year: '2024', event: '业务拓展至全国' },
+    { id: 4, year: '2026', event: '成为行业领先企业' }
+  ])
 </script>
 
 <style scoped>
-h1 {
-  margin-bottom: var(--spacing-xl);
-}
+  h1 {
+    margin-bottom: var(--spacing-xl);
+  }
 
-.about-card {
-  margin-bottom: var(--spacing-xl);
-}
+  .about-card {
+    margin-bottom: var(--spacing-xl);
+  }
 
-.about-card h2 {
-  margin-bottom: var(--spacing-lg);
-  color: var(--primary-color);
-}
+  .about-card h2 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-color);
+  }
 
-.about-card p {
-  line-height: 1.8;
-  color: var(--text-regular);
-}
+  .about-card p {
+    line-height: 1.8;
+    color: var(--text-regular);
+  }
 
-.value-item {
-  text-align: center;
-  padding: var(--spacing-lg);
-}
+  .value-item {
+    text-align: center;
+    padding: var(--spacing-lg);
+  }
 
-.value-item h3 {
-  margin: var(--spacing-md) 0;
-}
+  .value-item h3 {
+    margin: var(--spacing-md) 0;
+  }
 
-.value-item p {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
+  .value-item p {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
 </style>

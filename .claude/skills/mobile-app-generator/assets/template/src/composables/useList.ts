@@ -18,13 +18,13 @@ export function useList(options: UseListOptions = {}) {
     loading.value = true
     try {
       // 模拟 API 请求
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // 模拟数据
       const newData = Array.from({ length: pageSize }, (_, i) => ({
         id: list.value.length + i + 1,
         title: `项目 ${list.value.length + i + 1}`,
-        desc: '这是描述信息',
+        desc: '这是描述信息'
       }))
 
       list.value.push(...newData)
@@ -56,6 +56,6 @@ export function useList(options: UseListOptions = {}) {
     refreshing,
     page,
     onLoad,
-    onRefresh,
+    onRefresh
   }
 }

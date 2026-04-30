@@ -49,7 +49,8 @@
                 :type="typeTagMap[row.type]?.tagType"
                 size="small"
                 disable-transitions
-              >{{ row.type }}</el-tag>
+                >{{ row.type }}</el-tag
+              >
             </template>
           </ElTableColumn>
           <ElTableColumn prop="leader" label="负责人" width="120" />
@@ -135,7 +136,10 @@
 
   defineOptions({ name: 'OrganizationDepartment' })
 
-  const typeTagMap: Record<string, { tagType: 'primary' | 'success' | 'info' | 'warning' | 'danger' }> = {
+  const typeTagMap: Record<
+    string,
+    { tagType: 'primary' | 'success' | 'info' | 'warning' | 'danger' }
+  > = {
     省公司: { tagType: 'danger' },
     分公司: { tagType: 'warning' },
     片区: { tagType: 'primary' },

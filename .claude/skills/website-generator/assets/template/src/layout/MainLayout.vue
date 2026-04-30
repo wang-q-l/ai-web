@@ -9,19 +9,19 @@
 </template>
 
 <script setup lang="ts">
-import Header from './Header.vue'
-import Footer from './Footer.vue'
+  import Header from './Header.vue'
+  import Footer from './Footer.vue'
 </script>
 
 <style scoped>
-.main-layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  .main-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.main-content {
-  flex: 1;
-  background-color: var(--bg-page);
-}
+  .main-content {
+    flex: 1;
+    background-color: var(--bg-page);
+  }
 </style>

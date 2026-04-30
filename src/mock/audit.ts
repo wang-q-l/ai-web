@@ -471,27 +471,26 @@ export function launchProjectMock(id: number, form: LaunchProjectForm) {
   })
 
   // 初始化四大阶段
-  const stages: ProjectStage[] = ['准备阶段', '实施阶段', '报告阶段', '后续审计'].map(
-    (name, i) => {
-      const stage: ProjectStage = {
-        id: Date.now() + i,
-        projectId: id,
-        stageName: name,
-        order: i + 1,
-        status: i === 0 ? StageStatus.InProgress : StageStatus.NotStarted,
-        auditPlan: '',
-        planDocuments: [],
-        materials: [],
-        workRecords: [],
-        findings: [],
-        reportDocuments: [],
-        progress: 0
-      }
+  const stages: ProjectStage[] = ['准备阶段', '实施阶段', '报告阶段', '后续审计'].map((name, i) => {
+    const stage: ProjectStage = {
+      id: Date.now() + i,
+      projectId: id,
+      stageName: name,
+      order: i + 1,
+      status: i === 0 ? StageStatus.InProgress : StageStatus.NotStarted,
+      auditPlan: '',
+      planDocuments: [],
+      materials: [],
+      workRecords: [],
+      findings: [],
+      reportDocuments: [],
+      progress: 0
+    }
 
-      // 准备阶段初始化子节点数据
-      if (i === 0) {
-        stage.currentSubNode = PrepareSubNode.Notice
-        stage.noticeContent = `根据《中华人民共和国审计法》及相关规定，我部决定对${project.auditedUnit}${project.year}年度财务收支情况进行审计。现将有关事项通知如下：
+    // 准备阶段初始化子节点数据
+    if (i === 0) {
+      stage.currentSubNode = PrepareSubNode.Notice
+      stage.noticeContent = `根据《中华人民共和国审计法》及相关规定，我部决定对${project.auditedUnit}${project.year}年度财务收支情况进行审计。现将有关事项通知如下：
 
 一、审计范围
 ${project.year}年度的财务收支及相关经济活动。
@@ -507,14 +506,13 @@ ${form.members.map((m) => `${m.role}：${m.name}`).join('\n')}
 
 五、配合要求
 请被审计单位按照审计组要求，及时提供相关资料，配合审计工作。`
-        stage.auditItems = []
-        stage.implementationPlan = ''
-        stage.startTime = now
-      }
-
-      return stage
+      stage.auditItems = []
+      stage.implementationPlan = ''
+      stage.startTime = now
     }
-  )
+
+    return stage
+  })
   stagesMap[id] = stages
   return project
 }

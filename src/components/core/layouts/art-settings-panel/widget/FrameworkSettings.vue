@@ -18,35 +18,35 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import SectionTitle from './SectionTitle.vue'
-import { useSettingStore } from '@/store/modules/setting'
-import { FrameworkTypeEnum } from '@/enums/appEnum'
-import { configImages } from '@/config/assets/images'
+  import { computed } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import SectionTitle from './SectionTitle.vue'
+  import { useSettingStore } from '@/store/modules/setting'
+  import { FrameworkTypeEnum } from '@/enums/appEnum'
+  import { configImages } from '@/config/assets/images'
 
-const settingStore = useSettingStore()
-const { frameworkType } = storeToRefs(settingStore)
+  const settingStore = useSettingStore()
+  const { frameworkType } = storeToRefs(settingStore)
 
-// 当前框架类型
-const currentFramework = computed(() => frameworkType.value)
+  // 当前框架类型
+  const currentFramework = computed(() => frameworkType.value)
 
-// 框架选项配置
-const frameworkOptions = [
-  {
-    name: '框架一',
-    value: FrameworkTypeEnum.FRAMEWORK_ONE,
-    img: configImages.menuLayouts.vertical
-  },
-  {
-    name: '框架二',
-    value: FrameworkTypeEnum.FRAMEWORK_TWO,
-    img: configImages.menuLayouts.horizontal
+  // 框架选项配置
+  const frameworkOptions = [
+    {
+      name: '框架一',
+      value: FrameworkTypeEnum.FRAMEWORK_ONE,
+      img: configImages.menuLayouts.vertical
+    },
+    {
+      name: '框架二',
+      value: FrameworkTypeEnum.FRAMEWORK_TWO,
+      img: configImages.menuLayouts.horizontal
+    }
+  ]
+
+  // 切换框架
+  const handleFrameworkChange = (type: FrameworkTypeEnum) => {
+    settingStore.switchFramework(type)
   }
-]
-
-// 切换框架
-const handleFrameworkChange = (type: FrameworkTypeEnum) => {
-  settingStore.switchFramework(type)
-}
 </script>

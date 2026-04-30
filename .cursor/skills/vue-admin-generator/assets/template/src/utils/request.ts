@@ -7,23 +7,23 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(
-  config => {
+  (config) => {
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   }
 )
 
 request.interceptors.response.use(
-  response => {
+  (response) => {
     return response.data
   },
-  error => {
+  (error) => {
     ElMessage.error(error.message || '请求失败')
     return Promise.reject(error)
   }

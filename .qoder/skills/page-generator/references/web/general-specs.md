@@ -5,6 +5,7 @@
 ## 技术栈
 
 ### 核心框架
+
 - **Vue 3.x** - 使用 Composition API（`<script setup>`）
 - **TypeScript** - 类型安全
 - **Vite** - 构建工具
@@ -12,10 +13,12 @@
 - **Pinia** - 状态管理
 
 ### UI 组件库
+
 - **Element Plus** - 主要 UI 组件库
 - 使用组件：Card、Carousel、Timeline、Pagination、Form、Button 等
 
 ### 工具库
+
 - **VueUse** - Vue 组合式工具库
 - **Axios** - HTTP 请求
 - **Day.js** - 日期处理
@@ -64,15 +67,15 @@ src/
 </template>
 
 <style scoped>
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  .app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-.main-content {
-  flex: 1;
-}
+  .main-content {
+    flex: 1;
+  }
 </style>
 ```
 
@@ -90,18 +93,18 @@ src/
 </template>
 
 <style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
   .container {
-    padding: 0 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
-}
+
+  /* 响应式调整 */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 15px;
+    }
+  }
 </style>
 ```
 
@@ -118,6 +121,7 @@ src/
 ```
 
 **断点说明：**
+
 - `xs` - <768px（手机）
 - `sm` - ≥768px（平板）
 - `md` - ≥992px（小屏电脑）
@@ -129,27 +133,27 @@ src/
 
 ```scss
 // 主色调
-$primary-color: #409EFF;
-$success-color: #67C23A;
-$warning-color: #E6A23C;
-$danger-color: #F56C6C;
+$primary-color: #409eff;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$danger-color: #f56c6c;
 $info-color: #909399;
 
 // 文字颜色
 $text-primary: #303133;
 $text-regular: #606266;
 $text-secondary: #909399;
-$text-placeholder: #C0C4CC;
+$text-placeholder: #c0c4cc;
 
 // 边框颜色
-$border-base: #DCDFE6;
-$border-light: #E4E7ED;
-$border-lighter: #EBEEF5;
+$border-base: #dcdfe6;
+$border-light: #e4e7ed;
+$border-lighter: #ebeef5;
 
 // 背景颜色
-$bg-white: #FFFFFF;
-$bg-light: #F5F7FA;
-$bg-lighter: #FAFAFA;
+$bg-white: #ffffff;
+$bg-light: #f5f7fa;
+$bg-lighter: #fafafa;
 ```
 
 ### 2. 间距规范
@@ -240,61 +244,61 @@ $box-shadow-dark: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 </template>
 
 <style scoped>
-.app-header {
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
+  .app-header {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 70px;
-}
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-.logo img {
-  height: 40px;
-}
+  .logo img {
+    height: 40px;
+  }
 
-.nav-menu {
-  display: flex;
-  gap: 32px;
-}
-
-.nav-item {
-  color: #606266;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s;
-}
-
-.nav-item:hover,
-.nav-item.router-link-active {
-  color: #409EFF;
-}
-
-.mobile-menu-btn {
-  display: none;
-}
-
-@media (max-width: 768px) {
   .nav-menu {
-    display: none;
+    display: flex;
+    gap: 32px;
+  }
+
+  .nav-item {
+    color: #606266;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+  }
+
+  .nav-item:hover,
+  .nav-item.router-link-active {
+    color: #409eff;
   }
 
   .mobile-menu-btn {
-    display: block;
+    display: none;
   }
-}
+
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: block;
+    }
+  }
 </style>
 ```
 
@@ -336,46 +340,46 @@ $box-shadow-dark: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 </template>
 
 <style scoped>
-.app-footer {
-  background: #2c3e50;
-  color: #fff;
-  padding: 48px 0 24px;
-}
+  .app-footer {
+    background: #2c3e50;
+    color: #fff;
+    padding: 48px 0 24px;
+  }
 
-.footer-content {
-  margin-bottom: 32px;
-}
+  .footer-content {
+    margin-bottom: 32px;
+  }
 
-.footer-content h4 {
-  margin-bottom: 16px;
-  font-size: 18px;
-}
+  .footer-content h4 {
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
 
-.footer-content ul {
-  list-style: none;
-  padding: 0;
-}
+  .footer-content ul {
+    list-style: none;
+    padding: 0;
+  }
 
-.footer-content li {
-  margin-bottom: 8px;
-}
+  .footer-content li {
+    margin-bottom: 8px;
+  }
 
-.footer-content a {
-  color: #bdc3c7;
-  text-decoration: none;
-  transition: color 0.3s;
-}
+  .footer-content a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
 
-.footer-content a:hover {
-  color: #fff;
-}
+  .footer-content a:hover {
+    color: #fff;
+  }
 
-.footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 24px;
-  text-align: center;
-  color: #95a5a6;
-}
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 24px;
+    text-align: center;
+    color: #95a5a6;
+  }
 </style>
 ```
 
@@ -400,10 +404,10 @@ $box-shadow-dark: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 </template>
 
 <style scoped>
-.breadcrumb-wrapper {
-  background: #f5f7fa;
-  padding: 16px 0;
-}
+  .breadcrumb-wrapper {
+    background: #f5f7fa;
+    padding: 16px 0;
+  }
 </style>
 ```
 
@@ -415,28 +419,21 @@ $box-shadow-dark: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useIntersectionObserver } from '@vueuse/core'
+  import { ref } from 'vue'
+  import { useIntersectionObserver } from '@vueuse/core'
 
-const imgRef = ref<HTMLImageElement>()
-const isVisible = ref(false)
+  const imgRef = ref<HTMLImageElement>()
+  const isVisible = ref(false)
 
-useIntersectionObserver(
-  imgRef,
-  ([{ isIntersecting }]) => {
+  useIntersectionObserver(imgRef, ([{ isIntersecting }]) => {
     if (isIntersecting) {
       isVisible.value = true
     }
-  }
-)
+  })
 </script>
 
 <template>
-  <img
-    ref="imgRef"
-    :src="isVisible ? actualSrc : placeholderSrc"
-    alt="图片描述"
-  />
+  <img ref="imgRef" :src="isVisible ? actualSrc : placeholderSrc" alt="图片描述" />
 </template>
 ```
 
@@ -479,13 +476,25 @@ router.beforeEach((to, from, next) => {
 使用语义化标签：
 
 ```html
-<header>  <!-- 页头 -->
-<nav>     <!-- 导航 -->
-<main>    <!-- 主内容 -->
-<article> <!-- 文章 -->
-<section> <!-- 章节 -->
-<aside>   <!-- 侧边栏 -->
-<footer>  <!-- 页脚 -->
+<header>
+  <!-- 页头 -->
+  <nav>
+    <!-- 导航 -->
+    <main>
+      <!-- 主内容 -->
+      <article>
+        <!-- 文章 -->
+        <section>
+          <!-- 章节 -->
+          <aside>
+            <!-- 侧边栏 -->
+            <footer> <!-- 页脚 --></footer></aside
+          ></section
+        ></article
+      ></main
+    ></nav
+  ></header
+>
 ```
 
 ## 性能优化
@@ -505,11 +514,9 @@ const routes = [
 
 ```vue
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
+  import { defineAsyncComponent } from 'vue'
 
-const HeavyComponent = defineAsyncComponent(() =>
-  import('@/components/HeavyComponent.vue')
-)
+  const HeavyComponent = defineAsyncComponent(() => import('@/components/HeavyComponent.vue'))
 </script>
 ```
 

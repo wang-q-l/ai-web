@@ -42,6 +42,7 @@
 在所有规范文档中强调了**卡片式布局**的核心设计原则：
 
 **卡片默认样式：**
+
 - **无边框**：`border: none !important;`
 - **无阴影**：`box-shadow: none !important;`
 - **圆角**：`border-radius: 12px`
@@ -64,6 +65,7 @@
 技能会自动识别当前项目类型（管理后台/Web前台/移动端），并加载对应的规范和模版。
 
 识别规则：
+
 1. 检查 package.json 依赖
 2. 检查项目目录结构
 3. 检查路由配置方式
@@ -104,11 +106,13 @@
 以下模版文件已创建占位，后续可根据需要补充完整内容：
 
 **Web 前台：**
+
 - template-list-page.md
 - template-detail-page.md
 - template-form-page.md
 
 **移动端：**
+
 - template-tabbar-page.md
 - template-list-page.md
 - template-detail-page.md

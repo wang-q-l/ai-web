@@ -11,24 +11,24 @@
 ```css
 :root {
   /* 主题色 */
-  --primary-color: #1989fa;    /* 主色调 */
-  --success-color: #07c160;    /* 成功色 */
-  --warning-color: #ff976a;    /* 警告色 */
-  --danger-color: #ee0a24;     /* 危险色 */
+  --primary-color: #1989fa; /* 主色调 */
+  --success-color: #07c160; /* 成功色 */
+  --warning-color: #ff976a; /* 警告色 */
+  --danger-color: #ee0a24; /* 危险色 */
 
   /* 文字颜色 */
-  --text-color: #323233;              /* 主要文字 */
-  --text-color-secondary: #646566;    /* 次要文字 */
-  --text-color-disabled: #c8c9cc;     /* 禁用文字 */
+  --text-color: #323233; /* 主要文字 */
+  --text-color-secondary: #646566; /* 次要文字 */
+  --text-color-disabled: #c8c9cc; /* 禁用文字 */
 
   /* 背景色 */
-  --background-color: #f7f8fa;   /* 页面背景 */
-  --card-background: #ffffff;    /* 卡片背景 */
+  --background-color: #f7f8fa; /* 页面背景 */
+  --card-background: #ffffff; /* 卡片背景 */
 
   /* Tabbar */
-  --tabbar-background: #ffffff;        /* Tabbar 背景 */
-  --tabbar-active-color: #1989fa;      /* 激活颜色 */
-  --tabbar-inactive-color: #646566;    /* 未激活颜色 */
+  --tabbar-background: #ffffff; /* Tabbar 背景 */
+  --tabbar-active-color: #1989fa; /* 激活颜色 */
+  --tabbar-inactive-color: #646566; /* 未激活颜色 */
 
   /* 边框 */
   --border-color: #ebedf0;
@@ -104,8 +104,8 @@ app.use(ConfigProvider, {
     primaryColor: '#1989fa',
     successColor: '#07c160',
     warningColor: '#ff976a',
-    dangerColor: '#ee0a24',
-  },
+    dangerColor: '#ee0a24'
+  }
 })
 ```
 
@@ -121,9 +121,7 @@ import { ref, watch } from 'vue'
 type Theme = 'light' | 'dark'
 
 export function useTheme() {
-  const theme = ref<Theme>(
-    (localStorage.getItem('theme') as Theme) || 'light'
-  )
+  const theme = ref<Theme>((localStorage.getItem('theme') as Theme) || 'light')
 
   const toggleTheme = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
@@ -154,11 +152,11 @@ export function useTheme() {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useTheme } from '@/composables/useTheme'
+  import { ref } from 'vue'
+  import { useTheme } from '@/composables/useTheme'
 
-const { theme, toggleTheme } = useTheme()
-const isDark = ref(theme.value === 'dark')
+  const { theme, toggleTheme } = useTheme()
+  const isDark = ref(theme.value === 'dark')
 </script>
 ```
 
@@ -168,10 +166,10 @@ const isDark = ref(theme.value === 'dark')
 
 ```css
 :root {
-  --primary-color: #ff6034;    /* 橙红色 */
-  --success-color: #52c41a;    /* 绿色 */
-  --warning-color: #faad14;    /* 黄色 */
-  --danger-color: #f5222d;     /* 红色 */
+  --primary-color: #ff6034; /* 橙红色 */
+  --success-color: #52c41a; /* 绿色 */
+  --warning-color: #faad14; /* 黄色 */
+  --danger-color: #f5222d; /* 红色 */
 }
 ```
 
@@ -179,7 +177,7 @@ const isDark = ref(theme.value === 'dark')
 
 ```css
 :root {
-  --primary-color: #07c160;    /* 微信绿 */
+  --primary-color: #07c160; /* 微信绿 */
   --success-color: #52c41a;
   --warning-color: #faad14;
   --danger-color: #f5222d;
@@ -190,7 +188,7 @@ const isDark = ref(theme.value === 'dark')
 
 ```css
 :root {
-  --primary-color: #1890ff;    /* 蓝色 */
+  --primary-color: #1890ff; /* 蓝色 */
   --success-color: #52c41a;
   --warning-color: #faad14;
   --danger-color: #f5222d;
@@ -241,7 +239,9 @@ background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 
 ```css
 * {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 ```
 

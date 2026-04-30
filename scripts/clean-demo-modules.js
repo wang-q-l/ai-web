@@ -31,59 +31,59 @@ import path from 'path'
 const KEEP_MODULES = {
   // views 目录中需要保留的模块
   views: [
-    'auth',           // 认证相关页面（登录、注册等）
-    'exception',      // 异常页面（404、403、500等）
-    'index',          // 首页/主框架
-    'template',       // 页面模板
-    'widgets',        // 组件示例（可选保留）
-    'organization',   // 组织架构管理
-    'permission',     // 权限管理
-    'workbench',      // 工作台
-    'china-map',      // 中国地图（保留页面，但路由会被删除）
+    'auth', // 认证相关页面（登录、注册等）
+    'exception', // 异常页面（404、403、500等）
+    'index', // 首页/主框架
+    'template', // 页面模板
+    'widgets', // 组件示例（可选保留）
+    'organization', // 组织架构管理
+    'permission', // 权限管理
+    'workbench', // 工作台
+    'china-map', // 中国地图（保留页面，但路由会被删除）
     'operation-cockpit' // 运营驾驶舱（保留页面，但路由会被删除）
   ],
 
   // router/modules 目录中需要保留的路由文件
   router: [
-    'index.ts',                  // 路由入口文件
-    'exception.ts',              // 异常页面路由
-    'template.ts',               // 模板路由
-    'widgets.ts',                // 组件路由（可选保留）
-    'organization-template.ts',  // 企业管理路由
-    'permission-template.ts',    // 权限管理路由
-    'workbench.ts'               // 工作台路由
+    'index.ts', // 路由入口文件
+    'exception.ts', // 异常页面路由
+    'template.ts', // 模板路由
+    'widgets.ts', // 组件路由（可选保留）
+    'organization-template.ts', // 企业管理路由
+    'permission-template.ts', // 权限管理路由
+    'workbench.ts' // 工作台路由
     // 注意：china-map.ts 和 operation-cockpit.ts 路由会被删除
   ],
 
   // api 目录中需要保留的 API 文件
   api: [
-    'auth.ts',           // 认证 API
-    'captcha.ts',        // 验证码 API
-    'map.ts',            // 地图 API（可选保留）
-    'organization.ts',   // 组织架构 API
-    'permission.ts'      // 权限管理 API
+    'auth.ts', // 认证 API
+    'captcha.ts', // 验证码 API
+    'map.ts', // 地图 API（可选保留）
+    'organization.ts', // 组织架构 API
+    'permission.ts' // 权限管理 API
   ],
 
   // mock 目录中需要保留的 Mock 文件
   mock: [
-    'auth.ts',           // 认证 Mock
-    'json',              // JSON 数据目录
-    'temp',              // 临时目录
-    'upgrade',           // 升级目录
-    'map.ts',            // 地图 Mock（可选保留）
-    'organization.ts',   // 组织架构 Mock
-    'permission.ts'      // 权限管理 Mock
+    'auth.ts', // 认证 Mock
+    'json', // JSON 数据目录
+    'temp', // 临时目录
+    'upgrade', // 升级目录
+    'map.ts', // 地图 Mock（可选保留）
+    'organization.ts', // 组织架构 Mock
+    'permission.ts' // 权限管理 Mock
   ],
 
   // locales/langs 中需要保留的国际化 key 前缀
   // 这些前缀开头的 key 会被保留，其他的会被删除
   i18nPrefixes: [
-    'common',                        // 通用翻译
-    'menus.workbench',               // 工作台菜单
-    'menus.organizationTemplate',    // 企业管理菜单
-    'menus.permissionTemplate',      // 权限管理菜单
-    'menus.template',                // 模板菜单
-    'menus.widgets'                  // 组件菜单（可选保留）
+    'common', // 通用翻译
+    'menus.workbench', // 工作台菜单
+    'menus.organizationTemplate', // 企业管理菜单
+    'menus.permissionTemplate', // 权限管理菜单
+    'menus.template', // 模板菜单
+    'menus.widgets' // 组件菜单（可选保留）
     // 注意：menus.chinaMap 和 menus.operationCockpit 会被删除
   ]
 }
@@ -114,7 +114,7 @@ function deleteFileOrDir(filePath) {
   if (stats.isDirectory()) {
     // 递归删除目录
     const files = fs.readdirSync(filePath)
-    files.forEach(file => {
+    files.forEach((file) => {
       deleteFileOrDir(path.join(filePath, file))
     })
     fs.rmdirSync(filePath)
@@ -140,7 +140,7 @@ function cleanViews() {
   }
 
   const allDirs = fs.readdirSync(viewsDir)
-  const toDelete = allDirs.filter(dir => {
+  const toDelete = allDirs.filter((dir) => {
     // 跳过隐藏文件
     if (dir.startsWith('.')) return false
     // 只删除不在保留列表中的目录
@@ -153,7 +153,7 @@ function cleanViews() {
   }
 
   console.log(`📋 将删除 ${toDelete.length} 个模块: ${toDelete.join(', ')}`)
-  toDelete.forEach(module => {
+  toDelete.forEach((module) => {
     const modulePath = path.join(viewsDir, module)
     deleteFileOrDir(modulePath)
   })
@@ -173,7 +173,7 @@ function cleanRouter() {
   }
 
   const allFiles = fs.readdirSync(routerDir)
-  const toDelete = allFiles.filter(file => {
+  const toDelete = allFiles.filter((file) => {
     // 跳过隐藏文件
     if (file.startsWith('.')) return false
     // 只删除不在保留列表中的文件
@@ -188,7 +188,7 @@ function cleanRouter() {
   console.log(`📋 将删除 ${toDelete.length} 个路由文件: ${toDelete.join(', ')}`)
 
   // 删除路由文件
-  toDelete.forEach(file => {
+  toDelete.forEach((file) => {
     const filePath = path.join(routerDir, file)
     deleteFileOrDir(filePath)
   })
@@ -217,16 +217,14 @@ function updateRouterIndex(deletedFiles) {
 
   // 获取被删除文件的模块名（去掉 .ts 后缀，转换为驼峰命名）
   const deletedModules = deletedFiles
-    .filter(file => file.endsWith('.ts'))
-    .map(file => {
+    .filter((file) => file.endsWith('.ts'))
+    .map((file) => {
       // 将文件名转换为可能的变量名
       // 例如: question-bank.ts -> questionBankRoutes
       const baseName = file.replace('.ts', '')
       const camelCase = baseName
         .split('-')
-        .map((part, index) =>
-          index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)
-        )
+        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
         .join('')
       return camelCase + 'Routes'
     })
@@ -239,14 +237,17 @@ function updateRouterIndex(deletedFiles) {
   console.log(`📋 将移除以下模块的导入: ${deletedModules.join(', ')}`)
 
   // 移除导入语句
-  deletedModules.forEach(moduleName => {
+  deletedModules.forEach((moduleName) => {
     // 匹配导入语句，例如: import { questionBankRoutes } from './question-bank'
-    const importRegex = new RegExp(`import\\s+{\\s*${moduleName}\\s*}\\s+from\\s+['"]\\.[^'"]+['"]\\s*\\n?`, 'g')
+    const importRegex = new RegExp(
+      `import\\s+{\\s*${moduleName}\\s*}\\s+from\\s+['"]\\.[^'"]+['"]\\s*\\n?`,
+      'g'
+    )
     content = content.replace(importRegex, '')
   })
 
   // 移除数组中的引用
-  deletedModules.forEach(moduleName => {
+  deletedModules.forEach((moduleName) => {
     // 匹配数组中的引用，处理多种情况：
     // 1. moduleName,\n (中间项)
     // 2. ,\n  moduleName (最后一项)
@@ -280,7 +281,7 @@ function cleanApi() {
   }
 
   const allFiles = fs.readdirSync(apiDir)
-  const toDelete = allFiles.filter(file => {
+  const toDelete = allFiles.filter((file) => {
     // 跳过隐藏文件
     if (file.startsWith('.')) return false
     // 只删除不在保留列表中的文件
@@ -293,7 +294,7 @@ function cleanApi() {
   }
 
   console.log(`📋 将删除 ${toDelete.length} 个 API 文件: ${toDelete.join(', ')}`)
-  toDelete.forEach(file => {
+  toDelete.forEach((file) => {
     const filePath = path.join(apiDir, file)
     deleteFileOrDir(filePath)
   })
@@ -313,7 +314,7 @@ function cleanMock() {
   }
 
   const allItems = fs.readdirSync(mockDir)
-  const toDelete = allItems.filter(item => {
+  const toDelete = allItems.filter((item) => {
     // 跳过隐藏文件
     if (item.startsWith('.')) return false
     // 只删除不在保留列表中的文件/目录
@@ -326,7 +327,7 @@ function cleanMock() {
   }
 
   console.log(`📋 将删除 ${toDelete.length} 个 Mock 文件: ${toDelete.join(', ')}`)
-  toDelete.forEach(item => {
+  toDelete.forEach((item) => {
     const itemPath = path.join(mockDir, item)
     deleteFileOrDir(itemPath)
   })
@@ -341,7 +342,7 @@ function cleanI18n() {
   const langsDir = path.join(process.cwd(), 'src/locales/langs')
   const langFiles = ['zh.json', 'en.json']
 
-  langFiles.forEach(file => {
+  langFiles.forEach((file) => {
     const filePath = path.join(langsDir, file)
 
     if (!fs.existsSync(filePath)) {
@@ -359,9 +360,9 @@ function cleanI18n() {
         const allMenuKeys = Object.keys(data.menus)
         const toDelete = []
 
-        allMenuKeys.forEach(key => {
+        allMenuKeys.forEach((key) => {
           // 检查是否在保留列表中
-          const isKeep = KEEP_MODULES.i18nPrefixes.some(prefix => {
+          const isKeep = KEEP_MODULES.i18nPrefixes.some((prefix) => {
             // 提取前缀的最后一部分，如 'menus.workbench' -> 'workbench'
             const prefixKey = prefix.split('.').pop()
             return key === prefixKey
@@ -439,7 +440,7 @@ async function main() {
     confirmClean()
 
     // 等待 5 秒
-    await new Promise(resolve => setTimeout(resolve, 5000))
+    await new Promise((resolve) => setTimeout(resolve, 5000))
 
     console.log('🚀 开始清理示例模块...\n')
 
@@ -457,7 +458,6 @@ async function main() {
     console.log('  1. 请运行 npm run build 验证项目是否正常')
     console.log('  2. 如果需要恢复，请使用 git 恢复删除的文件')
     console.log('  3. 建议在清理前先提交代码到 git\n')
-
   } catch (error) {
     console.error('\n❌ 清理过程中发生错误:', error.message)
     console.error(error.stack)

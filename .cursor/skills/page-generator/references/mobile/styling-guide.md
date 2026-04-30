@@ -7,6 +7,7 @@
 **所有内容区域使用卡片式布局**。
 
 **卡片默认样式：**
+
 - **无边框**：`border: none`
 - **无阴影**：`box-shadow: none`
 - **圆角**：`border-radius: 12px`

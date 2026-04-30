@@ -123,32 +123,32 @@ icon: 'setting-o'
 
 ```typescript
 // 基础图标
-'home-o'          // 首页
-'user-o'          // 用户
-'setting-o'       // 设置
-'search'          // 搜索
-'star-o'          // 收藏
-'like-o'          // 点赞
-'chat-o'          // 聊天
-'bell-o'          // 通知
+'home-o' // 首页
+'user-o' // 用户
+'setting-o' // 设置
+'search' // 搜索
+'star-o' // 收藏
+'like-o' // 点赞
+'chat-o' // 聊天
+'bell-o' // 通知
 
 // 商业图标
-'shop-o'          // 商店
-'cart-o'          // 购物车
+'shop-o' // 商店
+'cart-o' // 购物车
 'shopping-cart-o' // 购物车（另一种）
-'orders-o'        // 订单
-'coupon-o'        // 优惠券
-'gift-o'          // 礼物
-'gold-coin-o'     // 金币
+'orders-o' // 订单
+'coupon-o' // 优惠券
+'gift-o' // 礼物
+'gold-coin-o' // 金币
 
 // 功能图标
-'apps-o'          // 应用
-'fire-o'          // 热门
-'location-o'      // 位置
-'photo-o'         // 图片
-'video-o'         // 视频
-'music-o'         // 音乐
-'calendar-o'      // 日历
+'apps-o' // 应用
+'fire-o' // 热门
+'location-o' // 位置
+'photo-o' // 图片
+'video-o' // 视频
+'music-o' // 音乐
+'calendar-o' // 日历
 ```
 
 完整图标列表请参考：[Vant Icon 组件文档](https://vant-ui.github.io/vant/#/zh-CN/icon)
@@ -178,13 +178,13 @@ import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    count: 0,
+    count: 0
   }),
   actions: {
     updateCount(count: number) {
       this.count = count
-    },
-  },
+    }
+  }
 })
 ```
 
@@ -204,16 +204,16 @@ export const useCartStore = defineStore('cart', {
 </template>
 
 <script setup lang="ts">
-import { useCartStore } from '@/stores/cart'
+  import { useCartStore } from '@/stores/cart'
 
-const cartStore = useCartStore()
+  const cartStore = useCartStore()
 
-const getBadge = (route: any) => {
-  if (route.name === 'Cart') {
-    return cartStore.count || undefined
+  const getBadge = (route: any) => {
+    if (route.name === 'Cart') {
+      return cartStore.count || undefined
+    }
+    return route.meta.badge
   }
-  return route.meta.badge
-}
 </script>
 ```
 
@@ -238,9 +238,9 @@ meta: {
 
 ```css
 :root {
-  --tabbar-background: #ffffff;        /* 背景色 */
-  --tabbar-active-color: #1989fa;      /* 激活颜色 */
-  --tabbar-inactive-color: #646566;    /* 未激活颜色 */
+  --tabbar-background: #ffffff; /* 背景色 */
+  --tabbar-active-color: #1989fa; /* 激活颜色 */
+  --tabbar-inactive-color: #646566; /* 未激活颜色 */
 }
 ```
 
@@ -250,7 +250,7 @@ meta: {
 
 ```css
 .van-tabbar {
-  height: 60px;  /* 默认 50px */
+  height: 60px; /* 默认 50px */
 }
 
 .van-tabbar-item {
@@ -262,7 +262,7 @@ meta: {
 
 ```css
 .van-tabbar-item__icon {
-  font-size: 24px;  /* 默认 22px */
+  font-size: 24px; /* 默认 22px */
 }
 ```
 
@@ -296,9 +296,9 @@ meta: {
 </template>
 
 <script setup lang="ts">
-const showTabbar = computed(() => {
-  return route.meta.tabbar === true
-})
+  const showTabbar = computed(() => {
+    return route.meta.tabbar === true
+  })
 </script>
 ```
 
@@ -317,7 +317,7 @@ children: [
   { path: 'home', meta: { title: '首页', icon: 'home-o', tabbar: true } },
   { path: 'category', meta: { title: '分类', icon: 'apps-o', tabbar: true } },
   { path: 'cart', meta: { title: '购物车', icon: 'shopping-cart-o', tabbar: true, badge: 0 } },
-  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } },
+  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } }
 ]
 ```
 
@@ -328,7 +328,7 @@ children: [
   { path: 'home', meta: { title: '首页', icon: 'home-o', tabbar: true } },
   { path: 'message', meta: { title: '消息', icon: 'chat-o', tabbar: true, badge: '' } },
   { path: 'discover', meta: { title: '发现', icon: 'fire-o', tabbar: true } },
-  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } },
+  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } }
 ]
 ```
 
@@ -338,7 +338,7 @@ children: [
 children: [
   { path: 'home', meta: { title: '首页', icon: 'home-o', tabbar: true } },
   { path: 'tools', meta: { title: '工具', icon: 'apps-o', tabbar: true } },
-  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } },
+  { path: 'profile', meta: { title: '我的', icon: 'user-o', tabbar: true } }
 ]
 ```
 

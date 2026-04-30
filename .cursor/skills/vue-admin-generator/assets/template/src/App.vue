@@ -4,18 +4,18 @@
   </el-scrollbar>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style>
-/* 隐藏原生滚动条 */
-html, body {
-  overflow: hidden;
-  height: 100vh;
-}
+  /* 隐藏原生滚动条 */
+  html,
+  body {
+    overflow: hidden;
+    height: 100vh;
+  }
 
-#app {
-  height: 100vh;
-  overflow: hidden;
-}
+  #app {
+    height: 100vh;
+    overflow: hidden;
+  }
 </style>

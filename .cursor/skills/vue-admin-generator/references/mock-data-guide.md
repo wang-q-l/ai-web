@@ -13,9 +13,10 @@ import { MockMethod } from 'vite-plugin-mock'
 
 export default [
   {
-    url: '/api/xxx',      // 接口路径
-    method: 'get',        // 请求方法
-    response: () => {     // 响应数据
+    url: '/api/xxx', // 接口路径
+    method: 'get', // 请求方法
+    response: () => {
+      // 响应数据
       return {
         code: 200,
         data: {}

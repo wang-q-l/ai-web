@@ -10,15 +10,12 @@ import baseRoutes from './modules/base'
 import tabbarRoutes from './modules/tabbar'
 
 // 合并所有路由
-const routes: RouteRecordRaw[] = [
-  ...baseRoutes,
-  tabbarRoutes,
-]
+const routes: RouteRecordRaw[] = [...baseRoutes, tabbarRoutes]
 
 // 创建路由实例
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
 export default router

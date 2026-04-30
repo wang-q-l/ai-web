@@ -1,12 +1,7 @@
 <template>
   <div class="profile-page">
     <div class="profile-header">
-      <van-image
-        round
-        width="80"
-        height="80"
-        src="https://via.placeholder.com/80"
-      />
+      <van-image round width="80" height="80" src="https://via.placeholder.com/80" />
       <div class="user-info">
         <h3>用户名</h3>
         <p>这是个人简介</p>
@@ -30,73 +25,71 @@
     </van-cell-group>
 
     <div class="logout-btn">
-      <van-button round block type="danger" @click="onLogout">
-        退出登录
-      </van-button>
+      <van-button round block type="danger" @click="onLogout"> 退出登录 </van-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { showConfirmDialog, showToast } from 'vant'
-import { useTheme } from '@/composables/useTheme'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { showConfirmDialog, showToast } from 'vant'
+  import { useTheme } from '@/composables/useTheme'
 
-const router = useRouter()
-const { theme, toggleTheme: toggle } = useTheme()
-const isDark = ref(theme.value === 'dark')
+  const router = useRouter()
+  const { theme, toggleTheme: toggle } = useTheme()
+  const isDark = ref(theme.value === 'dark')
 
-const toggleTheme = () => {
-  toggle()
-}
+  const toggleTheme = () => {
+    toggle()
+  }
 
-const onLogout = () => {
-  showConfirmDialog({
-    title: '提示',
-    message: '确定要退出登录吗？',
-  })
-    .then(() => {
-      showToast('已退出登录')
-      router.push('/login')
+  const onLogout = () => {
+    showConfirmDialog({
+      title: '提示',
+      message: '确定要退出登录吗？'
     })
-    .catch(() => {
-      // 取消
-    })
-}
+      .then(() => {
+        showToast('已退出登录')
+        router.push('/login')
+      })
+      .catch(() => {
+        // 取消
+      })
+  }
 </script>
 
 <style scoped>
-.profile-page {
-  background-color: var(--background-color);
-  min-height: 100vh;
-  padding-bottom: 20px;
-}
+  .profile-page {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding-bottom: 20px;
+  }
 
-.profile-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, #667eea 100%);
-  padding: 40px 20px;
-  display: flex;
-  align-items: center;
-  color: #fff;
-}
+  .profile-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #667eea 100%);
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
 
-.user-info {
-  margin-left: 20px;
-}
+  .user-info {
+    margin-left: 20px;
+  }
 
-.user-info h3 {
-  margin: 0 0 8px 0;
-  font-size: 20px;
-}
+  .user-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+  }
 
-.user-info p {
-  margin: 0;
-  opacity: 0.8;
-  font-size: 14px;
-}
+  .user-info p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 14px;
+  }
 
-.logout-btn {
-  padding: 20px;
-}
+  .logout-btn {
+    padding: 20px;
+  }
 </style>

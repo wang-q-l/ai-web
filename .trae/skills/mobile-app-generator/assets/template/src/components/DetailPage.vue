@@ -22,45 +22,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { showToast } from 'vant'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { showToast } from 'vant'
 
-interface Props {
-  title?: string
-}
+  interface Props {
+    title?: string
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  title: '详情页',
-})
+  const props = withDefaults(defineProps<Props>(), {
+    title: '详情页'
+  })
 
-const router = useRouter()
+  const router = useRouter()
 
-const detail = ref({
-  image: 'https://via.placeholder.com/300',
-  title: '商品名称',
-  price: '99.99',
-  stock: '100',
-  desc: '这是商品的详细描述信息，可以包含多行文字。',
-})
+  const detail = ref({
+    image: 'https://via.placeholder.com/300',
+    title: '商品名称',
+    price: '99.99',
+    stock: '100',
+    desc: '这是商品的详细描述信息，可以包含多行文字。'
+  })
 
-const onAddCart = () => {
-  showToast('已加入购物车')
-}
+  const onAddCart = () => {
+    showToast('已加入购物车')
+  }
 
-const onBuy = () => {
-  showToast('立即购买功能开发中')
-}
+  const onBuy = () => {
+    showToast('立即购买功能开发中')
+  }
 
-const onBack = () => {
-  router.back()
-}
+  const onBack = () => {
+    router.back()
+  }
 </script>
 
 <style scoped>
-.detail-page {
-  background-color: var(--background-color);
-  min-height: 100vh;
-  padding-bottom: 50px;
-}
+  .detail-page {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding-bottom: 50px;
+  }
 </style>

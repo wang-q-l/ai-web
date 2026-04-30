@@ -93,10 +93,10 @@ src/
 
 ```css
 :root {
-  --primary-color: #1989fa;  /* 主题色 */
-  --success-color: #07c160;  /* 成功色 */
-  --warning-color: #ff976a;  /* 警告色 */
-  --danger-color: #ee0a24;   /* 危险色 */
+  --primary-color: #1989fa; /* 主题色 */
+  --success-color: #07c160; /* 成功色 */
+  --warning-color: #ff976a; /* 警告色 */
+  --danger-color: #ee0a24; /* 危险色 */
 }
 ```
 
@@ -158,7 +158,7 @@ export default [
 </template>
 
 <script setup lang="ts">
-import ListPage from '@/components/ListPage.vue'
+  import ListPage from '@/components/ListPage.vue'
 </script>
 ```
 
@@ -170,7 +170,7 @@ import ListPage from '@/components/ListPage.vue'
 </template>
 
 <script setup lang="ts">
-import FormPage from '@/components/FormPage.vue'
+  import FormPage from '@/components/FormPage.vue'
 </script>
 ```
 
@@ -182,7 +182,7 @@ import FormPage from '@/components/FormPage.vue'
 </template>
 
 <script setup lang="ts">
-import DetailPage from '@/components/DetailPage.vue'
+  import DetailPage from '@/components/DetailPage.vue'
 </script>
 ```
 
@@ -194,7 +194,7 @@ import DetailPage from '@/components/DetailPage.vue'
 </template>
 
 <script setup lang="ts">
-import SearchPage from '@/components/SearchPage.vue'
+  import SearchPage from '@/components/SearchPage.vue'
 </script>
 ```
 
@@ -204,12 +204,12 @@ import SearchPage from '@/components/SearchPage.vue'
 
 ```vue
 <script setup lang="ts">
-import { useList } from '@/composables/useList'
+  import { useList } from '@/composables/useList'
 
-const { list, loading, finished, refreshing, onLoad, onRefresh } = useList({
-  fetchApi: '/api/products/list',
-  pageSize: 10,
-})
+  const { list, loading, finished, refreshing, onLoad, onRefresh } = useList({
+    fetchApi: '/api/products/list',
+    pageSize: 10
+  })
 </script>
 ```
 
@@ -217,9 +217,9 @@ const { list, loading, finished, refreshing, onLoad, onRefresh } = useList({
 
 ```vue
 <script setup lang="ts">
-import { useTheme } from '@/composables/useTheme'
+  import { useTheme } from '@/composables/useTheme'
 
-const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
 </script>
 ```
 

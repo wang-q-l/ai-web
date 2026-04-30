@@ -17,12 +17,7 @@
         <div class="tree-header">
           <span class="tree-title">部门列表</span>
         </div>
-        <el-input
-          v-model="deptFilterText"
-          placeholder="请输入内容"
-          clearable
-          class="tree-search"
-        />
+        <el-input v-model="deptFilterText" placeholder="请输入内容" clearable class="tree-search" />
         <div class="tree-container">
           <el-tree
             ref="treeRef"
@@ -74,12 +69,7 @@
           </div>
 
           <div class="table-container">
-            <el-table
-              ref="tableRef"
-              v-loading="loading"
-              :data="tableData"
-              height="100%"
-            >
+            <el-table ref="tableRef" v-loading="loading" :data="tableData" height="100%">
               <el-table-column prop="nickname" label="姓名" width="120" fixed="left" />
               <el-table-column prop="username" label="账号" width="120" />
               <el-table-column prop="departmentPath" label="所属部门" min-width="200" />
@@ -126,103 +116,103 @@
 
 ```vue
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
-import type { User, Department } from '@/types/api'
-import { getUserList, getDepartmentTree } from '@/api/organization'
+  import { ref, reactive, watch, onMounted } from 'vue'
+  import { ElMessage } from 'element-plus'
+  import { Search, Plus } from '@element-plus/icons-vue'
+  import type { User, Department } from '@/types/api'
+  import { getUserList, getDepartmentTree } from '@/api/organization'
 
-defineOptions({ name: 'UserManagement' })
+  defineOptions({ name: 'UserManagement' })
 
-// 部门树
-const deptFilterText = ref('')
-const treeRef = ref()
-const departmentTree = ref<Department[]>([])
-const selectedDeptId = ref<number>()
+  // 部门树
+  const deptFilterText = ref('')
+  const treeRef = ref()
+  const departmentTree = ref<Department[]>([])
+  const selectedDeptId = ref<number>()
 
-// 筛选表单
-const filterForm = reactive({
-  keyword: '',
-  status: undefined as number | undefined
-})
+  // 筛选表单
+  const filterForm = reactive({
+    keyword: '',
+    status: undefined as number | undefined
+  })
 
-// 表格数据
-const loading = ref(false)
-const tableData = ref<User[]>([])
+  // 表格数据
+  const loading = ref(false)
+  const tableData = ref<User[]>([])
 
-// 分页
-const pagination = reactive({
-  page: 1,
-  pageSize: 10,
-  total: 0
-})
+  // 分页
+  const pagination = reactive({
+    page: 1,
+    pageSize: 10,
+    total: 0
+  })
 
-// 获取部门树
-const fetchDepartmentTree = async () => {
-  try {
-    const res = await getDepartmentTree()
-    if (res.code === 200) {
-      departmentTree.value = res.data || []
+  // 获取部门树
+  const fetchDepartmentTree = async () => {
+    try {
+      const res = await getDepartmentTree()
+      if (res.code === 200) {
+        departmentTree.value = res.data || []
+      }
+    } catch (error) {
+      console.error('获取部门树失败:', error)
+      ElMessage.error('获取部门树失败')
     }
-  } catch (error) {
-    console.error('获取部门树失败:', error)
-    ElMessage.error('获取部门树失败')
   }
-}
 
-// 获取用户列表
-const fetchUserList = async () => {
-  loading.value = true
-  try {
-    const params = {
-      departmentId: selectedDeptId.value,
-      keyword: filterForm.keyword || undefined,
-      status: filterForm.status,
-      page: pagination.page,
-      pageSize: pagination.pageSize
+  // 获取用户列表
+  const fetchUserList = async () => {
+    loading.value = true
+    try {
+      const params = {
+        departmentId: selectedDeptId.value,
+        keyword: filterForm.keyword || undefined,
+        status: filterForm.status,
+        page: pagination.page,
+        pageSize: pagination.pageSize
+      }
+      const res = await getUserList(params)
+      if (res.code === 200) {
+        tableData.value = res.data.list || []
+        pagination.total = res.data.total || 0
+      }
+    } catch (error) {
+      console.error('获取用户列表失败:', error)
+      ElMessage.error('获取用户列表失败')
+    } finally {
+      loading.value = false
     }
-    const res = await getUserList(params)
-    if (res.code === 200) {
-      tableData.value = res.data.list || []
-      pagination.total = res.data.total || 0
-    }
-  } catch (error) {
-    console.error('获取用户列表失败:', error)
-    ElMessage.error('获取用户列表失败')
-  } finally {
-    loading.value = false
   }
-}
 
-// 部门节点点击
-const handleDeptClick = (data: Department) => {
-  selectedDeptId.value = data.id
-  pagination.page = 1
-  fetchUserList()
-}
+  // 部门节点点击
+  const handleDeptClick = (data: Department) => {
+    selectedDeptId.value = data.id
+    pagination.page = 1
+    fetchUserList()
+  }
 
-// 树节点过滤
-const filterNode = (value: string, data: Department) => {
-  if (!value) return true
-  return data.name.includes(value)
-}
+  // 树节点过滤
+  const filterNode = (value: string, data: Department) => {
+    if (!value) return true
+    return data.name.includes(value)
+  }
 
-// 监听搜索文本变化
-watch(deptFilterText, (val) => {
-  treeRef.value?.filter(val)
-})
+  // 监听搜索文本变化
+  watch(deptFilterText, (val) => {
+    treeRef.value?.filter(val)
+  })
 
-// 搜索
-const handleSearch = () => {
-  pagination.page = 1
-  fetchUserList()
-}
+  // 搜索
+  const handleSearch = () => {
+    pagination.page = 1
+    fetchUserList()
+  }
 
-// 初始化
-onMounted(() => {
-  fetchDepartmentTree()
-  fetchUserList()
-})
+  // 初始化
+  onMounted(() => {
+    fetchDepartmentTree()
+    fetchUserList()
+  })
 </script>
 ```
 
@@ -230,129 +220,130 @@ onMounted(() => {
 
 ```vue
 <style lang="scss" scoped>
-.page-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.split-layout {
-  display: flex;
-  gap: 16px;
-  height: 100%;
-  overflow: hidden;
-
-  .left-card {
-    width: 280px;
-    flex-shrink: 0;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 12px;
+  .page-container {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-
-    :deep(.el-card__body) {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .tree-header {
-      margin-bottom: 12px;
-
-      .tree-title {
-        font-size: 16px;
-        font-weight: 500;
-        color: #303133;
-      }
-    }
-
-    .tree-search {
-      margin-bottom: 12px;
-    }
-
-    .tree-container {
-      flex: 1;
-      overflow: auto;
-    }
   }
 
-  .right-content {
-    flex: 1;
+  .split-layout {
     display: flex;
-    flex-direction: column;
     gap: 16px;
+    height: 100%;
     overflow: hidden;
 
-    .filter-card {
+    .left-card {
+      width: 280px;
       flex-shrink: 0;
       border: none !important;
       box-shadow: none !important;
       border-radius: 12px;
-
-      :deep(.el-card__body) {
-        padding: 12px 20px;
-      }
-
-      .filter-form {
-        margin-bottom: 0;
-        display: flex;
-        align-items: center;
-
-        :deep(.el-form-item) {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    .table-card {
-      flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: none !important;
-      box-shadow: none !important;
-      border-radius: 12px;
 
       :deep(.el-card__body) {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .tree-header {
+        margin-bottom: 12px;
+
+        .tree-title {
+          font-size: 16px;
+          font-weight: 500;
+          color: #303133;
+        }
+      }
+
+      .tree-search {
+        margin-bottom: 12px;
+      }
+
+      .tree-container {
+        flex: 1;
+        overflow: auto;
+      }
+    }
+
+    .right-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+
+      .filter-card {
+        flex-shrink: 0;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 12px;
+
+        :deep(.el-card__body) {
+          padding: 12px 20px;
+        }
+
+        .filter-form {
+          margin-bottom: 0;
+          display: flex;
+          align-items: center;
+
+          :deep(.el-form-item) {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .table-card {
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        padding: 16px;
-      }
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 12px;
 
-      .table-header {
-        display: flex;
-        margin-bottom: 16px;
-
-        .el-button:not(:first-child) {
-          margin-left: 12px;
+        :deep(.el-card__body) {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          padding: 16px;
         }
-      }
 
-      .table-container {
-        flex: 1;
-        overflow: hidden;
-      }
+        .table-header {
+          display: flex;
+          margin-bottom: 16px;
 
-      .pagination-container {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 16px;
+          .el-button:not(:first-child) {
+            margin-left: 12px;
+          }
+        }
+
+        .table-container {
+          flex: 1;
+          overflow: hidden;
+        }
+
+        .pagination-container {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 16px;
+        }
       }
     }
   }
-}
 </style>
 ```
 
 ## 关键点说明
 
 ### 分栏布局结构
+
 ```scss
 .split-layout {
   display: flex;
@@ -367,10 +358,11 @@ onMounted(() => {
 - `height: 100%` 和 `overflow: hidden` 确保高度固定
 
 ### 左侧卡片
+
 ```scss
 .left-card {
   width: 280px;
-  flex-shrink: 0;  // 不压缩
+  flex-shrink: 0; // 不压缩
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -382,9 +374,10 @@ onMounted(() => {
 - 内部使用 flex 布局，树容器自动占满剩余空间
 
 ### 右侧内容
+
 ```scss
 .right-content {
-  flex: 1;  // 占据剩余空间
+  flex: 1; // 占据剩余空间
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -396,6 +389,7 @@ onMounted(() => {
 - 内部垂直排列筛选卡片和表格卡片
 
 ### 树组件配置
+
 ```vue
 <el-tree
   ref="treeRef"
@@ -414,6 +408,7 @@ onMounted(() => {
 - `:filter-node-method` - 自定义过滤方法
 
 ### 树节点过滤
+
 ```typescript
 const filterNode = (value: string, data: Department) => {
   if (!value) return true
@@ -426,17 +421,19 @@ watch(deptFilterText, (val) => {
 ```
 
 ### 联动交互
+
 ```typescript
 const handleDeptClick = (data: Department) => {
   selectedDeptId.value = data.id
-  pagination.page = 1  // 重置页码
-  fetchUserList()  // 重新获取列表
+  pagination.page = 1 // 重置页码
+  fetchUserList() // 重新获取列表
 }
 ```
 
 点击左侧树节点时，右侧列表根据选中的部门进行过滤。
 
 ### 数据结构
+
 ```typescript
 interface Department {
   id: number

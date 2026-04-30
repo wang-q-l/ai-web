@@ -23,7 +23,12 @@
           />
         </el-form-item>
         <el-form-item label="菜单状态">
-          <el-select v-model="filterForm.status" placeholder="请选择" clearable style="width: 150px">
+          <el-select
+            v-model="filterForm.status"
+            placeholder="请选择"
+            clearable
+            style="width: 150px"
+          >
             <el-option label="启用" :value="1" />
             <el-option label="禁用" :value="0" />
           </el-select>
@@ -137,56 +142,63 @@
 
 ```vue
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Plus } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
-import type { Menu } from '@/types/api'
-import { getMenuList, addMenu, updateMenu, deleteMenu, updateMenuStatus } from '@/api/organization'
+  import { ref, reactive, onMounted, computed } from 'vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { Search, Plus } from '@element-plus/icons-vue'
+  import type { FormInstance, FormRules } from 'element-plus'
+  import type { Menu } from '@/types/api'
+  import {
+    getMenuList,
+    addMenu,
+    updateMenu,
+    deleteMenu,
+    updateMenuStatus
+  } from '@/api/organization'
 
-defineOptions({ name: 'MenuPage' })
+  defineOptions({ name: 'MenuPage' })
 
-// 表格数据
-const loading = ref(false)
-const tableData = ref<Menu[]>([])
-const isExpanded = ref(true)
-const tableRef = ref()
-const tableKey = ref(0)
+  // 表格数据
+  const loading = ref(false)
+  const tableData = ref<Menu[]>([])
+  const isExpanded = ref(true)
+  const tableRef = ref()
+  const tableKey = ref(0)
 
-// 菜单树选项（用于上级菜单选择）
-const menuTreeOptions = computed(() => {
-  // 过滤掉按钮类型的菜单，只显示目录和菜单
-  const filterButtons = (menus: Menu[]): Menu[] => {
-    return menus
-      .filter((menu) => menu.type !== 'button')
-      .map((menu) => ({
-        ...menu,
-        children: menu.children ? filterButtons(menu.children) : undefined
-      }))
+  // 菜单树选项（用于上级菜单选择）
+  const menuTreeOptions = computed(() => {
+    // 过滤掉按钮类型的菜单，只显示目录和菜单
+    const filterButtons = (menus: Menu[]): Menu[] => {
+      return menus
+        .filter((menu) => menu.type !== 'button')
+        .map((menu) => ({
+          ...menu,
+          children: menu.children ? filterButtons(menu.children) : undefined
+        }))
+    }
+    return filterButtons(tableData.value)
+  })
+
+  // 展开/折叠
+  const toggleExpand = () => {
+    isExpanded.value = !isExpanded.value
+    tableKey.value++
   }
-  return filterButtons(tableData.value)
-})
 
-// 展开/折叠
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value
-  tableKey.value++
-}
+  // 新增（支持添加子项）
+  const handleAdd = (parentId?: number) => {
+    dialogTitle.value = '新增菜单'
+    form.parentId = parentId
+    dialogVisible.value = true
+  }
 
-// 新增（支持添加子项）
-const handleAdd = (parentId?: number) => {
-  dialogTitle.value = '新增菜单'
-  form.parentId = parentId
-  dialogVisible.value = true
-}
-
-// ... 其他 CRUD 操作类似标准列表页
+  // ... 其他 CRUD 操作类似标准列表页
 </script>
 ```
 
 ## 关键点说明
 
 ### 树形表格配置
+
 ```vue
 <el-table
   row-key="id"
@@ -200,32 +212,37 @@ const handleAdd = (parentId?: number) => {
 - `:default-expand-all` - 控制默认展开状态
 
 ### 展开/折叠功能
+
 ```typescript
 const isExpanded = ref(true)
 const tableKey = ref(0)
 
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value
-  tableKey.value++  // 强制重新渲染
+  tableKey.value++ // 强制重新渲染
 }
 ```
 
 ### 新增子项功能
+
 ```typescript
 const handleAdd = (parentId?: number) => {
   dialogTitle.value = '新增菜单'
-  form.parentId = parentId  // 设置父节点ID
+  form.parentId = parentId // 设置父节点ID
   dialogVisible.value = true
 }
 ```
 
 在操作列中：
+
 ```vue
 <el-button link type="primary" @click="handleAdd(row.id)">新增</el-button>
 ```
 
 ### 上级菜单选择
+
 使用 `el-tree-select` 组件：
+
 ```vue
 <el-tree-select
   v-model="form.parentId"
@@ -241,11 +258,13 @@ const handleAdd = (parentId?: number) => {
 - `menuTreeOptions` - 过滤掉按钮类型的菜单
 
 ### 图标显示
+
 ```vue
 <i v-if="row.icon" class="iconfont-sys" v-html="row.icon"></i>
 ```
 
 样式：
+
 ```scss
 .iconfont-sys {
   font-size: 18px;
@@ -253,6 +272,7 @@ const handleAdd = (parentId?: number) => {
 ```
 
 ### 数据结构
+
 ```typescript
 interface Menu {
   id: number

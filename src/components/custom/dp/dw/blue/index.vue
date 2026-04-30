@@ -3,9 +3,23 @@
     <!-- 文字框行：左装饰 + 文字 + 右装饰 -->
     <div class="marker-txt-row">
       <!-- 左侧装饰：三角 + 青色发光竖条 -->
-      <svg class="bracket-svg" width="10" height="26" viewBox="0 0 14 42" fill="none" overflow="visible">
+      <svg
+        class="bracket-svg"
+        width="10"
+        height="26"
+        viewBox="0 0 14 42"
+        fill="none"
+        overflow="visible"
+      >
         <defs>
-          <filter :id="`gL-${uid}`" x="-300%" y="-100%" width="700%" height="300%" color-interpolation-filters="sRGB">
+          <filter
+            :id="`gL-${uid}`"
+            x="-300%"
+            y="-100%"
+            width="700%"
+            height="300%"
+            color-interpolation-filters="sRGB"
+          >
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -25,9 +39,23 @@
       <div class="marker-text">{{ text }}</div>
 
       <!-- 右侧装饰（镜像） -->
-      <svg class="bracket-svg" width="10" height="26" viewBox="0 0 14 42" fill="none" overflow="visible">
+      <svg
+        class="bracket-svg"
+        width="10"
+        height="26"
+        viewBox="0 0 14 42"
+        fill="none"
+        overflow="visible"
+      >
         <defs>
-          <filter :id="`gR-${uid}`" x="-300%" y="-100%" width="700%" height="300%" color-interpolation-filters="sRGB">
+          <filter
+            :id="`gR-${uid}`"
+            x="-300%"
+            y="-100%"
+            width="700%"
+            height="300%"
+            color-interpolation-filters="sRGB"
+          >
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -48,7 +76,14 @@
     <svg class="pin-arrow" viewBox="-8 -5 62 58" width="36" height="34" fill="none">
       <defs>
         <!-- 阴影渐变 -->
-        <linearGradient :id="`Ps-${uid}`" x1="23" y1="0" x2="55" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Ps-${uid}`"
+          x1="23"
+          y1="0"
+          x2="55"
+          y2="0"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#1B2234" />
           <stop offset="1" stop-color="#151927" stop-opacity="0" />
         </linearGradient>
@@ -62,37 +97,86 @@
           <stop offset="1" stop-color="#00CCFF" />
         </radialGradient>
         <!-- 右侧面填充 -->
-        <linearGradient :id="`Prf-${uid}`" x1="23" y1="0" x2="23" y2="42" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Prf-${uid}`"
+          x1="23"
+          y1="0"
+          x2="23"
+          y2="42"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#0051FF" />
           <stop offset="1" stop-color="#00CFDE" />
         </linearGradient>
         <!-- 右侧面描边 -->
-        <linearGradient :id="`Prs-${uid}`" x1="23" y1="0" x2="23" y2="42" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Prs-${uid}`"
+          x1="23"
+          y1="0"
+          x2="23"
+          y2="42"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#00BBFF" />
           <stop offset="1" stop-color="white" />
         </linearGradient>
         <!-- 顶面高光 -->
-        <linearGradient :id="`Pth-${uid}`" x1="23" y1="3" x2="23" y2="11" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Pth-${uid}`"
+          x1="23"
+          y1="3"
+          x2="23"
+          y2="11"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="white" />
           <stop offset="1" stop-color="#006AFF" stop-opacity="0" />
         </linearGradient>
         <!-- 左侧面填充 -->
-        <linearGradient :id="`Plf-${uid}`" x1="12" y1="0" x2="12" y2="16" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Plf-${uid}`"
+          x1="12"
+          y1="0"
+          x2="12"
+          y2="16"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#0080FF" />
           <stop offset="1" stop-color="white" />
         </linearGradient>
         <!-- 左侧面描边 -->
-        <linearGradient :id="`Pls-${uid}`" x1="12" y1="0" x2="12" y2="16" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Pls-${uid}`"
+          x1="12"
+          y1="0"
+          x2="12"
+          y2="16"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#00BBFF" />
           <stop offset="1" stop-color="white" />
         </linearGradient>
         <!-- 箭体高光填充 -->
-        <linearGradient :id="`Pbh-${uid}`" x1="23" y1="9" x2="23" y2="32" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Pbh-${uid}`"
+          x1="23"
+          y1="9"
+          x2="23"
+          y2="32"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="#75DAFF" />
           <stop offset="1" stop-color="#0077FF" stop-opacity="0" />
         </linearGradient>
         <!-- 箭体高光描边 -->
-        <linearGradient :id="`Pbs-${uid}`" x1="23" y1="5" x2="23" y2="32" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          :id="`Pbs-${uid}`"
+          x1="23"
+          y1="5"
+          x2="23"
+          y2="32"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stop-color="white" />
           <stop offset="1" stop-color="#0080FF" stop-opacity="0" />
         </linearGradient>

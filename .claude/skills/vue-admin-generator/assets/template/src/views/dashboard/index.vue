@@ -7,33 +7,32 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
-.empty-page {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: 12px;
-}
+  .empty-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 12px;
+  }
 
-.empty-content {
-  text-align: center;
-}
+  .empty-content {
+    text-align: center;
+  }
 
-.page-title {
-  font-size: 24px;
-  font-weight: 500;
-  color: #303133;
-  margin-bottom: 12px;
-}
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #303133;
+    margin-bottom: 12px;
+  }
 
-.page-subtitle {
-  font-size: 14px;
-  color: #909399;
-}
+  .page-subtitle {
+    font-size: 14px;
+    color: #909399;
+  }
 </style>

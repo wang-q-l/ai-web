@@ -1019,12 +1019,14 @@ export interface ListParams {
       ```
 
     - ❌ 错误格式：
+
       ```markdown
       **标题**：
 
       - 列表项1
       - 列表项2
       ```
+
     - 原因：Pandoc 需要空行来正确解析列表，否则在 Word 中列表会挤在一起
 
 ## 文档转换功能

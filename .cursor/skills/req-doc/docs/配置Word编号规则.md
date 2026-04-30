@@ -73,6 +73,7 @@ bash .claude/skills/req-doc/scripts/export-word-numbered.sh 安全监督风险�
 ## 验证配置
 
 导出文档后，在 Word 中验证：
+
 1. 右键点击标题
 2. 查看是否有"调整编号值"选项
 3. 如果有，说明编号配置成功

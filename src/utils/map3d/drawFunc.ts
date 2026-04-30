@@ -208,10 +208,7 @@ export const drawflySpot = (curve: any) => {
 }
 
 // 绘制两点链接飞线
-export const drawLineBetween2Spot = (
-  coordStart: [number, number],
-  coordEnd: [number, number]
-) => {
+export const drawLineBetween2Spot = (coordStart: [number, number], coordEnd: [number, number]) => {
   const [x0, y0, z0] = [...coordStart, mapConfig.spotZIndex]
   const [x1, y1, z1] = [...coordEnd, mapConfig.spotZIndex]
 
@@ -239,10 +236,7 @@ export const drawLineBetween2Spot = (
     'position',
     new THREE.BufferAttribute(new Float32Array(positions), 3, true)
   )
-  lineGeometry.setAttribute(
-    'color',
-    new THREE.BufferAttribute(new Float32Array(colors), 3, true)
-  )
+  lineGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3, true))
 
   const material = new THREE.LineBasicMaterial({
     vertexColors: true,

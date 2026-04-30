@@ -52,54 +52,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+  import { ref, computed } from 'vue'
 
-const activeTab = ref('all')
+  const activeTab = ref('all')
 
-const messages = ref([
-  {
-    id: 1,
-    type: 'primary',
-    title: '系统通知',
-    content: '您的账户已成功激活',
-    time: '2026-02-20 10:00'
-  },
-  {
-    id: 2,
-    type: 'success',
-    title: '订单通知',
-    content: '您的订单已发货',
-    time: '2026-02-19 15:30'
-  },
-  {
-    id: 3,
-    type: 'warning',
-    title: '活动通知',
-    content: '新春促销活动即将开始',
-    time: '2026-02-18 09:00'
-  }
-])
+  const messages = ref([
+    {
+      id: 1,
+      type: 'primary',
+      title: '系统通知',
+      content: '您的账户已成功激活',
+      time: '2026-02-20 10:00'
+    },
+    {
+      id: 2,
+      type: 'success',
+      title: '订单通知',
+      content: '您的订单已发货',
+      time: '2026-02-19 15:30'
+    },
+    {
+      id: 3,
+      type: 'warning',
+      title: '活动通知',
+      content: '新春促销活动即将开始',
+      time: '2026-02-18 09:00'
+    }
+  ])
 
-const systemMessages = computed(() =>
-  messages.value.filter(m => m.title.includes('系统'))
-)
+  const systemMessages = computed(() => messages.value.filter((m) => m.title.includes('系统')))
 
-const orderMessages = computed(() =>
-  messages.value.filter(m => m.title.includes('订单'))
-)
+  const orderMessages = computed(() => messages.value.filter((m) => m.title.includes('订单')))
 </script>
 
 <style scoped>
-h1 {
-  margin-bottom: var(--spacing-xl);
-}
+  h1 {
+    margin-bottom: var(--spacing-xl);
+  }
 
-h4 {
-  margin-bottom: var(--spacing-sm);
-}
+  h4 {
+    margin-bottom: var(--spacing-sm);
+  }
 
-p {
-  color: var(--text-secondary);
-  margin: 0;
-}
+  p {
+    color: var(--text-secondary);
+    margin: 0;
+  }
 </style>

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import ChinaMap3D from '@/components/business/china-map-3d/index.vue'
+  import ChinaMap3D from '@/components/business/china-map-3d/index.vue'
 </script>
 ```
 
@@ -32,10 +32,10 @@ import ChinaMap3D from '@/components/business/china-map-3d/index.vue'
 <template>
   <ChinaMap3D
     :config="{
-      initialAdcode: '110000',  // 初始显示北京市
-      showGUI: true,            // 显示调试面板
-      showBreadcrumb: true,     // 显示面包屑
-      showLoading: true,        // 显示加载状态
+      initialAdcode: '110000', // 初始显示北京市
+      showGUI: true, // 显示调试面板
+      showBreadcrumb: true, // 显示面包屑
+      showLoading: true, // 显示加载状态
       colors: {
         mapColor: '#06092a',
         mapHoverColor: '#408ef9',
@@ -52,17 +52,17 @@ import ChinaMap3D from '@/components/business/china-map-3d/index.vue'
 </template>
 
 <script setup>
-const handleRegionClick = (event) => {
-  console.log('点击区域:', event.name, event.adcode)
-}
+  const handleRegionClick = (event) => {
+    console.log('点击区域:', event.name, event.adcode)
+  }
 
-const handleBreadcrumbChange = (breadcrumb) => {
-  console.log('面包屑变化:', breadcrumb)
-}
+  const handleBreadcrumbChange = (breadcrumb) => {
+    console.log('面包屑变化:', breadcrumb)
+  }
 
-const handleLoadingChange = (loading) => {
-  console.log('加载状态:', loading)
-}
+  const handleLoadingChange = (loading) => {
+    console.log('加载状态:', loading)
+  }
 </script>
 ```
 
@@ -111,44 +111,44 @@ const handleLoadingChange = (loading) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const mapRef = ref()
+  const mapRef = ref()
 
-const backToChina = () => {
-  mapRef.value?.goBack(0)
-}
+  const backToChina = () => {
+    mapRef.value?.goBack(0)
+  }
 </script>
 ```
 
 ## Props
 
-| 参数 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| config | 组件配置 | `ChinaMap3DConfig` | `{}` |
-| fullScreen | 是否全屏模式 | `boolean` | `false` |
+| 参数       | 说明         | 类型               | 默认值  |
+| ---------- | ------------ | ------------------ | ------- |
+| config     | 组件配置     | `ChinaMap3DConfig` | `{}`    |
+| fullScreen | 是否全屏模式 | `boolean`          | `false` |
 
 ## Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| region-click | 区域点击事件 | `(event: MapRegionClickEvent)` |
-| breadcrumb-change | 面包屑变化事件 | `(breadcrumb: BreadcrumbItem[])` |
-| loading-change | 加载状态变化事件 | `(loading: boolean)` |
+| 事件名            | 说明             | 回调参数                         |
+| ----------------- | ---------------- | -------------------------------- |
+| region-click      | 区域点击事件     | `(event: MapRegionClickEvent)`   |
+| breadcrumb-change | 面包屑变化事件   | `(breadcrumb: BreadcrumbItem[])` |
+| loading-change    | 加载状态变化事件 | `(loading: boolean)`             |
 
 ## Slots
 
-| 插槽名 | 说明 | 作用域参数 |
-|--------|------|-----------|
-| breadcrumb | 自定义面包屑 | `{ breadcrumb, goBack }` |
-| loading | 自定义加载状态 | - |
-| tooltip | 自定义提示框 | `{ tooltip }` |
+| 插槽名     | 说明           | 作用域参数               |
+| ---------- | -------------- | ------------------------ |
+| breadcrumb | 自定义面包屑   | `{ breadcrumb, goBack }` |
+| loading    | 自定义加载状态 | -                        |
+| tooltip    | 自定义提示框   | `{ tooltip }`            |
 
 ## Exposes
 
-| 方法/属性 | 说明 | 类型 |
-|-----------|------|------|
-| loading | 当前加载状态 | `Ref<boolean>` |
-| breadcrumb | 当前面包屑导航 | `Ref<BreadcrumbItem[]>` |
-| goBack | 返回到指定层级 | `(index: number) => void` |
+| 方法/属性       | 说明            | 类型                       |
+| --------------- | --------------- | -------------------------- |
+| loading         | 当前加载状态    | `Ref<boolean>`             |
+| breadcrumb      | 当前面包屑导航  | `Ref<BreadcrumbItem[]>`    |
+| goBack          | 返回到指定层级  | `(index: number) => void`  |
 | mapContainerRef | 地图容器DOM引用 | `Ref<HTMLElement \| null>` |

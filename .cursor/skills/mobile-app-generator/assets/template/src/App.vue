@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-// App 根组件
+  // App 根组件
 </script>
 
 <style>
-/* 全局样式 */
+  /* 全局样式 */
 </style>

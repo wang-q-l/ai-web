@@ -10,10 +10,7 @@ This skill provides guidance for creating effective skills.
 
 ## About Skills
 
-Skills are modular, self-contained packages that extend Claude's capabilities by providing
-specialized knowledge, workflows, and tools. Think of them as "onboarding guides" for specific
-domains or tasks—they transform Claude from a general-purpose agent into a specialized agent
-equipped with procedural knowledge that no model can fully possess.
+Skills are modular, self-contained packages that extend Claude's capabilities by providing specialized knowledge, workflows, and tools. Think of them as "onboarding guides" for specific domains or tasks—they transform Claude from a general-purpose agent into a specialized agent equipped with procedural knowledge that no model can fully possess.
 
 ### What Skills Provide
 
@@ -132,8 +129,7 @@ Keep SKILL.md body to the essentials and under 500 lines to minimize context blo
 
 ## Quick start
 
-Extract text with pdfplumber:
-[code example]
+Extract text with pdfplumber: [code example]
 
 ## Advanced features
 
@@ -188,8 +184,7 @@ Use docx-js for new documents. See [DOCX-JS.md](DOCX-JS.md).
 
 For simple edits, modify the XML directly.
 
-**For tracked changes**: See [REDLINING.md](REDLINING.md)
-**For OOXML details**: See [OOXML.md](OOXML.md)
+**For tracked changes**: See [REDLINING.md](REDLINING.md) **For OOXML details**: See [OOXML.md](OOXML.md)
 ```
 
 Claude reads REDLINING.md or OOXML.md only when the user needs those features.
@@ -334,7 +329,6 @@ scripts/package_skill.py <path/to/skill-folder> ./dist
 The packaging script will:
 
 1. **Validate** the skill automatically, checking:
-
    - YAML frontmatter format and required fields
    - Skill naming conventions and directory structure
    - Description completeness and quality

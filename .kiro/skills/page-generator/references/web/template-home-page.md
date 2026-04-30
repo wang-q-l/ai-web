@@ -59,91 +59,93 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+  import { ref, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
 
-const router = useRouter()
+  const router = useRouter()
 
-const banners = ref([])
-const products = ref([])
-const news = ref([])
+  const banners = ref([])
+  const products = ref([])
+  const news = ref([])
 
-const viewProduct = (id: number) => {
-  router.push(`/products/${id}`)
-}
+  const viewProduct = (id: number) => {
+    router.push(`/products/${id}`)
+  }
 
-const viewNews = (id: number) => {
-  router.push(`/news/${id}`)
-}
+  const viewNews = (id: number) => {
+    router.push(`/news/${id}`)
+  }
 
-onMounted(() => {
-  // 加载数据
-})
+  onMounted(() => {
+    // 加载数据
+  })
 </script>
 
 <style scoped lang="scss">
-.home-page {
-  min-height: 100vh;
-}
+  .home-page {
+    min-height: 100vh;
+  }
 
-.banner-section {
-  width: 100%;
+  .banner-section {
+    width: 100%;
 
-  .banner-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    .banner-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+
+      h1 {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      p {
+        font-size: 20px;
+        margin-bottom: 32px;
+      }
+    }
+  }
+
+  .products-section,
+  .news-section {
+    padding: 64px 0;
+  }
+
+  .products-section {
+    background: #f5f7fa;
+  }
+
+  .section-title {
     text-align: center;
-    color: #fff;
+    font-size: 32px;
+    margin-bottom: 48px;
+  }
 
-    h1 {
-      font-size: 48px;
-      margin-bottom: 16px;
-    }
+  .product-card,
+  .news-card {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+    cursor: pointer;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
 
-    p {
-      font-size: 20px;
-      margin-bottom: 32px;
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
     }
   }
-}
 
-.products-section,
-.news-section {
-  padding: 64px 0;
-}
-
-.products-section {
-  background: #f5f7fa;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 48px;
-}
-
-.product-card,
-.news-card {
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  .product-image,
+  .news-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
   }
-}
-
-.product-image,
-.news-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-}
 </style>
 ```

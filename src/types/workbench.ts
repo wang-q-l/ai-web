@@ -147,4 +147,3 @@ export interface QuickAction {
   /** 背景色 */
   color: string
 }
-

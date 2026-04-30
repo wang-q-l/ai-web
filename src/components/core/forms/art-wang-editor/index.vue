@@ -97,9 +97,7 @@
   } as const
 
   // 计算属性：上传服务器地址
-  const uploadServer = computed(
-    () => props.uploadConfig?.server || '/api/upload/image'
-  )
+  const uploadServer = computed(() => props.uploadConfig?.server || '/api/upload/image')
 
   // 合并上传配置
   const mergedUploadConfig = computed(() => ({

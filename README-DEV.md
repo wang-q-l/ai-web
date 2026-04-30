@@ -37,18 +37,22 @@ pnpm install
 **本项目默认启用 Mock 模式，无需后端 API 即可运行！**
 
 Mock 模式适用于：
+
 - 产品经理快速演示原型
 - 前端开发独立调试
 - 功能预览和测试
 
 **默认登录账号**：
+
 - 管理员账号：`admin` / `123456`
 - 普通用户：`user` / `123456`
 
 **切换 Mock 模式**：
+
 - mock模式不要修改
 
 在 `.env` 文件中修改：
+
 ```bash
 # 开启 Mock 模式（默认）
 VITE_USE_MOCK = true
@@ -66,6 +70,7 @@ pnpm dev
 开发服务器将在 `http://localhost:3006` 启动（端口可在 `.env` 中配置）
 
 **首次启动提示**：
+
 - Mock 模式下，直接使用上述账号登录即可
 - 验证码可随意输入（Mock 模式不验证）
 
@@ -103,9 +108,6 @@ pnpm lint:stylelint
 # Lint-staged（Git 提交前自动执行）
 pnpm lint:lint-staged
 ```
-
-
-
 
 ## 项目结构
 
@@ -172,6 +174,7 @@ src/
 ## 核心开发规范
 
 ### 开发规范
+
 - 组件都是自动导入，无需手动导入
 - 开发完不要npm run dev，由用户自行dev，但是需要build一下验证代码是否合规，没有报错
 - 创建页面需在 `src/router/modules/` 添加路由配置并在 `index.ts` 注册
@@ -183,11 +186,13 @@ src/
 - Ai对话需永远中文回复我
 
 #### 国际化规范
+
 - **页面内容统一使用中文**：页面中的所有文本内容（标签、按钮、提示信息等）直接使用中文，不使用 `$t()` 或 `t()` 函数进行国际化
 - **只有菜单名称需要多语言**：路由配置中的 `meta.title` 使用翻译键（如 `menus.example.title`），以支持菜单的中英文切换
 - **不要导入 useI18n**：页面组件中不需要 `import { useI18n } from 'vue-i18n'` 和 `const { t } = useI18n()`
 - **参考示例**：查看 `src/views/permission/role/index.vue` 等现有页面的实现方式
 - **示例对比**：
+
   ```vue
   <!-- ❌ 错误：使用国际化函数 -->
   <el-form-item :label="$t('user.name')">
@@ -203,6 +208,7 @@ src/
   ```
 
 #### 路由和菜单结构规范
+
 - 一级菜单必须使用父子路由结构，父路由的 `component` 固定为 `() => import('@/views/index/index.vue')`
 - 一级菜单的子路由才是实际的页面入口，`path` 为空字符串 `''`，`component` 指向实际页面
 - 子路由需要在 `meta` 中添加 `isHide: true` 避免在菜单中重复显示
@@ -326,17 +332,17 @@ src/
           title: 'menus.example.detail',
           keepAlive: true,
           isHide: true,
-          activePath: '/example'  // 指定激活的菜单路径，使一级菜单高亮
+          activePath: '/example' // 指定激活的菜单路径，使一级菜单高亮
         }
       }
     ]
   }
   ```
 
-
 ### 布局规范
 
 #### 卡片样式
+
 - 无边框：`border: none !important;`
 - 无阴影：`box-shadow: none !important;`
 - 圆角：`border-radius: 12px`
@@ -346,6 +352,7 @@ src/
 #### 页面布局
 
 **核心原则**：
+
 - **纯 Flex 布局** - 不写死页面高度，完全使用 flex 自动计算
 - **固定高度** - `.layout-content` 使用 `height: 100%` 确保页面不滚动，只有表格数据滚动
 - **统一内边距** - `.layout-content` 使用 `padding: 0 20px 0`（左右20px），底部 padding 放在 `.art-page-view` 上
@@ -357,6 +364,7 @@ src/
 **框架布局配置**（已在 `/src/views/index/style.scss` 中配置）：
 
 **框架一**：
+
 ```scss
 .app-content {
   flex: 1;
@@ -364,19 +372,20 @@ src/
 
   :deep(.layout-content) {
     box-sizing: border-box;
-    height: 100%;  // 固定高度，页面不滚动
-    padding: 0 20px 0;  // 只设置左右 padding
+    height: 100%; // 固定高度，页面不滚动
+    padding: 0 20px 0; // 只设置左右 padding
 
     .art-page-view {
       box-sizing: border-box;
       height: 100%;
-      padding-bottom: 20px;  // 底部 padding 在这里设置
+      padding-bottom: 20px; // 底部 padding 在这里设置
     }
   }
 }
 ```
 
 **框架二**：
+
 ```scss
 .app-content {
   flex: 1;
@@ -389,7 +398,7 @@ src/
 
     .art-page-view {
       box-sizing: border-box;
-      height: calc(100% - 60px);  // 减去工作标签页的高度（含 margin）
+      height: calc(100% - 60px); // 减去工作标签页的高度（含 margin）
       padding-bottom: 20px;
     }
   }
@@ -397,18 +406,19 @@ src/
 ```
 
 **页面组件布局规范**：
+
 ```scss
 // 页面根容器
 .page-container {
-  height: 100%;  // 继承父容器高度
+  height: 100%; // 继承父容器高度
   display: flex;
   flex-direction: column;
-  gap: 16px;  // 卡片间距
+  gap: 16px; // 卡片间距
 }
 
 // 筛选卡片
 .filter-card {
-  flex-shrink: 0;  // 不压缩
+  flex-shrink: 0; // 不压缩
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -420,7 +430,7 @@ src/
 
 // 数据卡片
 .data-card {
-  flex: 1;  // 占据剩余空间
+  flex: 1; // 占据剩余空间
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -440,7 +450,7 @@ src/
   }
 
   .table-container {
-    flex: 1;  // 表格占据剩余空间
+    flex: 1; // 表格占据剩余空间
     overflow: hidden;
   }
 
@@ -452,6 +462,7 @@ src/
 ```
 
 **关键点**：
+
 - 不使用 `calc(100vh - XXpx)` 等固定高度计算
 - 使用 `gap` 控制卡片间距，不使用 `margin-bottom`
 - **按钮间距不使用 `gap`**：按钮本身有 `margin-left: 12px`，使用 `.el-button:not(:first-child) { margin-left: 12px; }` 控制间距
@@ -464,6 +475,7 @@ src/
 当页面是二级页面（从列表页进入详情页或管理页）时，需要在页面顶部添加面包屑卡片：
 
 **结构：**
+
 ```vue
 <el-card class="breadcrumb-card">
   <div class="breadcrumb-content">
@@ -478,6 +490,7 @@ src/
 ```
 
 **样式规范：**
+
 ```scss
 .breadcrumb-card {
   flex-shrink: 0;
@@ -529,6 +542,7 @@ src/
 ```
 
 **功能实现：**
+
 - 返回按钮使用 `router.push()` 返回上级页面
 - 页面信息从 API 获取并显示
 - 使用 ArrowLeft 图标
@@ -538,6 +552,7 @@ src/
 筛选表单使用 flexbox 布局，不使用 Element Plus 的 inline 属性：
 
 **结构：**
+
 ```vue
 <el-card class="filter-card">
   <el-form :model="queryParams">
@@ -569,6 +584,7 @@ src/
 ```
 
 **样式规范：**
+
 ```scss
 .filter-card {
   flex-shrink: 0;
@@ -603,6 +619,7 @@ src/
 ```
 
 **关键点：**
+
 - 不使用 `inline` 属性，使用自定义 flexbox 布局
 - 表单项容器使用 `gap: 16px` 控制间距（不使用 margin-bottom）
 - 按钮间距使用 `.el-button:not(:first-child) { margin-left: 12px; }`（不使用 gap）
@@ -610,13 +627,14 @@ src/
 - 按钮的 form-item 使用 `label=" "` 确保对齐
 - 支持多行自动换行（`flex-wrap: wrap`）
 
-
 ### API 和 Mock 规范
 
 #### API 请求方法使用规范
+
 - **正确使用方式**：使用 `request.get()`、`request.post()`、`request.put()`、`request.del()` 方法
 - **错误使用方式**：不要使用 `request()` 直接调用或使用 `method` 参数
 - 示例：
+
   ```typescript
   // ✅ 正确
   export function getList(params: ListParams) {
@@ -637,13 +655,14 @@ src/
   export function getList(params: ListParams) {
     return request({
       url: '/admin/list',
-      method: 'get',  // 不要使用 method 参数
+      method: 'get', // 不要使用 method 参数
       params
     })
   }
   ```
 
 #### Mock 数据处理规范
+
 - **项目使用手动 Mock 模式**，不使用 vite-plugin-mock 自动拦截
 - Mock 文件需要导出具体的 Mock 函数，而不是 MockMethod 数组
 - API 文件中需要判断 `USE_MOCK` 环境变量，手动调用 Mock 函数
@@ -651,6 +670,7 @@ src/
 - Mock API 延迟 300ms 返回结果
 
 **Mock 文件示例**：
+
 ```typescript
 // src/mock/example.ts
 import type { Item, ListParams } from '@/types/example'
@@ -672,11 +692,11 @@ export function getListMock(params: ListParams) {
 
   // 筛选（注意类型转换）
   if (name) {
-    filteredData = filteredData.filter(item => item.name.includes(name))
+    filteredData = filteredData.filter((item) => item.name.includes(name))
   }
   if (status !== undefined && status !== null && status !== '') {
     const statusValue = typeof status === 'string' ? parseInt(status) : status
-    filteredData = filteredData.filter(item => item.status === statusValue)
+    filteredData = filteredData.filter((item) => item.status === statusValue)
   }
 
   // 分页
@@ -694,6 +714,7 @@ export function getListMock(params: ListParams) {
 ```
 
 **API 文件示例**：
+
 ```typescript
 // src/api/example.ts
 import request from '@/utils/http'
@@ -730,11 +751,13 @@ export function getList(params: ListParams) {
 ```
 
 #### 类型定义规范
+
 - 类型定义统一放在 `src/types/` 目录下，按模块分文件
 - **查询参数类型定义**：状态、类型、难度等筛选字段需要支持 `number | string | null` 类型
   - 原因：从 URL 查询参数传过来的值可能是字符串类型
   - 在 Mock 函数中需要进行类型转换：`typeof value === 'string' ? parseInt(value) : value`
 - 示例：
+
   ```typescript
   // src/types/example.ts
 
@@ -760,14 +783,15 @@ export function getList(params: ListParams) {
   export interface Item {
     id: number
     name: string
-    status: number  // 实际存储时是 number
-    type: number    // 实际存储时是 number
+    status: number // 实际存储时是 number
+    type: number // 实际存储时是 number
     createTime: string
     updateTime: string
   }
   ```
 
 #### API 函数命名规范
+
 - 遵循 RESTful 风格：get/add/update/delete + 资源名称
 - 批量操作：batch + 操作 + 资源名称（如 `batchDeleteItems`）
 - 示例：
@@ -779,17 +803,19 @@ export function getList(params: ListParams) {
   - `batchDeleteItems` - 批量删除
 
 #### 清理脚本规范
+
 - **清理脚本已固定**：`scripts/clean-demo-modules.js` 已配置好保留的模块列表
 - **实现新功能时不需要更新清理脚本**
 - 清理脚本会自动保留配置中指定的模块
 
-
 ### 组件使用规范
 
 #### 滚动条组件
+
 - **必须使用 Element Plus 的 `el-scrollbar` 组件**，不使用原生浏览器滚动条
 - **适用场景**：所有需要滚动的内容区域（表单页面、详情页面、长列表等）
 - **基本用法**：
+
   ```vue
   <template>
     <div class="page-container">
@@ -806,25 +832,26 @@ export function getList(params: ListParams) {
   </template>
 
   <style scoped lang="scss">
-  .page-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .content-scrollbar {
-    flex: 1;
-    overflow: hidden;
-
-    :deep(.el-scrollbar__view) {
-      padding-bottom: 20px;  // 底部留白
+    .page-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-  }
+
+    .content-scrollbar {
+      flex: 1;
+      overflow: hidden;
+
+      :deep(.el-scrollbar__view) {
+        padding-bottom: 20px; // 底部留白
+      }
+    }
   </style>
   ```
 
 **关键点**：
+
 - 固定内容（如面包屑、顶部操作栏）放在 `el-scrollbar` 外面
 - 可滚动内容包裹在 `el-scrollbar` 内
 - 滚动容器使用 `flex: 1` 占据剩余空间
@@ -833,6 +860,7 @@ export function getList(params: ListParams) {
 - ✅ 正确：使用 `<el-scrollbar>` 组件
 
 #### 表格组件
+
 - 使用 Element Plus 的 ElTable，不使用项目内 artTable 组件
 - **表格边框**：默认不使用 `border` 属性，表格只有横向分隔线，没有竖边框
   - ✅ 正确：`<el-table :data="tableData" height="100%">`
@@ -847,14 +875,17 @@ export function getList(params: ListParams) {
 #### 按钮规范
 
 **按钮分类**：
+
 - **操作按钮**：面包屑区域、卡片头部的功能按钮（如"保存草稿"、"发布考试"、"创建考试"）
 - **表格按钮**：表格操作列中的按钮（如"编辑"、"删除"、"查看详情"）
 - **返回按钮**：面包屑左侧的返回按钮
 
 **按钮间距**：
+
 - 按钮组使用 `.el-button:not(:first-child) { margin-left: 12px; }` 控制间距
 - 不使用 `gap` 属性，因为按钮本身有 `margin-left: 12px`
 - 示例：
+
   ```scss
   .filter-buttons {
     display: flex;
@@ -866,6 +897,7 @@ export function getList(params: ListParams) {
   ```
 
 **按钮类型**：
+
 - 主要操作：`type="primary"`（如"搜索"、"保存"、"确定"）
 - 次要操作：不设置 type（如"重置"、"取消"）
 - 危险操作：`type="danger"`（如"删除"）
@@ -873,11 +905,13 @@ export function getList(params: ListParams) {
 - 警告操作：`type="warning"`（如"警告"、"发布考试"）
 
 **按钮尺寸**：
+
 - 默认尺寸：不设置 size（用于表单、筛选区域、操作按钮）
 - 小尺寸：`size="small"`（用于特殊场景）
 - 大尺寸：`size="large"`（用于重要的主操作）
 
 **按钮图标**：
+
 - 使用 Element Plus 图标：`<el-icon><Plus /></el-icon>`
 - 图标位置：图标在文字左侧
 - 示例：
@@ -889,11 +923,13 @@ export function getList(params: ListParams) {
   ```
 
 **⚠️ 操作按钮规范**（面包屑区域、卡片头部）：
+
 - **保持 Element Plus 默认样式**，不添加自定义的 font-size、color、padding 等样式
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
 - 可以添加图标使用 `:icon` 属性
 - 示例：
+
   ```vue
   <!-- 面包屑操作按钮 -->
   <div class="breadcrumb-actions">
@@ -912,6 +948,7 @@ export function getList(params: ListParams) {
     </el-button>
   </div>
   ```
+
 - ❌ 错误：给操作按钮添加自定义样式
   ```scss
   // ❌ 错误：不要这样写
@@ -932,6 +969,7 @@ export function getList(params: ListParams) {
   ```
 
 **⚠️ 表格操作列按钮规范**：
+
 - **必须使用 `link` 类型**，不使用 `text` 类型
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
@@ -956,9 +994,11 @@ export function getList(params: ListParams) {
 - ✅ 正确：`<el-button link>`
 
 **返回按钮规范**（面包屑左侧）：
+
 - 使用 `text` 类型
 - 可以添加自定义样式，但 CSS 选择器必须精确，避免影响其他按钮
 - 示例：
+
   ```vue
   <div class="breadcrumb-left">
     <el-button text @click="handleBack">
@@ -969,6 +1009,7 @@ export function getList(params: ListParams) {
     <span class="page-info">创建考试</span>
   </div>
   ```
+
   ```scss
   .breadcrumb-left {
     display: flex;
@@ -996,11 +1037,13 @@ export function getList(params: ListParams) {
 使用 `vue-draggable-plus` 库实现拖动排序功能。
 
 **安装依赖**：
+
 ```bash
 pnpm add vue-draggable-plus
 ```
 
 **基本用法**：
+
 ```vue
 <template>
   <VueDraggable
@@ -1010,41 +1053,36 @@ pnpm add vue-draggable-plus
     @end="handleDragEnd"
     class="draggable-container"
   >
-    <el-card
-      v-for="item in list"
-      :key="item.id"
-      class="draggable-item"
-    >
-      <span class="drag-handle" style="cursor: move; margin-right: 8px; color: #909399">
-        ☰
-      </span>
+    <el-card v-for="item in list" :key="item.id" class="draggable-item">
+      <span class="drag-handle" style="cursor: move; margin-right: 8px; color: #909399"> ☰ </span>
       <span>{{ item.name }}</span>
     </el-card>
   </VueDraggable>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
+  import { ref } from 'vue'
+  import { VueDraggable } from 'vue-draggable-plus'
 
-const list = ref([
-  { id: 1, name: '项目1', order: 1 },
-  { id: 2, name: '项目2', order: 2 },
-  { id: 3, name: '项目3', order: 3 }
-])
+  const list = ref([
+    { id: 1, name: '项目1', order: 1 },
+    { id: 2, name: '项目2', order: 2 },
+    { id: 3, name: '项目3', order: 3 }
+  ])
 
-const handleDragEnd = () => {
-  // 更新排序
-  list.value.forEach((item, index) => {
-    item.order = index + 1
-  })
-  // 调用 API 保存排序
-  // updateOrder(list.value)
-}
+  const handleDragEnd = () => {
+    // 更新排序
+    list.value.forEach((item, index) => {
+      item.order = index + 1
+    })
+    // 调用 API 保存排序
+    // updateOrder(list.value)
+  }
 </script>
 ```
 
 **关键配置**：
+
 - `v-model`：绑定数据列表
 - `:animation="200"`：拖动动画时长（毫秒）
 - `handle=".drag-handle"`：指定拖动手柄的 CSS 选择器
@@ -1052,6 +1090,7 @@ const handleDragEnd = () => {
 - `class="draggable-container"`：容器样式类
 
 **拖动手柄样式**：
+
 ```scss
 .drag-handle {
   cursor: move;
@@ -1066,6 +1105,7 @@ const handleDragEnd = () => {
 ```
 
 **注意事项**：
+
 - 必须为每个项目设置唯一的 `key`（通常使用 `id`）
 - 拖动手柄使用 `☰` 符号（Unicode: U+2630）
 - 拖动结束后需要更新每个项目的 `order` 字段
@@ -1073,34 +1113,34 @@ const handleDragEnd = () => {
 - 容器需要设置合适的样式以确保拖动体验良好
 
 **完整示例（带 API 调用）**：
+
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
-import { ElMessage } from 'element-plus'
-import { updateOrder } from '@/api/example'
+  import { ref } from 'vue'
+  import { VueDraggable } from 'vue-draggable-plus'
+  import { ElMessage } from 'element-plus'
+  import { updateOrder } from '@/api/example'
 
-const list = ref([
-  { id: 1, name: '项目1', order: 1 },
-  { id: 2, name: '项目2', order: 2 },
-  { id: 3, name: '项目3', order: 3 }
-])
+  const list = ref([
+    { id: 1, name: '项目1', order: 1 },
+    { id: 2, name: '项目2', order: 2 },
+    { id: 3, name: '项目3', order: 3 }
+  ])
 
-const handleDragEnd = async () => {
-  // 更新排序
-  list.value.forEach((item, index) => {
-    item.order = index + 1
-  })
+  const handleDragEnd = async () => {
+    // 更新排序
+    list.value.forEach((item, index) => {
+      item.order = index + 1
+    })
 
-  try {
-    // 调用 API 保存排序
-    await updateOrder(list.value.map(item => ({ id: item.id, order: item.order })))
-    ElMessage.success('排序已保存')
-  } catch (error) {
-    ElMessage.error('保存排序失败')
-    // 可以考虑重新加载数据恢复原始排序
+    try {
+      // 调用 API 保存排序
+      await updateOrder(list.value.map((item) => ({ id: item.id, order: item.order })))
+      ElMessage.success('排序已保存')
+    } catch (error) {
+      ElMessage.error('保存排序失败')
+      // 可以考虑重新加载数据恢复原始排序
+    }
   }
-}
 </script>
 ```
-

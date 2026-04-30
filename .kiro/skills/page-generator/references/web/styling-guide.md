@@ -9,6 +9,7 @@
 **所有页面必须使用卡片式布局**，这是项目的核心设计规范。
 
 **卡片默认样式：**
+
 - **无边框**：`border: none !important;`
 - **无阴影**：`box-shadow: none !important;`
 - **圆角**：`border-radius: 12px`
@@ -34,31 +35,31 @@
 </template>
 
 <style scoped lang="scss">
-.page-container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.filter-card,
-.content-card {
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-}
-
-.filter-card {
-  :deep(.el-card__body) {
-    padding: 12px 20px;
-  }
-}
-
-.content-card {
-  :deep(.el-card__body) {
+  .page-container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
-}
+
+  .filter-card,
+  .content-card {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+  }
+
+  .filter-card {
+    :deep(.el-card__body) {
+      padding: 12px 20px;
+    }
+  }
+
+  .content-card {
+    :deep(.el-card__body) {
+      padding: 20px;
+    }
+  }
 </style>
 ```
 
@@ -67,6 +68,7 @@
 **只有在特殊说明的情况下才添加投影和边框：**
 
 - **悬浮效果**：鼠标悬停时显示投影
+
   ```scss
   .card {
     transition: box-shadow 0.3s;
@@ -78,10 +80,11 @@
   ```
 
 - **强调重点**：需要突出显示的卡片
+
   ```scss
   .highlight-card {
     box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2);
-    border: 1px solid #409EFF;
+    border: 1px solid #409eff;
   }
   ```
 
@@ -108,17 +111,17 @@
 </template>
 
 <style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-@media (max-width: 768px) {
   .container {
-    padding: 0 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
-}
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 15px;
+    }
+  }
 </style>
 ```
 
@@ -130,7 +133,7 @@
 .page-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;  // 卡片间距 16px
+  gap: 16px; // 卡片间距 16px
 }
 ```
 
@@ -164,36 +167,36 @@
 ### 1. 主色调
 
 ```scss
-$primary-color: #409EFF;
-$success-color: #67C23A;
-$warning-color: #E6A23C;
-$danger-color: #F56C6C;
+$primary-color: #409eff;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$danger-color: #f56c6c;
 $info-color: #909399;
 ```
 
 ### 2. 文字颜色
 
 ```scss
-$text-primary: #303133;    // 主要文字
-$text-regular: #606266;    // 常规文字
-$text-secondary: #909399;  // 次要文字
-$text-placeholder: #C0C4CC; // 占位文字
+$text-primary: #303133; // 主要文字
+$text-regular: #606266; // 常规文字
+$text-secondary: #909399; // 次要文字
+$text-placeholder: #c0c4cc; // 占位文字
 ```
 
 ### 3. 背景颜色
 
 ```scss
-$bg-white: #FFFFFF;        // 卡片背景
-$bg-light: #F5F7FA;        // 页面背景
-$bg-lighter: #FAFAFA;      // 浅色背景
+$bg-white: #ffffff; // 卡片背景
+$bg-light: #f5f7fa; // 页面背景
+$bg-lighter: #fafafa; // 浅色背景
 ```
 
 ### 4. 边框颜色
 
 ```scss
-$border-base: #DCDFE6;
-$border-light: #E4E7ED;
-$border-lighter: #EBEEF5;
+$border-base: #dcdfe6;
+$border-light: #e4e7ed;
+$border-lighter: #ebeef5;
 ```
 
 ## 间距规范
@@ -246,7 +249,7 @@ $font-weight-bold: 700;
 ```scss
 $border-radius-sm: 4px;
 $border-radius-base: 8px;
-$border-radius-lg: 12px;   // 卡片默认圆角
+$border-radius-lg: 12px; // 卡片默认圆角
 $border-radius-xl: 16px;
 ```
 
@@ -255,10 +258,10 @@ $border-radius-xl: 16px;
 ### 1. 断点定义
 
 ```scss
-$breakpoint-xs: 768px;   // 手机
-$breakpoint-sm: 992px;   // 平板
-$breakpoint-md: 1200px;  // 小屏电脑
-$breakpoint-lg: 1920px;  // 大屏电脑
+$breakpoint-xs: 768px; // 手机
+$breakpoint-sm: 992px; // 平板
+$breakpoint-md: 1200px; // 小屏电脑
+$breakpoint-lg: 1920px; // 大屏电脑
 ```
 
 ### 2. 媒体查询
@@ -271,7 +274,7 @@ $breakpoint-lg: 1920px;  // 大屏电脑
   }
 
   .card {
-    border-radius: 8px;  // 手机端使用较小圆角
+    border-radius: 8px; // 手机端使用较小圆角
   }
 }
 
@@ -311,28 +314,28 @@ $breakpoint-lg: 1920px;  // 大屏电脑
 </template>
 
 <style scoped>
-.banner-section {
-  width: 100%;
-}
+  .banner-section {
+    width: 100%;
+  }
 
-.banner-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #fff;
-}
+  .banner-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+  }
 
-.banner-content h1 {
-  font-size: 48px;
-  margin-bottom: 16px;
-}
+  .banner-content h1 {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
 
-.banner-content p {
-  font-size: 20px;
-  margin-bottom: 32px;
-}
+  .banner-content p {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
 </style>
 ```
 
@@ -361,69 +364,71 @@ $breakpoint-lg: 1920px;  // 大屏电脑
 </template>
 
 <style scoped lang="scss">
-.products-section {
-  padding: 64px 0;
-  background: #f5f7fa;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 48px;
-}
-
-.product-card {
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  .products-section {
+    padding: 64px 0;
+    background: #f5f7fa;
   }
 
-  :deep(.el-card__body) {
-    padding: 16px;
+  .section-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 48px;
   }
-}
 
-.product-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 16px;
-}
+  .product-card {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
 
-.product-card h3 {
-  font-size: 18px;
-  margin-bottom: 8px;
-}
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    }
 
-.product-card p {
-  color: #909399;
-  font-size: 14px;
-  margin-bottom: 16px;
-  height: 40px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+    :deep(.el-card__body) {
+      padding: 16px;
+    }
+  }
 
-.product-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
 
-.price {
-  color: #f56c6c;
-  font-size: 20px;
-  font-weight: bold;
-}
+  .product-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .product-card p {
+    color: #909399;
+    font-size: 14px;
+    margin-bottom: 16px;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price {
+    color: #f56c6c;
+    font-size: 20px;
+    font-weight: bold;
+  }
 </style>
 ```
 
@@ -451,67 +456,69 @@ $breakpoint-lg: 1920px;  // 大屏电脑
 </template>
 
 <style scoped lang="scss">
-.news-section {
-  padding: 64px 0;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 48px;
-}
-
-.news-card {
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  .news-section {
+    padding: 64px 0;
   }
 
-  :deep(.el-card__body) {
-    padding: 0;
+  .section-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 48px;
   }
-}
 
-.news-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
+  .news-card {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+    cursor: pointer;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
 
-.news-content {
-  padding: 20px;
-}
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    }
 
-.news-content h3 {
-  font-size: 18px;
-  margin-bottom: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+    :deep(.el-card__body) {
+      padding: 0;
+    }
+  }
 
-.news-date {
-  color: #909399;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
+  .news-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
 
-.news-desc {
-  color: #606266;
-  font-size: 14px;
-  height: 60px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
+  .news-content {
+    padding: 20px;
+  }
+
+  .news-content h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .news-date {
+    color: #909399;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .news-desc {
+    color: #606266;
+    font-size: 14px;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
 </style>
 ```
 

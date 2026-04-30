@@ -12,27 +12,27 @@
 export default {
   plugins: {
     'postcss-px-to-viewport': {
-      viewportWidth: 375,              // 设计稿宽度
-      viewportUnit: 'vw',              // 转换单位
-      selectorBlackList: ['.ignore', '.hairlines'],  // 不转换的类名
-      minPixelValue: 1,                // 最小转换值
-      mediaQuery: false,               // 是否转换媒体查询中的 px
-    },
-  },
+      viewportWidth: 375, // 设计稿宽度
+      viewportUnit: 'vw', // 转换单位
+      selectorBlackList: ['.ignore', '.hairlines'], // 不转换的类名
+      minPixelValue: 1, // 最小转换值
+      mediaQuery: false // 是否转换媒体查询中的 px
+    }
+  }
 }
 ```
 
 ### 配置项说明
 
-| 配置项 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| viewportWidth | number | 375 | 设计稿宽度 |
-| viewportHeight | number | 667 | 设计稿高度（可选） |
-| viewportUnit | string | 'vw' | 转换单位（vw/vh/vmin/vmax） |
-| selectorBlackList | array | [] | 不转换的类名 |
-| minPixelValue | number | 1 | 最小转换值（小于此值不转换） |
-| mediaQuery | boolean | false | 是否转换媒体查询中的 px |
-| unitPrecision | number | 5 | 转换精度 |
+| 配置项            | 类型    | 默认值 | 说明                         |
+| ----------------- | ------- | ------ | ---------------------------- |
+| viewportWidth     | number  | 375    | 设计稿宽度                   |
+| viewportHeight    | number  | 667    | 设计稿高度（可选）           |
+| viewportUnit      | string  | 'vw'   | 转换单位（vw/vh/vmin/vmax）  |
+| selectorBlackList | array   | []     | 不转换的类名                 |
+| minPixelValue     | number  | 1      | 最小转换值（小于此值不转换） |
+| mediaQuery        | boolean | false  | 是否转换媒体查询中的 px      |
+| unitPrecision     | number  | 5      | 转换精度                     |
 
 ## 设计稿尺寸配置
 
@@ -85,14 +85,10 @@ viewportWidth: 360
 ```vue
 <template>
   <!-- 不转换 -->
-  <div class="ignore" style="width: 100px">
-    宽度保持 100px
-  </div>
+  <div class="ignore" style="width: 100px"> 宽度保持 100px </div>
 
   <!-- 转换 -->
-  <div style="width: 100px">
-    宽度转换为 vw
-  </div>
+  <div style="width: 100px"> 宽度转换为 vw </div>
 </template>
 ```
 
@@ -130,12 +126,12 @@ Vant 4.x 版本已经做了移动端适配，无需特殊处理：
 ```css
 /* 会自动转换 */
 .van-button {
-  height: 50px;  /* 转换为 vw */
+  height: 50px; /* 转换为 vw */
 }
 
 /* 不转换 */
 .van-button.ignore {
-  height: 50px;  /* 保持 50px */
+  height: 50px; /* 保持 50px */
 }
 ```
 
@@ -145,15 +141,13 @@ Vant 4.x 版本已经做了移动端适配，无需特殊处理：
 
 ```vue
 <template>
-  <div class="box hairlines">
-    边框保持 1px
-  </div>
+  <div class="box hairlines"> 边框保持 1px </div>
 </template>
 
 <style scoped>
-.box {
-  border: 1px solid #eee;
-}
+  .box {
+    border: 1px solid #eee;
+  }
 </style>
 ```
 
@@ -203,9 +197,7 @@ Vant 4.x 版本已经做了移动端适配，无需特殊处理：
 
 ```vue
 <template>
-  <div class="ignore" style="width: 100px">
-    固定宽度
-  </div>
+  <div class="ignore" style="width: 100px"> 固定宽度 </div>
 </template>
 ```
 
@@ -245,8 +237,8 @@ Vant 4.x 版本已经做了移动端适配，无需特殊处理：
 
 ```css
 .container {
-  max-width: 750px;  /* 最大宽度 */
-  min-width: 320px;  /* 最小宽度 */
+  max-width: 750px; /* 最大宽度 */
+  min-width: 320px; /* 最小宽度 */
   margin: 0 auto;
 }
 ```

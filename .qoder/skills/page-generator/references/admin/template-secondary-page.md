@@ -59,7 +59,7 @@
 
 // 1. 固定的面包屑卡片
 .breadcrumb-card {
-  flex-shrink: 0;  // 不压缩，固定在顶部
+  flex-shrink: 0; // 不压缩，固定在顶部
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -67,8 +67,8 @@
 
 // 2. 滚动包装器
 .scroll-wrapper {
-  flex: 1;  // 占据剩余空间
-  overflow: hidden;  // 隐藏溢出
+  flex: 1; // 占据剩余空间
+  overflow: hidden; // 隐藏溢出
 
   :deep(.el-scrollbar) {
     height: 100%;
@@ -79,12 +79,13 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-bottom: 20px;  // 底部留白，确保内容不被裁剪
+    padding-bottom: 20px; // 底部留白，确保内容不被裁剪
   }
 }
 ```
 
 **关键点：**
+
 - ✅ 面包屑卡片固定在顶部，不滚动
 - ✅ 使用 `el-scrollbar` 组件，不使用原生滚动条
 - ✅ 滚动内容区使用 `gap: 16px` 控制卡片间距
@@ -111,9 +112,7 @@
           返回题库列表
         </el-button>
         <span class="divider">|</span>
-        <span class="page-info">
-          {{ bankName }}（共 {{ total }} 题）
-        </span>
+        <span class="page-info"> {{ bankName }}（共 {{ total }} 题） </span>
       </div>
     </el-card>
 
@@ -161,11 +160,7 @@
               </el-button>
             </div>
 
-            <el-table
-              :data="tableData"
-              max-height="600"
-              v-loading="loading"
-            >
+            <el-table :data="tableData" max-height="600" v-loading="loading">
               <el-table-column prop="id" label="ID" width="80" />
               <el-table-column label="题型" width="100">
                 <template #default="{ row }">
@@ -210,123 +205,125 @@
 
 ```vue
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { ArrowLeft, Plus } from '@element-plus/icons-vue'
-import { getQuestionList, getQuestionBankDetail } from '@/api/question-bank'
-import type { Question } from '@/types/api'
+  import { ref, reactive, onMounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { ArrowLeft, Plus } from '@element-plus/icons-vue'
+  import { getQuestionList, getQuestionBankDetail } from '@/api/question-bank'
+  import type { Question } from '@/types/api'
 
-defineOptions({ name: 'QuestionManagement' })
+  defineOptions({ name: 'QuestionManagement' })
 
-const route = useRoute()
-const router = useRouter()
+  const route = useRoute()
+  const router = useRouter()
 
-// 获取路由参数
-const bankId = Number(route.params.bankId)
-const bankName = ref('')
+  // 获取路由参数
+  const bankId = Number(route.params.bankId)
+  const bankName = ref('')
 
-// 查询参数
-const queryParams = reactive({
-  bankId,
-  keyword: '',
-  type: undefined as number | undefined,
-  page: 1,
-  pageSize: 20
-})
+  // 查询参数
+  const queryParams = reactive({
+    bankId,
+    keyword: '',
+    type: undefined as number | undefined,
+    page: 1,
+    pageSize: 20
+  })
 
-// 表格数据
-const tableData = ref<Question[]>([])
-const total = ref(0)
-const loading = ref(false)
+  // 表格数据
+  const tableData = ref<Question[]>([])
+  const total = ref(0)
+  const loading = ref(false)
 
-/**
- * 获取题库信息
- */
-const fetchBankInfo = async () => {
-  try {
-    const res = await getQuestionBankDetail(bankId)
-    bankName.value = res.data.name
-  } catch (error: any) {
-    ElMessage.error(error.message || '获取题库信息失败')
+  /**
+   * 获取题库信息
+   */
+  const fetchBankInfo = async () => {
+    try {
+      const res = await getQuestionBankDetail(bankId)
+      bankName.value = res.data.name
+    } catch (error: any) {
+      ElMessage.error(error.message || '获取题库信息失败')
+    }
   }
-}
 
-/**
- * 获取数据
- */
-const fetchData = async () => {
-  loading.value = true
-  try {
-    const res = await getQuestionList(queryParams)
-    tableData.value = res.data.list
-    total.value = res.data.total
-  } catch (error: any) {
-    ElMessage.error(error.message || '获取数据失败')
-  } finally {
-    loading.value = false
+  /**
+   * 获取数据
+   */
+  const fetchData = async () => {
+    loading.value = true
+    try {
+      const res = await getQuestionList(queryParams)
+      tableData.value = res.data.list
+      total.value = res.data.total
+    } catch (error: any) {
+      ElMessage.error(error.message || '获取数据失败')
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-/**
- * 搜索
- */
-const handleSearch = () => {
-  queryParams.page = 1
-  fetchData()
-}
-
-/**
- * 重置
- */
-const handleReset = () => {
-  queryParams.keyword = ''
-  queryParams.type = undefined
-  queryParams.page = 1
-  fetchData()
-}
-
-/**
- * 返回
- */
-const handleBack = () => {
-  router.push({ name: 'QuestionBankList' })
-}
-
-/**
- * 添加
- */
-const handleAdd = () => {
-  router.push({ name: 'QuestionAdd', params: { bankId } })
-}
-
-/**
- * 编辑
- */
-const handleEdit = (row: Question) => {
-  router.push({ name: 'QuestionEdit', params: { id: row.id } })
-}
-
-/**
- * 删除
- */
-const handleDelete = (row: Question) => {
-  ElMessageBox.confirm('确定要删除这道题目吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(async () => {
-    // 调用删除 API
-    ElMessage.success('删除成功')
+  /**
+   * 搜索
+   */
+  const handleSearch = () => {
+    queryParams.page = 1
     fetchData()
-  }).catch(() => {})
-}
+  }
 
-// 初始化
-onMounted(() => {
-  fetchBankInfo()
-  fetchData()
-})
+  /**
+   * 重置
+   */
+  const handleReset = () => {
+    queryParams.keyword = ''
+    queryParams.type = undefined
+    queryParams.page = 1
+    fetchData()
+  }
+
+  /**
+   * 返回
+   */
+  const handleBack = () => {
+    router.push({ name: 'QuestionBankList' })
+  }
+
+  /**
+   * 添加
+   */
+  const handleAdd = () => {
+    router.push({ name: 'QuestionAdd', params: { bankId } })
+  }
+
+  /**
+   * 编辑
+   */
+  const handleEdit = (row: Question) => {
+    router.push({ name: 'QuestionEdit', params: { id: row.id } })
+  }
+
+  /**
+   * 删除
+   */
+  const handleDelete = (row: Question) => {
+    ElMessageBox.confirm('确定要删除这道题目吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(async () => {
+        // 调用删除 API
+        ElMessage.success('删除成功')
+        fetchData()
+      })
+      .catch(() => {})
+  }
+
+  // 初始化
+  onMounted(() => {
+    fetchBankInfo()
+    fetchData()
+  })
 </script>
 ```
 
@@ -334,134 +331,134 @@ onMounted(() => {
 
 ```vue
 <style lang="scss" scoped>
-.page-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-// 面包屑卡片
-.breadcrumb-card {
-  flex-shrink: 0;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-
-  :deep(.el-card__body) {
-    padding: 0 20px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-  }
-
-  .breadcrumb-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    height: 60px;
-
-    .el-button {
-      font-size: 14px;
-      color: #606266;
-      padding: 0;
-
-      &:hover {
-        color: var(--el-color-primary);
-      }
-
-      .el-icon {
-        font-size: 16px;
-      }
-    }
-
-    .divider {
-      color: #dcdfe6;
-      font-size: 14px;
-    }
-
-    .page-info {
-      font-size: 14px;
-      color: #303133;
-      font-weight: 500;
-    }
-  }
-}
-
-// 滚动包装器
-.scroll-wrapper {
-  flex: 1;
-  overflow: hidden;
-
-  :deep(.el-scrollbar) {
+  .page-container {
     height: 100%;
-  }
-
-  .scroll-content {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-bottom: 20px;
-  }
-}
-
-// 筛选卡片
-.filter-card {
-  flex-shrink: 0;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-
-  :deep(.el-card__body) {
-    padding: 12px 20px;
   }
 
-  .filter-form-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
+  // 面包屑卡片
+  .breadcrumb-card {
+    flex-shrink: 0;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
 
-    :deep(.el-form-item) {
-      margin-bottom: 0;
+    :deep(.el-card__body) {
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .breadcrumb-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      height: 60px;
+
+      .el-button {
+        font-size: 14px;
+        color: #606266;
+        padding: 0;
+
+        &:hover {
+          color: var(--el-color-primary);
+        }
+
+        .el-icon {
+          font-size: 16px;
+        }
+      }
+
+      .divider {
+        color: #dcdfe6;
+        font-size: 14px;
+      }
+
+      .page-info {
+        font-size: 14px;
+        color: #303133;
+        font-weight: 500;
+      }
     }
   }
 
-  .filter-buttons {
-    display: flex;
+  // 滚动包装器
+  .scroll-wrapper {
+    flex: 1;
+    overflow: hidden;
 
-    .el-button:not(:first-child) {
-      margin-left: 12px;
+    :deep(.el-scrollbar) {
+      height: 100%;
     }
-  }
-}
 
-// 数据卡片
-.data-card {
-  flex-shrink: 0;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 12px;
-
-  :deep(.el-card__body) {
-    padding: 20px;
-  }
-
-  .table-header {
-    display: flex;
-    margin-bottom: 16px;
-
-    .el-button:not(:first-child) {
-      margin-left: 12px;
+    .scroll-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 20px;
     }
   }
 
-  .el-pagination {
-    margin-top: 16px;
-    justify-content: flex-end;
+  // 筛选卡片
+  .filter-card {
+    flex-shrink: 0;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+
+    :deep(.el-card__body) {
+      padding: 12px 20px;
+    }
+
+    .filter-form-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+
+      :deep(.el-form-item) {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-buttons {
+      display: flex;
+
+      .el-button:not(:first-child) {
+        margin-left: 12px;
+      }
+    }
   }
-}
+
+  // 数据卡片
+  .data-card {
+    flex-shrink: 0;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px;
+
+    :deep(.el-card__body) {
+      padding: 20px;
+    }
+
+    .table-header {
+      display: flex;
+      margin-bottom: 16px;
+
+      .el-button:not(:first-child) {
+        margin-left: 12px;
+      }
+    }
+
+    .el-pagination {
+      margin-top: 16px;
+      justify-content: flex-end;
+    }
+  }
 </style>
 ```
 
@@ -493,19 +490,19 @@ onMounted(() => {
 
 ```scss
 .page-container {
-  height: 100%;  // 继承父容器高度
+  height: 100%; // 继承父容器高度
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 .breadcrumb-card {
-  flex-shrink: 0;  // 固定，不压缩
+  flex-shrink: 0; // 固定，不压缩
 }
 
 .scroll-wrapper {
-  flex: 1;  // 占据剩余空间
-  overflow: hidden;  // 隐藏溢出
+  flex: 1; // 占据剩余空间
+  overflow: hidden; // 隐藏溢出
 
   :deep(.el-scrollbar) {
     height: 100%;
@@ -515,7 +512,7 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-bottom: 20px;  // 底部留白
+    padding-bottom: 20px; // 底部留白
   }
 }
 ```
@@ -659,9 +656,7 @@ const handleBack = () => {
 
           <!-- 数据卡片 -->
           <el-card class="data-card">
-            <el-table :data="tableData" max-height="600">
-              ...
-            </el-table>
+            <el-table :data="tableData" max-height="600"> ... </el-table>
           </el-card>
         </div>
       </el-scrollbar>

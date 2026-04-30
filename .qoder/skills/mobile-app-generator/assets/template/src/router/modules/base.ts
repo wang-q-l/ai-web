@@ -10,8 +10,8 @@ const baseRoutes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
-    meta: { title: '登录' },
-  },
+    meta: { title: '登录' }
+  }
 ]
 
 export default baseRoutes

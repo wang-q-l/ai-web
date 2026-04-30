@@ -45,9 +45,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-02 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 200, name: '南京宁马高速西加油站', parentId: 20, code: 'NJNMGSX', type: '加能站', leader: '赵磊', phone: '13800138200', sort: 1, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 201, name: '南京宁马高速东加油站', parentId: 20, code: 'NJNMGSD', type: '加能站', leader: '孙浩', phone: '13800138201', sort: 2, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 202, name: '绕越高速方山服务区东加油站', parentId: 20, code: 'RYGSFSD', type: '加能站', leader: '李明', phone: '13800138202', sort: 3, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 200,
+                name: '南京宁马高速西加油站',
+                parentId: 20,
+                code: 'NJNMGSX',
+                type: '加能站',
+                leader: '赵磊',
+                phone: '13800138200',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 201,
+                name: '南京宁马高速东加油站',
+                parentId: 20,
+                code: 'NJNMGSD',
+                type: '加能站',
+                leader: '孙浩',
+                phone: '13800138201',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 202,
+                name: '绕越高速方山服务区东加油站',
+                parentId: 20,
+                code: 'RYGSFSD',
+                type: '加能站',
+                leader: '李明',
+                phone: '13800138202',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           },
           {
@@ -63,9 +99,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-02 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 210, name: '南京浦口永宁加油站', parentId: 21, code: 'NJPKYN', type: '加能站', leader: '王芳', phone: '13800138210', sort: 1, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 211, name: '浦口北门加油站', parentId: 21, code: 'PKBM', type: '加能站', leader: '刘洋', phone: '13800138211', sort: 2, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 212, name: '西葛加油站', parentId: 21, code: 'XG', type: '加能站', leader: '陈静', phone: '13800138212', sort: 3, status: 1, createTime: '2024-01-02 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 210,
+                name: '南京浦口永宁加油站',
+                parentId: 21,
+                code: 'NJPKYN',
+                type: '加能站',
+                leader: '王芳',
+                phone: '13800138210',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 211,
+                name: '浦口北门加油站',
+                parentId: 21,
+                code: 'PKBM',
+                type: '加能站',
+                leader: '刘洋',
+                phone: '13800138211',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 212,
+                name: '西葛加油站',
+                parentId: 21,
+                code: 'XG',
+                type: '加能站',
+                leader: '陈静',
+                phone: '13800138212',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-02 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -96,9 +168,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-03 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 300, name: '无锡市学前东路加油站', parentId: 30, code: 'WXXQDL', type: '加能站', leader: '赵强', phone: '13800138300', sort: 1, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 301, name: '无锡锡洲加油站', parentId: 30, code: 'WXXZ', type: '加能站', leader: '钱伟', phone: '13800138301', sort: 2, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 302, name: '无锡锡山后宅加油站', parentId: 30, code: 'WXXSHZ', type: '加能站', leader: '孙丽', phone: '13800138302', sort: 3, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 300,
+                name: '无锡市学前东路加油站',
+                parentId: 30,
+                code: 'WXXQDL',
+                type: '加能站',
+                leader: '赵强',
+                phone: '13800138300',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 301,
+                name: '无锡锡洲加油站',
+                parentId: 30,
+                code: 'WXXZ',
+                type: '加能站',
+                leader: '钱伟',
+                phone: '13800138301',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 302,
+                name: '无锡锡山后宅加油站',
+                parentId: 30,
+                code: 'WXXSHZ',
+                type: '加能站',
+                leader: '孙丽',
+                phone: '13800138302',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           },
           {
@@ -114,9 +222,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-03 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 310, name: '无锡红星加油站', parentId: 31, code: 'WXHX', type: '加能站', leader: '周明', phone: '13800138310', sort: 1, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 311, name: '无锡金城加油站', parentId: 31, code: 'WXJC', type: '加能站', leader: '吴刚', phone: '13800138311', sort: 2, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 312, name: '无锡新光加油站', parentId: 31, code: 'WXXG', type: '加能站', leader: '郑华', phone: '13800138312', sort: 3, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 310,
+                name: '无锡红星加油站',
+                parentId: 31,
+                code: 'WXHX',
+                type: '加能站',
+                leader: '周明',
+                phone: '13800138310',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 311,
+                name: '无锡金城加油站',
+                parentId: 31,
+                code: 'WXJC',
+                type: '加能站',
+                leader: '吴刚',
+                phone: '13800138311',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 312,
+                name: '无锡新光加油站',
+                parentId: 31,
+                code: 'WXXG',
+                type: '加能站',
+                leader: '郑华',
+                phone: '13800138312',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           },
           {
@@ -132,9 +276,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-03 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 320, name: '宜兴茭渎加油站', parentId: 32, code: 'YXJD', type: '加能站', leader: '冯涛', phone: '13800138320', sort: 1, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 321, name: '宜兴范蠡加油站', parentId: 32, code: 'YXFL', type: '加能站', leader: '陈勇', phone: '13800138321', sort: 2, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 322, name: '正大加油站', parentId: 32, code: 'ZD', type: '加能站', leader: '杨帆', phone: '13800138322', sort: 3, status: 1, createTime: '2024-01-03 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 320,
+                name: '宜兴茭渎加油站',
+                parentId: 32,
+                code: 'YXJD',
+                type: '加能站',
+                leader: '冯涛',
+                phone: '13800138320',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 321,
+                name: '宜兴范蠡加油站',
+                parentId: 32,
+                code: 'YXFL',
+                type: '加能站',
+                leader: '陈勇',
+                phone: '13800138321',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 322,
+                name: '正大加油站',
+                parentId: 32,
+                code: 'ZD',
+                type: '加能站',
+                leader: '杨帆',
+                phone: '13800138322',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-03 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -165,9 +345,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-04 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 400, name: '徐州兴华加油站', parentId: 40, code: 'XZXH', type: '加能站', leader: '刘强', phone: '13800138400', sort: 1, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 401, name: '徐州响山路加油站', parentId: 40, code: 'XZXSL', type: '加能站', leader: '张磊', phone: '13800138401', sort: 2, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 402, name: '徐州城南加油站', parentId: 40, code: 'XZCN', type: '加能站', leader: '王涛', phone: '13800138402', sort: 3, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 400,
+                name: '徐州兴华加油站',
+                parentId: 40,
+                code: 'XZXH',
+                type: '加能站',
+                leader: '刘强',
+                phone: '13800138400',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 401,
+                name: '徐州响山路加油站',
+                parentId: 40,
+                code: 'XZXSL',
+                type: '加能站',
+                leader: '张磊',
+                phone: '13800138401',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 402,
+                name: '徐州城南加油站',
+                parentId: 40,
+                code: 'XZCN',
+                type: '加能站',
+                leader: '王涛',
+                phone: '13800138402',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           },
           {
@@ -183,9 +399,45 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-04 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 410, name: '丰县华山加油站', parentId: 41, code: 'FXHS', type: '加能站', leader: '赵军', phone: '13800138410', sort: 1, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 411, name: '丰县北关加油站', parentId: 41, code: 'FXBG', type: '加能站', leader: '孙鹏', phone: '13800138411', sort: 2, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 412, name: '丰县东环加油站', parentId: 41, code: 'FXDH', type: '加能站', leader: '钱进', phone: '13800138412', sort: 3, status: 1, createTime: '2024-01-04 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 410,
+                name: '丰县华山加油站',
+                parentId: 41,
+                code: 'FXHS',
+                type: '加能站',
+                leader: '赵军',
+                phone: '13800138410',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 411,
+                name: '丰县北关加油站',
+                parentId: 41,
+                code: 'FXBG',
+                type: '加能站',
+                leader: '孙鹏',
+                phone: '13800138411',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 412,
+                name: '丰县东环加油站',
+                parentId: 41,
+                code: 'FXDH',
+                type: '加能站',
+                leader: '钱进',
+                phone: '13800138412',
+                sort: 3,
+                status: 1,
+                createTime: '2024-01-04 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -216,8 +468,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-05 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 500, name: '常州武进加油站', parentId: 50, code: 'CZWJ', type: '加能站', leader: '吴波', phone: '13800138500', sort: 1, status: 1, createTime: '2024-01-05 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 501, name: '常州西林加油站', parentId: 50, code: 'CZXL', type: '加能站', leader: '郑涛', phone: '13800138501', sort: 2, status: 1, createTime: '2024-01-05 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 500,
+                name: '常州武进加油站',
+                parentId: 50,
+                code: 'CZWJ',
+                type: '加能站',
+                leader: '吴波',
+                phone: '13800138500',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-05 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 501,
+                name: '常州西林加油站',
+                parentId: 50,
+                code: 'CZXL',
+                type: '加能站',
+                leader: '郑涛',
+                phone: '13800138501',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-05 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -248,8 +524,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-06 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 600, name: '苏州吴中加油站', parentId: 60, code: 'SZWZJYZ', type: '加能站', leader: '朱磊', phone: '13800138600', sort: 1, status: 1, createTime: '2024-01-06 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 601, name: '苏州木渎加油站', parentId: 60, code: 'SZMD', type: '加能站', leader: '许强', phone: '13800138601', sort: 2, status: 1, createTime: '2024-01-06 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 600,
+                name: '苏州吴中加油站',
+                parentId: 60,
+                code: 'SZWZJYZ',
+                type: '加能站',
+                leader: '朱磊',
+                phone: '13800138600',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-06 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 601,
+                name: '苏州木渎加油站',
+                parentId: 60,
+                code: 'SZMD',
+                type: '加能站',
+                leader: '许强',
+                phone: '13800138601',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-06 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -280,8 +580,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-07 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 700, name: '南通学田加油站', parentId: 70, code: 'NTXT', type: '加能站', leader: '蒋涛', phone: '13800138700', sort: 1, status: 1, createTime: '2024-01-07 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 701, name: '南通港闸加油站', parentId: 70, code: 'NTGZ', type: '加能站', leader: '方明', phone: '13800138701', sort: 2, status: 1, createTime: '2024-01-07 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 700,
+                name: '南通学田加油站',
+                parentId: 70,
+                code: 'NTXT',
+                type: '加能站',
+                leader: '蒋涛',
+                phone: '13800138700',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-07 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 701,
+                name: '南通港闸加油站',
+                parentId: 70,
+                code: 'NTGZ',
+                type: '加能站',
+                leader: '方明',
+                phone: '13800138701',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-07 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -312,8 +636,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-08 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 800, name: '扬州文昌路加油站', parentId: 80, code: 'YZWCL', type: '加能站', leader: '石磊', phone: '13800138800', sort: 1, status: 1, createTime: '2024-01-08 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 801, name: '扬州邗江加油站', parentId: 80, code: 'YZHJ', type: '加能站', leader: '卢涛', phone: '13800138801', sort: 2, status: 1, createTime: '2024-01-08 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 800,
+                name: '扬州文昌路加油站',
+                parentId: 80,
+                code: 'YZWCL',
+                type: '加能站',
+                leader: '石磊',
+                phone: '13800138800',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-08 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 801,
+                name: '扬州邗江加油站',
+                parentId: 80,
+                code: 'YZHJ',
+                type: '加能站',
+                leader: '卢涛',
+                phone: '13800138801',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-08 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -344,8 +692,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-09 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 900, name: '句容城区加油站', parentId: 90, code: 'JRCQJYZ', type: '加能站', leader: '姜涛', phone: '13800138900', sort: 1, status: 1, createTime: '2024-01-09 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 901, name: '镇江丹徒加油站', parentId: 90, code: 'ZJDT', type: '加能站', leader: '邓明', phone: '13800138901', sort: 2, status: 1, createTime: '2024-01-09 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 900,
+                name: '句容城区加油站',
+                parentId: 90,
+                code: 'JRCQJYZ',
+                type: '加能站',
+                leader: '姜涛',
+                phone: '13800138900',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-09 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 901,
+                name: '镇江丹徒加油站',
+                parentId: 90,
+                code: 'ZJDT',
+                type: '加能站',
+                leader: '邓明',
+                phone: '13800138901',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-09 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -376,8 +748,32 @@ let mockDepartments: Department[] = [
             createTime: '2024-01-10 10:00:00',
             updateTime: '2025-03-01 09:00:00',
             children: [
-              { id: 1000, name: '泰州海陵加油站', parentId: 100, code: 'TZHL', type: '加能站', leader: '熊涛', phone: '13800139000', sort: 1, status: 1, createTime: '2024-01-10 10:00:00', updateTime: '2025-03-01 09:00:00' },
-              { id: 1001, name: '泰州高港加油站', parentId: 100, code: 'TZGG', type: '加能站', leader: '雷明', phone: '13800139001', sort: 2, status: 1, createTime: '2024-01-10 10:00:00', updateTime: '2025-03-01 09:00:00' }
+              {
+                id: 1000,
+                name: '泰州海陵加油站',
+                parentId: 100,
+                code: 'TZHL',
+                type: '加能站',
+                leader: '熊涛',
+                phone: '13800139000',
+                sort: 1,
+                status: 1,
+                createTime: '2024-01-10 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              },
+              {
+                id: 1001,
+                name: '泰州高港加油站',
+                parentId: 100,
+                code: 'TZGG',
+                type: '加能站',
+                leader: '雷明',
+                phone: '13800139001',
+                sort: 2,
+                status: 1,
+                createTime: '2024-01-10 10:00:00',
+                updateTime: '2025-03-01 09:00:00'
+              }
             ]
           }
         ]
@@ -728,17 +1124,39 @@ let nextUserId = 9
 function generatePositions(): Position[] {
   const positions: Position[] = []
   const positionNames = [
-    '设备管理岗', '巡检专员', '维修工程师', '备件管理岗', '设备档案管理员',
-    '技术支持岗', '质量检验员', '安全管理员', '培训专员', '数据分析员',
-    '项目经理', '系统管理员', '运维工程师', '客服专员', '采购专员'
+    '设备管理岗',
+    '巡检专员',
+    '维修工程师',
+    '备件管理岗',
+    '设备档案管理员',
+    '技术支持岗',
+    '质量检验员',
+    '安全管理员',
+    '培训专员',
+    '数据分析员',
+    '项目经理',
+    '系统管理员',
+    '运维工程师',
+    '客服专员',
+    '采购专员'
   ]
 
   const descriptions = [
-    '负责设备日常管理工作', '负责设备巡检与维护', '负责设备故障维修',
-    '负责备件库存管理', '负责设备档案整理', '提供技术支持服务',
-    '负责质量检验工作', '负责安全管理工作', '负责员工培训',
-    '负责数据分析与报表', '负责项目管理', '负责系统运维',
-    '负责运维保障', '负责客户服务', '负责物资采购'
+    '负责设备日常管理工作',
+    '负责设备巡检与维护',
+    '负责设备故障维修',
+    '负责备件库存管理',
+    '负责设备档案整理',
+    '提供技术支持服务',
+    '负责质量检验工作',
+    '负责安全管理工作',
+    '负责员工培训',
+    '负责数据分析与报表',
+    '负责项目管理',
+    '负责系统运维',
+    '负责运维保障',
+    '负责客户服务',
+    '负责物资采购'
   ]
 
   for (let i = 1; i <= 400; i++) {
@@ -754,7 +1172,7 @@ function generatePositions(): Position[] {
       sort: i,
       status,
       createTime: '2024-01-01 10:00:00',
-      updateTime: `2025-07-${String(Math.min(25, (i % 25) + 1)).padStart(2, '0')} ${String((i % 24)).padStart(2, '0')}:${String((i % 60)).padStart(2, '0')}:00`
+      updateTime: `2025-07-${String(Math.min(25, (i % 25) + 1)).padStart(2, '0')} ${String(i % 24).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}:00`
     })
   }
 
@@ -807,8 +1225,7 @@ export function getUserListMock(params?: {
   // 筛选关键词（姓名或账号）
   if (params?.keyword) {
     result = result.filter(
-      (user) =>
-        user.nickname?.includes(params.keyword!) || user.username?.includes(params.keyword!)
+      (user) => user.nickname?.includes(params.keyword!) || user.username?.includes(params.keyword!)
     )
   }
 
@@ -1674,4 +2091,3 @@ export function deleteMenuMock(id: number) {
 export function updateMenuStatusMock(id: number, status: number) {
   return updateMenuMock(id, { status })
 }
-

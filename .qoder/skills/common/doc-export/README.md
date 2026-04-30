@@ -42,15 +42,15 @@ bash .claude/skills/common/doc-export/scripts/export-word.sh 输入.md 输出.do
 
 ```yaml
 ---
-title: "需求说明书"
+title: '需求说明书'
 subtitle: "[项目名称]\n\n[客户名称]"
-author: "编制单位：[编制单位名称]"
-date: "[年月]"
+author: '编制单位：[编制单位名称]'
+date: '[年月]'
 lang: zh-CN
 toc: true
 toc-depth: 3
 numbersections: false
-geometry: "left=3.17cm,right=3.17cm,top=2.54cm,bottom=2.54cm"
+geometry: 'left=3.17cm,right=3.17cm,top=2.54cm,bottom=2.54cm'
 ---
 ```
 

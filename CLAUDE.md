@@ -9,6 +9,7 @@
 ## 开发命令
 
 ### 基础命令
+
 ```bash
 # 启动开发服务器（自动打开浏览器）
 pnpm dev
@@ -39,12 +40,14 @@ pnpm commit
 ```
 
 ### 环境要求
+
 - Node.js >= 20.19.0
 - pnpm >= 8.8.0
 
 ## 核心开发规范
 
 ### 开发规范
+
 - 组件都是自动导入，无需手动导入
 - 开发完不要npm run dev，由用户自行dev，但是需要build一下验证代码是否合规，没有报错
 - 创建页面需在 `src/router/modules/` 添加路由配置并在 `index.ts` 注册
@@ -57,11 +60,13 @@ pnpm commit
 - 开发过程中不需要npm run build或者pnpm build，由用户自行来，不然很费时间，请记住这点！！！
 
 #### 国际化规范
+
 - **页面内容统一使用中文**：页面中的所有文本内容（标签、按钮、提示信息等）直接使用中文，不使用 `$t()` 或 `t()` 函数进行国际化
 - **只有菜单名称需要多语言**：路由配置中的 `meta.title` 使用翻译键（如 `menus.example.title`），以支持菜单的中英文切换
 - **不要导入 useI18n**：页面组件中不需要 `import { useI18n } from 'vue-i18n'` 和 `const { t } = useI18n()`
 - **参考示例**：查看 `src/views/permission/role/index.vue` 等现有页面的实现方式
 - **示例对比**：
+
   ```vue
   <!-- ❌ 错误：使用国际化函数 -->
   <el-form-item :label="$t('user.name')">
@@ -77,6 +82,7 @@ pnpm commit
   ```
 
 #### 路由和菜单结构规范
+
 - 一级菜单必须使用父子路由结构，父路由的 `component` 固定为 `() => import('@/views/index/index.vue')`
 - 一级菜单的子路由才是实际的页面入口，`path` 为空字符串 `''`，`component` 指向实际页面
 - 子路由需要在 `meta` 中添加 `isHide: true` 避免在菜单中重复显示
@@ -200,17 +206,17 @@ pnpm commit
           title: 'menus.example.detail',
           keepAlive: true,
           isHide: true,
-          activePath: '/example'  // 指定激活的菜单路径，使一级菜单高亮
+          activePath: '/example' // 指定激活的菜单路径，使一级菜单高亮
         }
       }
     ]
   }
   ```
 
-
 ### 布局规范
 
 #### 卡片样式
+
 - 无边框：`border: none !important;`
 - 无阴影：`box-shadow: none !important;`
 - 圆角：`border-radius: 12px`
@@ -220,6 +226,7 @@ pnpm commit
 #### 页面布局
 
 **核心原则**：
+
 - **纯 Flex 布局** - 不写死页面高度，完全使用 flex 自动计算
 - **固定高度** - `.layout-content` 使用 `height: 100%` 确保页面不滚动，只有表格数据滚动
 - **统一内边距** - `.layout-content` 使用 `padding: 0 20px 0`（左右20px），底部 padding 放在 `.art-page-view` 上
@@ -231,6 +238,7 @@ pnpm commit
 **框架布局配置**（已在 `/src/views/index/style.scss` 中配置）：
 
 **框架一**：
+
 ```scss
 .app-content {
   flex: 1;
@@ -238,19 +246,20 @@ pnpm commit
 
   :deep(.layout-content) {
     box-sizing: border-box;
-    height: 100%;  // 固定高度，页面不滚动
-    padding: 0 20px 0;  // 只设置左右 padding
+    height: 100%; // 固定高度，页面不滚动
+    padding: 0 20px 0; // 只设置左右 padding
 
     .art-page-view {
       box-sizing: border-box;
       height: 100%;
-      padding-bottom: 20px;  // 底部 padding 在这里设置
+      padding-bottom: 20px; // 底部 padding 在这里设置
     }
   }
 }
 ```
 
 **框架二**：
+
 ```scss
 .app-content {
   flex: 1;
@@ -263,7 +272,7 @@ pnpm commit
 
     .art-page-view {
       box-sizing: border-box;
-      height: calc(100% - 60px);  // 减去工作标签页的高度（含 margin）
+      height: calc(100% - 60px); // 减去工作标签页的高度（含 margin）
       padding-bottom: 20px;
     }
   }
@@ -271,18 +280,19 @@ pnpm commit
 ```
 
 **页面组件布局规范**：
+
 ```scss
 // 页面根容器
 .page-container {
-  height: 100%;  // 继承父容器高度
+  height: 100%; // 继承父容器高度
   display: flex;
   flex-direction: column;
-  gap: 16px;  // 卡片间距
+  gap: 16px; // 卡片间距
 }
 
 // 筛选卡片
 .filter-card {
-  flex-shrink: 0;  // 不压缩
+  flex-shrink: 0; // 不压缩
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -294,7 +304,7 @@ pnpm commit
 
 // 数据卡片
 .data-card {
-  flex: 1;  // 占据剩余空间
+  flex: 1; // 占据剩余空间
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -314,7 +324,7 @@ pnpm commit
   }
 
   .table-container {
-    flex: 1;  // 表格占据剩余空间
+    flex: 1; // 表格占据剩余空间
     overflow: hidden;
   }
 
@@ -326,6 +336,7 @@ pnpm commit
 ```
 
 **关键点**：
+
 - 不使用 `calc(100vh - XXpx)` 等固定高度计算
 - 使用 `gap` 控制卡片间距，不使用 `margin-bottom`
 - **按钮间距不使用 `gap`**：按钮本身有 `margin-left: 12px`，使用 `.el-button:not(:first-child) { margin-left: 12px; }` 控制间距
@@ -338,6 +349,7 @@ pnpm commit
 当页面是二级页面（从列表页进入详情页或管理页）时，需要在页面顶部添加面包屑卡片：
 
 **结构：**
+
 ```vue
 <el-card class="breadcrumb-card">
   <div class="breadcrumb-content">
@@ -352,6 +364,7 @@ pnpm commit
 ```
 
 **样式规范：**
+
 ```scss
 .breadcrumb-card {
   flex-shrink: 0;
@@ -403,6 +416,7 @@ pnpm commit
 ```
 
 **功能实现：**
+
 - 返回按钮使用 `router.push()` 返回上级页面
 - 页面信息从 API 获取并显示
 - 使用 ArrowLeft 图标
@@ -412,6 +426,7 @@ pnpm commit
 筛选表单使用 flexbox 布局，不使用 Element Plus 的 inline 属性：
 
 **结构：**
+
 ```vue
 <el-card class="filter-card">
   <el-form :model="queryParams">
@@ -443,6 +458,7 @@ pnpm commit
 ```
 
 **样式规范：**
+
 ```scss
 .filter-card {
   flex-shrink: 0;
@@ -477,6 +493,7 @@ pnpm commit
 ```
 
 **关键点：**
+
 - 不使用 `inline` 属性，使用自定义 flexbox 布局
 - 表单项容器使用 `gap: 16px` 控制间距（不使用 margin-bottom）
 - 按钮间距使用 `.el-button:not(:first-child) { margin-left: 12px; }`（不使用 gap）
@@ -484,13 +501,14 @@ pnpm commit
 - 按钮的 form-item 使用 `label=" "` 确保对齐
 - 支持多行自动换行（`flex-wrap: wrap`）
 
-
 ### 组件使用规范
 
 #### 滚动条组件
+
 - **必须使用 Element Plus 的 `el-scrollbar` 组件**，不使用原生浏览器滚动条
 - **适用场景**：所有需要滚动的内容区域（表单页面、详情页面、长列表等）
 - **基本用法**：
+
   ```vue
   <template>
     <div class="page-container">
@@ -507,25 +525,26 @@ pnpm commit
   </template>
 
   <style scoped lang="scss">
-  .page-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .content-scrollbar {
-    flex: 1;
-    overflow: hidden;
-
-    :deep(.el-scrollbar__view) {
-      padding-bottom: 20px;  // 底部留白
+    .page-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-  }
+
+    .content-scrollbar {
+      flex: 1;
+      overflow: hidden;
+
+      :deep(.el-scrollbar__view) {
+        padding-bottom: 20px; // 底部留白
+      }
+    }
   </style>
   ```
 
 **关键点**：
+
 - 固定内容（如面包屑、顶部操作栏）放在 `el-scrollbar` 外面
 - 可滚动内容包裹在 `el-scrollbar` 内
 - 滚动容器使用 `flex: 1` 占据剩余空间
@@ -534,6 +553,7 @@ pnpm commit
 - ✅ 正确：使用 `<el-scrollbar>` 组件
 
 #### 表格组件
+
 - 使用Element Plus的ElTable，不使用项目内artTable组件
 - **表格边框**：默认不使用 `border` 属性，表格只有横向分隔线，没有竖边框
   - ✅ 正确：`<el-table :data="tableData" height="100%">`
@@ -548,14 +568,17 @@ pnpm commit
 #### 按钮规范
 
 **按钮分类**：
+
 - **操作按钮**：面包屑区域、卡片头部的功能按钮（如"保存草稿"、"发布考试"、"创建考试"）
 - **表格按钮**：表格操作列中的按钮（如"编辑"、"删除"、"查看详情"）
 - **返回按钮**：面包屑左侧的返回按钮
 
 **按钮间距**：
+
 - 按钮组使用 `.el-button:not(:first-child) { margin-left: 12px; }` 控制间距
 - 不使用 `gap` 属性，因为按钮本身有 `margin-left: 12px`
 - 示例：
+
   ```scss
   .filter-buttons {
     display: flex;
@@ -567,6 +590,7 @@ pnpm commit
   ```
 
 **按钮类型**：
+
 - 主要操作：`type="primary"`（如"搜索"、"保存"、"确定"）
 - 次要操作：不设置 type（如"重置"、"取消"）
 - 危险操作：`type="danger"`（如"删除"）
@@ -574,11 +598,13 @@ pnpm commit
 - 警告操作：`type="warning"`（如"警告"、"发布考试"）
 
 **按钮尺寸**：
+
 - 默认尺寸：不设置 size（用于表单、筛选区域、操作按钮）
 - 小尺寸：`size="small"`（用于特殊场景）
 - 大尺寸：`size="large"`（用于重要的主操作）
 
 **按钮图标**：
+
 - 使用 Element Plus 图标：`<el-icon><Plus /></el-icon>`
 - 图标位置：图标在文字左侧
 - 示例：
@@ -590,11 +616,13 @@ pnpm commit
   ```
 
 **⚠️ 操作按钮规范**（面包屑区域、卡片头部）：
+
 - **保持 Element Plus 默认样式**，不添加自定义的 font-size、color、padding 等样式
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
 - 可以添加图标使用 `:icon` 属性
 - 示例：
+
   ```vue
   <!-- 面包屑操作按钮 -->
   <div class="breadcrumb-actions">
@@ -613,6 +641,7 @@ pnpm commit
     </el-button>
   </div>
   ```
+
 - ❌ 错误：给操作按钮添加自定义样式
   ```scss
   // ❌ 错误：不要这样写
@@ -633,6 +662,7 @@ pnpm commit
   ```
 
 **⚠️ 表格操作列按钮规范**：
+
 - **必须使用 `link` 类型**，不使用 `text` 类型
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
@@ -657,9 +687,11 @@ pnpm commit
 - ✅ 正确：`<el-button link>`
 
 **返回按钮规范**（面包屑左侧）：
+
 - 使用 `text` 类型
 - 可以添加自定义样式，但 CSS 选择器必须精确，避免影响其他按钮
 - 示例：
+
   ```vue
   <div class="breadcrumb-left">
     <el-button text @click="handleBack">
@@ -670,6 +702,7 @@ pnpm commit
     <span class="page-info">创建考试</span>
   </div>
   ```
+
   ```scss
   .breadcrumb-left {
     display: flex;
@@ -705,11 +738,13 @@ pnpm commit
 使用 `vue-draggable-plus` 库实现拖动排序功能。
 
 **安装依赖**：
+
 ```bash
 pnpm add vue-draggable-plus
 ```
 
 **基本用法**：
+
 ```vue
 <template>
   <VueDraggable
@@ -719,41 +754,36 @@ pnpm add vue-draggable-plus
     @end="handleDragEnd"
     class="draggable-container"
   >
-    <el-card
-      v-for="item in list"
-      :key="item.id"
-      class="draggable-item"
-    >
-      <span class="drag-handle" style="cursor: move; margin-right: 8px; color: #909399">
-        ☰
-      </span>
+    <el-card v-for="item in list" :key="item.id" class="draggable-item">
+      <span class="drag-handle" style="cursor: move; margin-right: 8px; color: #909399"> ☰ </span>
       <span>{{ item.name }}</span>
     </el-card>
   </VueDraggable>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
+  import { ref } from 'vue'
+  import { VueDraggable } from 'vue-draggable-plus'
 
-const list = ref([
-  { id: 1, name: '项目1', order: 1 },
-  { id: 2, name: '项目2', order: 2 },
-  { id: 3, name: '项目3', order: 3 }
-])
+  const list = ref([
+    { id: 1, name: '项目1', order: 1 },
+    { id: 2, name: '项目2', order: 2 },
+    { id: 3, name: '项目3', order: 3 }
+  ])
 
-const handleDragEnd = () => {
-  // 更新排序
-  list.value.forEach((item, index) => {
-    item.order = index + 1
-  })
-  // 调用 API 保存排序
-  // updateOrder(list.value)
-}
+  const handleDragEnd = () => {
+    // 更新排序
+    list.value.forEach((item, index) => {
+      item.order = index + 1
+    })
+    // 调用 API 保存排序
+    // updateOrder(list.value)
+  }
 </script>
 ```
 
 **关键配置**：
+
 - `v-model`：绑定数据列表
 - `:animation="200"`：拖动动画时长（毫秒）
 - `handle=".drag-handle"`：指定拖动手柄的 CSS 选择器
@@ -761,6 +791,7 @@ const handleDragEnd = () => {
 - `class="draggable-container"`：容器样式类
 
 **拖动手柄样式**：
+
 ```scss
 .drag-handle {
   cursor: move;
@@ -775,6 +806,7 @@ const handleDragEnd = () => {
 ```
 
 **注意事项**：
+
 - 必须为每个项目设置唯一的 `key`（通常使用 `id`）
 - 拖动手柄使用 `☰` 符号（Unicode: U+2630）
 - 拖动结束后需要更新每个项目的 `order` 字段
@@ -782,38 +814,40 @@ const handleDragEnd = () => {
 - 容器需要设置合适的样式以确保拖动体验良好
 
 **完整示例（带 API 调用）**：
+
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { VueDraggable } from 'vue-draggable-plus'
-import { ElMessage } from 'element-plus'
-import { updateOrder } from '@/api/example'
+  import { ref } from 'vue'
+  import { VueDraggable } from 'vue-draggable-plus'
+  import { ElMessage } from 'element-plus'
+  import { updateOrder } from '@/api/example'
 
-const list = ref([
-  { id: 1, name: '项目1', order: 1 },
-  { id: 2, name: '项目2', order: 2 },
-  { id: 3, name: '项目3', order: 3 }
-])
+  const list = ref([
+    { id: 1, name: '项目1', order: 1 },
+    { id: 2, name: '项目2', order: 2 },
+    { id: 3, name: '项目3', order: 3 }
+  ])
 
-const handleDragEnd = async () => {
-  // 更新排序
-  list.value.forEach((item, index) => {
-    item.order = index + 1
-  })
+  const handleDragEnd = async () => {
+    // 更新排序
+    list.value.forEach((item, index) => {
+      item.order = index + 1
+    })
 
-  try {
-    // 调用 API 保存排序
-    await updateOrder(list.value.map(item => ({ id: item.id, order: item.order })))
-    ElMessage.success('排序已保存')
-  } catch (error) {
-    ElMessage.error('保存排序失败')
-    // 可以考虑重新加载数据恢复原始排序
+    try {
+      // 调用 API 保存排序
+      await updateOrder(list.value.map((item) => ({ id: item.id, order: item.order })))
+      ElMessage.success('排序已保存')
+    } catch (error) {
+      ElMessage.error('保存排序失败')
+      // 可以考虑重新加载数据恢复原始排序
+    }
   }
-}
 </script>
 ```
 
 #### 图标使用
+
 - 使用`iconfont-sys`类显示图标，不使用`iconfont`类
 - 图标代码使用HTML实体格式（如`&#xe88a;`）
 - 在template中使用`v-html`渲染：`<i class="iconfont-sys" v-html="icon"></i>`
@@ -822,9 +856,11 @@ const handleDragEnd = async () => {
 ### API和Mock规范
 
 #### API 请求方法使用规范
+
 - **正确使用方式**：使用 `request.get()`、`request.post()`、`request.put()`、`request.del()` 方法
 - **错误使用方式**：不要使用 `request()` 直接调用或使用 `method` 参数
 - 示例：
+
   ```typescript
   // ✅ 正确
   export function getList(params: ListParams) {
@@ -858,13 +894,14 @@ const handleDragEnd = async () => {
   export function getList(params: ListParams) {
     return request({
       url: '/admin/list',
-      method: 'get',  // 不要使用 method 参数
+      method: 'get', // 不要使用 method 参数
       params
     })
   }
   ```
 
 #### Mock 数据处理规范
+
 - **项目使用手动 Mock 模式**，不使用 vite-plugin-mock 自动拦截
 - Mock 文件需要导出具体的 Mock 函数，而不是 MockMethod 数组
 - API 文件中需要判断 `USE_MOCK` 环境变量，手动调用 Mock 函数
@@ -872,6 +909,7 @@ const handleDragEnd = async () => {
 - Mock API 延迟 300ms 返回结果
 
 **Mock 文件示例**：
+
 ```typescript
 // src/mock/example.ts
 import type { Item, ListParams } from '@/types/example'
@@ -893,11 +931,11 @@ export function getListMock(params: ListParams) {
 
   // 筛选
   if (name) {
-    filteredData = filteredData.filter(item => item.name.includes(name))
+    filteredData = filteredData.filter((item) => item.name.includes(name))
   }
   if (status !== undefined && status !== null && status !== '') {
     const statusValue = typeof status === 'string' ? parseInt(status) : status
-    filteredData = filteredData.filter(item => item.status === statusValue)
+    filteredData = filteredData.filter((item) => item.status === statusValue)
   }
 
   // 分页
@@ -930,7 +968,7 @@ export function addItemMock(data: Partial<Item>) {
  * 更新 Mock 函数
  */
 export function updateItemMock(data: Partial<Item>) {
-  const index = items.findIndex(item => item.id === data.id)
+  const index = items.findIndex((item) => item.id === data.id)
   if (index !== -1) {
     items[index] = {
       ...items[index],
@@ -946,7 +984,7 @@ export function updateItemMock(data: Partial<Item>) {
  * 删除 Mock 函数
  */
 export function deleteItemMock(id: number) {
-  const index = items.findIndex(item => item.id === id)
+  const index = items.findIndex((item) => item.id === id)
   if (index !== -1) {
     items.splice(index, 1)
     return true
@@ -956,16 +994,12 @@ export function deleteItemMock(id: number) {
 ```
 
 **API 文件示例**：
+
 ```typescript
 // src/api/example.ts
 import request from '@/utils/http'
 import type { Item, ListParams } from '@/types/example'
-import {
-  getListMock,
-  addItemMock,
-  updateItemMock,
-  deleteItemMock
-} from '@/mock/example'
+import { getListMock, addItemMock, updateItemMock, deleteItemMock } from '@/mock/example'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
@@ -1078,11 +1112,13 @@ export function deleteItem(id: number) {
 ```
 
 #### 类型定义规范
+
 - 类型定义统一放在 `src/types/` 目录下，按模块分文件
 - **查询参数类型定义**：状态、类型、难度等筛选字段需要支持 `number | string | null` 类型
   - 原因：从 URL 查询参数传过来的值可能是字符串类型
   - 在 Mock 函数中需要进行类型转换：`typeof value === 'string' ? parseInt(value) : value`
 - 示例：
+
   ```typescript
   // src/types/example.ts
 
@@ -1108,14 +1144,15 @@ export function deleteItem(id: number) {
   export interface Item {
     id: number
     name: string
-    status: number  // 实际存储时是 number
-    type: number    // 实际存储时是 number
+    status: number // 实际存储时是 number
+    type: number // 实际存储时是 number
     createTime: string
     updateTime: string
   }
   ```
 
 #### API 函数命名规范
+
 - 遵循 RESTful 风格：get/add/update/delete + 资源名称
 - 批量操作：batch + 操作 + 资源名称（如 `batchDeleteItems`）
 - 示例：
@@ -1127,6 +1164,7 @@ export function deleteItem(id: number) {
   - `batchDeleteItems` - 批量删除
 
 #### 清理脚本规范
+
 - **清理脚本已固定**：`scripts/clean-demo-modules.js` 已配置好保留的模块列表
 - **实现新功能时不需要更新清理脚本**
 - 清理脚本会自动保留以下内容：
@@ -1136,26 +1174,28 @@ export function deleteItem(id: number) {
   - `KEEP_MODULES.mock` - 保留的 Mock 文件
   - `KEEP_MODULES.i18nPrefixes` - 保留的国际化前缀
 
-
-
 ## 架构概述
 
 ### 框架系统
+
 应用支持两种可在运行时切换的布局框架：
 
 **框架一（传统布局）**
+
 - 左侧边栏导航
 - 顶部标题栏，包含面包屑和工具栏
 - 右侧内容区域
 - 布局文件：`src/views/index/index.vue`（第 3-20 行）
 
 **框架二（顶部 Header 布局）**
+
 - 固定顶部 Header（`ArtTopHeader`），包含 Logo、搜索和工具栏
 - 顶部 Header 下方的左侧边栏导航
 - 内容区域显示标签页（`ArtWorkTab`）而非工具栏按钮
 - 布局文件：`src/views/index/index.vue`（第 23-44 行）
 
 框架切换管理：
+
 - 状态管理：`src/store/modules/setting.ts`（`frameworkType` 状态）
 - 枚举定义：`src/enums/appEnum.ts`（`FrameworkTypeEnum`）
 - 切换方法：`settingStore.switchFramework(type)`
@@ -1163,6 +1203,7 @@ export function deleteItem(id: number) {
 ### 状态管理（Pinia）
 
 Store 模块位于 `src/store/modules/`：
+
 - `setting.ts` - UI 设置（主题、菜单、框架类型、布局偏好）
 - `user.ts` - 用户认证和个人资料数据
 - `menu.ts` - 导航菜单结构和激活状态
@@ -1174,6 +1215,7 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 ### 路由系统
 
 路由配置：`src/router/`
+
 - 从 `src/router/modules/` 动态加载路由
 - 路由守卫用于认证和权限控制
 - 视图懒加载实现代码分割
@@ -1199,6 +1241,7 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 ### 全局组件配置
 
 全局组件通过 `src/config/component.ts` 注册：
+
 - 使用 `defineAsyncComponent` 实现懒加载
 - 通过 `enabled` 标志控制
 - 在 `ArtGlobalComponent` 中动态加载
@@ -1206,12 +1249,14 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 ## 样式系统
 
 ### SCSS 架构
+
 - 变量：`src/assets/styles/variables.scss`
 - Mixins：`src/assets/styles/mixin.scss`
 - 主题文件：`el-light.scss`、`el-dark.scss`、`dark.scss`
 - 通过 Vite 配置自动导入到所有 SCSS 文件
 
 ### 主题系统
+
 - 支持浅色/深色模式
 - 系统主题自动检测
 - 主题颜色可在 `src/config/index.ts` 中配置
@@ -1220,6 +1265,7 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 ## 路径别名
 
 在 `vite.config.ts` 中配置：
+
 ```typescript
 '@' → 'src/'
 '@views' → 'src/views'
@@ -1234,12 +1280,15 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 ## 关键配置文件
 
 ### 系统配置
+
 - `src/config/index.ts` - 系统信息、主题列表、菜单布局、框架布局
 - `src/config/component.ts` - 全局组件注册
 - `src/config/headerBar.ts` - 顶部栏功能开关
 
 ### 环境变量
+
 位于 `.env` 文件：
+
 - `VITE_VERSION` - 应用版本
 - `VITE_PORT` - 开发服务器端口
 - `VITE_BASE_URL` - 路由基础 URL
@@ -1247,7 +1296,9 @@ Store 初始化：`src/store/index.ts`，使用 `pinia-plugin-persistedstate` �
 - `VITE_API_PROXY_URL` - API 请求代理目标
 
 ### API 代理配置
+
 Vite 开发服务器代理（在 `vite.config.ts` 中）：
+
 - `/admin` - 管理后台 API
 - `/app` - Web 前台 API
 - `/api` - 公共 API
@@ -1255,11 +1306,13 @@ Vite 开发服务器代理（在 `vite.config.ts` 中）：
 ## 重要实现细节
 
 ### Logo 使用
-所有 Logo 引用使用 `@imgs/common/logo-web.png`（不是 `logo.webp`）。
-Logo 通过 `ArtLogo` 组件渲染。
+
+所有 Logo 引用使用 `@imgs/common/logo-web.png`（不是 `logo.webp`）。Logo 通过 `ArtLogo` 组件渲染。
 
 ### 已删除的功能
+
 以下功能已被有意删除：
+
 - 控制台欢迎信息（`src/utils/sys/console.ts` - 已清空）
 - 通知功能（按钮和组件已删除）
 - 聊天功能（按钮和 `ArtChatWindow` 已从全局配置中删除）
@@ -1269,25 +1322,30 @@ Logo 通过 `ArtLogo` 组件渲染。
 ### 框架特定行为
 
 **框架二特性：**
+
 - 顶部 Header 在暗黑模式下使用 `#1a1a1a` 背景色
 - 侧边栏菜单隐藏 Logo 和系统名称（在顶部 Header 中显示）
 - 侧边栏有 20px 顶部间距，避免内容紧贴顶部
 - 工作标签页显示在 Header 栏中，而非工具栏按钮
 - 内容区域根据侧边栏宽度动态调整（展开 200px，收起 70px）
 
-**侧边栏宽度管理：**
-使用 CSS 变量 `--sidebar-width`，在以下状态间切换：
+**侧边栏宽度管理：** 使用 CSS 变量 `--sidebar-width`，在以下状态间切换：
+
 - 菜单展开：`200px`
 - 菜单收起：`70px`
 
 ### 工作标签页对齐
+
 工作标签页组件（`.worktab`）使用：
+
 - `display: flex` 配合 `align-items: center` 实现垂直居中
 - `min-height: 40px` 确保适当高度
 - 标签页高度：32px，下拉按钮高度：34px
 
 ### 用户菜单样式
+
 用户菜单弹出层（`.user-menu-popover`）需要：
+
 - 非 scoped 样式以确保正确渲染
 - `.user-menu-box` 的 padding：`10px 16px 0`
 - 在 `ArtHeaderBar` 和 `ArtTopHeader` 中都需要导入
@@ -1295,6 +1353,7 @@ Logo 通过 `ArtLogo` 组件渲染。
 ## 自动导入配置
 
 项目使用 `unplugin-auto-import` 和 `unplugin-vue-components`：
+
 - Vue API（ref、computed、watch 等）自动导入
 - Vue Router 组合式函数自动导入
 - Pinia 组合式函数自动导入
@@ -1313,6 +1372,7 @@ Logo 通过 `ArtLogo` 组件渲染。
 ## 国际化
 
 i18n 配置：`src/locales/`
+
 - 支持多语言
 - 通过设置面板切换语言
 - 所有 UI 组件的翻译

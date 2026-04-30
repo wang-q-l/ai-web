@@ -15,9 +15,11 @@ src/components/
 ## 各目录说明
 
 ### common/ - 通用组件
+
 存放项目中可复用的基础 UI 组件，与业务逻辑无关。
 
 **适用组件**：
+
 - 按钮组件（Button.vue）
 - 图标组件（Icon.vue）
 - 加载组件（Loading.vue）
@@ -28,9 +30,11 @@ src/components/
 **命名规范**：PascalCase，如 `CustomButton.vue`
 
 ### layout/ - 布局组件
+
 存放页面布局相关的组件。
 
 **适用组件**：
+
 - 头部导航（Header.vue）
 - 侧边栏（Sidebar.vue）
 - 面包屑（Breadcrumb.vue）
@@ -40,9 +44,11 @@ src/components/
 **命名规范**：PascalCase，如 `AppHeader.vue`
 
 ### business/ - 业务组件
+
 存放与具体业务逻辑相关的组件。
 
 **适用组件**：
+
 - 用户卡片（UserCard.vue）
 - 数据表格（DataTable.vue）
 - 搜索表单（SearchForm.vue）
@@ -52,6 +58,7 @@ src/components/
 **命名规范**：PascalCase，如 `UserProfileCard.vue`
 
 ### page-templates/ - 页面模板组件
+
 存放可复用的页面模板组件（如果有）。
 
 **命名规范**：PascalCase + Page 后缀，如 `ListPage.vue`
@@ -59,16 +66,18 @@ src/components/
 ## 使用示例
 
 ### 导入通用组件
+
 ```vue
 <script setup>
-import CustomButton from '@/components/common/CustomButton.vue'
+  import CustomButton from '@/components/common/CustomButton.vue'
 </script>
 ```
 
 ### 导入业务组件
+
 ```vue
 <script setup>
-import UserCard from '@/components/business/UserCard.vue'
+  import UserCard from '@/components/business/UserCard.vue'
 </script>
 ```
 

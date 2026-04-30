@@ -5,6 +5,7 @@
 ## 技术栈
 
 ### 核心框架
+
 - **Vue 3.x** - 使用 Composition API（`<script setup>`）
 - **TypeScript** - 类型安全
 - **Vite** - 构建工具
@@ -12,6 +13,7 @@
 - **Pinia** - 状态管理
 
 ### UI 组件库
+
 - **Vant 4.x** - 移动端 UI 组件库
 - 按需引入组件
 
@@ -22,6 +24,7 @@
 **所有页面内容区域使用卡片式布局**。
 
 **卡片默认样式：**
+
 - **无边框**：`border: none`
 - **无阴影**：`box-shadow: none`
 - **圆角**：`border-radius: 12px`
@@ -47,14 +50,14 @@
 </template>
 
 <style scoped>
-.page-container {
-  min-height: 100vh;
-  background: #f5f7fa;
-}
+  .page-container {
+    min-height: 100vh;
+    background: #f5f7fa;
+  }
 
-.page-content {
-  padding: 16px;
-}
+  .page-content {
+    padding: 16px;
+  }
 </style>
 ```
 

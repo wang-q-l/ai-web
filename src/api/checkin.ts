@@ -5,11 +5,7 @@ import type {
   CheckinSubmitParams,
   CheckinStatistics
 } from '@/types/checkin'
-import {
-  getCheckinListMock,
-  submitCheckinMock,
-  getCheckinStatisticsMock
-} from '@/mock/checkin'
+import { getCheckinListMock, submitCheckinMock, getCheckinStatisticsMock } from '@/mock/checkin'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
@@ -65,7 +61,11 @@ export function submitCheckin(data: CheckinSubmitParams) {
 /**
  * 获取打卡统计数据
  */
-export function getCheckinStatistics(params: { projectId?: number; startTime?: string; endTime?: string }) {
+export function getCheckinStatistics(params: {
+  projectId?: number
+  startTime?: string
+  endTime?: string
+}) {
   if (USE_MOCK) {
     return new Promise<any>((resolve) => {
       setTimeout(() => {

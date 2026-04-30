@@ -47,18 +47,21 @@ description: 多端页面生成器规范。根据项目类型（管理后台/Web
 ### 1. 管理后台项目
 
 **特征：**
+
 - Vue3 + Element Plus + TypeScript
 - 侧边栏菜单 + 顶部栏布局
 - 表格、表单、树形结构等数据管理功能
 - 权限控制、路由守卫
 
 **适用场景：**
+
 - 后台管理系统
 - CMS 内容管理
 - 数据管理平台
 - 企业内部系统
 
 **参考文档：**
+
 - [管理后台通用规范](references/admin/general-specs.md)
 - [路由配置指南](references/admin/routing-guide.md)
 - [样式规范](references/admin/styling-guide.md)
@@ -72,18 +75,21 @@ description: 多端页面生成器规范。根据项目类型（管理后台/Web
 ### 2. Web 前台项目
 
 **特征：**
+
 - Vue3 + Element Plus + TypeScript
 - Header + Footer 布局
 - 响应式设计，支持移动端
 - 内容展示、产品介绍、新闻列表
 
 **适用场景：**
+
 - 企业官网
 - 产品官网
 - 门户网站
 - 营销页面
 
 **参考文档：**
+
 - [Web 前台通用规范](references/web/general-specs.md)
 - [路由配置指南](references/web/routing-guide.md)
 - [样式规范](references/web/styling-guide.md)
@@ -97,18 +103,21 @@ description: 多端页面生成器规范。根据项目类型（管理后台/Web
 ### 3. 移动端项目
 
 **特征：**
+
 - Vue3 + Vant + TypeScript
 - NavBar + Tabbar 布局
 - 触摸优化、下拉刷新、上拉加载
 - 移动端交互体验
 
 **适用场景：**
+
 - H5 应用
 - 移动端网站
 - 小程序（H5 版本）
 - 移动端商城
 
 **参考文档：**
+
 - [移动端通用规范](references/mobile/general-specs.md)
 - [路由配置指南](references/mobile/routing-guide.md)
 - [样式规范](references/mobile/styling-guide.md)
@@ -126,6 +135,7 @@ description: 多端页面生成器规范。根据项目类型（管理后台/Web
 **所有页面必须使用卡片式布局**，这是项目的核心设计规范。
 
 **卡片默认样式：**
+
 - **无边框**：`border: none !important;`
 - **无阴影**：`box-shadow: none !important;`
 - **圆角**：`border-radius: 12px`
@@ -174,18 +184,21 @@ description: 多端页面生成器规范。根据项目类型（管理后台/Web
 根据用户需求，选择合适的页面模版：
 
 **管理后台：**
+
 - 标准列表页（带筛选、表格、分页）
 - 树形表格页（层级数据展示）
 - 二级页面（详情、编辑页面）
 - 左右分栏布局（树形导航 + 列表）
 
 **Web 前台：**
+
 - 首页（Banner + 产品展示 + 新闻动态）
 - 列表页（产品列表、新闻列表）
 - 详情页（产品详情、新闻详情）
 - 表单页（联系我们、留言反馈）
 
 **移动端：**
+
 - Tabbar 页面（首页、分类、购物车、我的）
 - 列表页（商品列表、订单列表）
 - 详情页（商品详情、订单详情）
@@ -297,6 +310,7 @@ npm run build
 ### 当前项目识别
 
 **检查依赖：**
+
 ```json
 {
   "dependencies": {
@@ -308,6 +322,7 @@ npm run build
 ```
 
 **检查目录结构：**
+
 ```
 src/
 ├── components/

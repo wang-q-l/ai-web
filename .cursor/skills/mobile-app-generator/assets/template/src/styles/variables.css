@@ -1,10 +1,10 @@
 :root {
   /* 主题色 */
-  --primary-color: #1171F8;
+  --primary-color: #1171f8;
   --success-color: #00b42a;
   --warning-color: #ff7d00;
   --danger-color: #f53f3f;
-  --info-color: #1171F8;
+  --info-color: #1171f8;
 
   /* 文字色 */
   --text-primary: #1d2129;
@@ -33,7 +33,7 @@
 
 /* 覆盖 Vant 主题色 */
 :root:root {
-  --van-primary-color: #1171F8;
+  --van-primary-color: #1171f8;
   --van-success-color: #00b42a;
   --van-warning-color: #ff7d00;
   --van-danger-color: #f53f3f;

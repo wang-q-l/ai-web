@@ -7,6 +7,7 @@
 **所有页面必须使用卡片式布局**，这是项目的核心设计规范。
 
 **卡片默认样式：**
+
 - **无边框**：`border: none !important;`
 - **无阴影**：`box-shadow: none !important;`
 - **圆角**：`border-radius: 12px`
@@ -22,14 +23,15 @@
 
 ```scss
 .page-container {
-  height: 100%;  // 继承父容器高度
+  height: 100%; // 继承父容器高度
   display: flex;
   flex-direction: column;
-  gap: 16px;  // 卡片间距
+  gap: 16px; // 卡片间距
 }
 ```
 
 ### 关键点
+
 - 使用 `height: 100%` 而不是 `calc(100vh - XXpx)`
 - 使用 `gap` 控制卡片间距，不使用 `margin-bottom`
 - 使用 `flex-direction: column` 垂直排列
@@ -40,13 +42,13 @@
 
 ```scss
 .filter-card {
-  flex-shrink: 0;  // 不压缩
+  flex-shrink: 0; // 不压缩
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
 
   :deep(.el-card__body) {
-    padding: 12px 20px;  // 上下12px，左右20px
+    padding: 12px 20px; // 上下12px，左右20px
   }
 
   .filter-form-content {
@@ -74,7 +76,7 @@
 
 ```scss
 .data-card {
-  flex: 1;  // 占据剩余空间
+  flex: 1; // 占据剩余空间
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -100,7 +102,7 @@
   }
 
   .table-container {
-    flex: 1;  // 表格占据剩余空间
+    flex: 1; // 表格占据剩余空间
     overflow: hidden;
   }
 
@@ -176,6 +178,7 @@
 ```
 
 ### 列宽建议
+
 - ID 列：80px
 - 状态列：100px
 - 时间列：180px
@@ -224,6 +227,7 @@
 ```
 
 样式：
+
 ```scss
 .filter-form-content {
   display: flex;
@@ -271,6 +275,7 @@
 ```
 
 ### 按钮类型
+
 - 主要操作：`type="primary"`
 - 危险操作：`type="danger"`
 - 链接按钮：`link type="primary"`
@@ -299,6 +304,7 @@
 ```
 
 样式：
+
 ```scss
 .el-pagination {
   flex-shrink: 0;
@@ -322,6 +328,7 @@
 ```
 
 ### 宽度建议
+
 - 简单表单：500-600px
 - 复杂表单：700-800px
 - 预览对话框：700-900px
@@ -372,7 +379,7 @@
 
 // 1. 固定的面包屑卡片
 .breadcrumb-card {
-  flex-shrink: 0;  // 不压缩，固定在顶部
+  flex-shrink: 0; // 不压缩，固定在顶部
   border: none !important;
   box-shadow: none !important;
   border-radius: 12px;
@@ -380,8 +387,8 @@
 
 // 2. 滚动包装器
 .scroll-wrapper {
-  flex: 1;  // 占据剩余空间
-  overflow: hidden;  // 隐藏溢出
+  flex: 1; // 占据剩余空间
+  overflow: hidden; // 隐藏溢出
 
   :deep(.el-scrollbar) {
     height: 100%;
@@ -392,7 +399,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-bottom: 20px;  // 底部留白，确保内容不被裁剪
+    padding-bottom: 20px; // 底部留白，确保内容不被裁剪
   }
 }
 
@@ -400,7 +407,7 @@
 .scroll-content {
   .filter-card,
   .data-card {
-    flex-shrink: 0;  // 防止被压缩
+    flex-shrink: 0; // 防止被压缩
   }
 }
 ```
@@ -474,6 +481,7 @@
 ```
 
 使用方式：
+
 ```vue
 <i class="iconfont-sys" v-html="'&#xe88a;'"></i>
 ```
@@ -517,7 +525,7 @@ var(--el-color-primary)
 ```scss
 .filter-form-content {
   display: flex;
-  flex-wrap: wrap;  // 支持换行
+  flex-wrap: wrap; // 支持换行
   gap: 16px;
   align-items: center;
 }
@@ -528,10 +536,10 @@ var(--el-color-primary)
 ```scss
 .table-container {
   flex: 1;
-  overflow: hidden;  // 容器不滚动
+  overflow: hidden; // 容器不滚动
 
   .el-table {
-    height: 100%;  // 表头固定，数据滚动
+    height: 100%; // 表头固定，数据滚动
   }
 }
 ```

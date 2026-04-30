@@ -36,7 +36,10 @@ export function minifyJavaScript(code: string): string {
       .replace(/}\s*else\s*{/g, '}else{') // 特殊处理 }else{
       .replace(/}\s*catch\s*{/g, '}catch{') // 特殊处理 }catch{
       // 保留必要的空格
-      .replace(/\b(var|let|const|function|return|if|else|for|while|do|switch|case|break|continue|throw|try|catch|finally|new|typeof|instanceof)\b/g, ' $1 ')
+      .replace(
+        /\b(var|let|const|function|return|if|else|for|while|do|switch|case|break|continue|throw|try|catch|finally|new|typeof|instanceof)\b/g,
+        ' $1 '
+      )
       .replace(/\s+/g, ' ') // 再次合并多余空格
       .trim()
   )

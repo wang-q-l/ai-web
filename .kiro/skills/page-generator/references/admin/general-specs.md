@@ -12,17 +12,20 @@
 ## 核心开发规范
 
 ### 组件导入
+
 - 所有组件都是自动导入，无需手动导入
 - Vue API（ref、computed、watch 等）自动导入
 - Element Plus 组件按需自动导入
 - 类型定义自动生成在 `src/types/` 目录
 
 ### 国际化规范
+
 - **页面内容统一使用中文** - 标签、按钮、提示信息等直接使用中文
 - **只有菜单名称需要多语言** - 路由配置中的 `meta.title` 使用翻译键
 - **不要导入 useI18n** - 页面组件中不需要国际化函数
 
 示例：
+
 ```vue
 <!-- ✅ 正确：直接使用中文 -->
 <el-form-item label="用户名称">
@@ -37,11 +40,13 @@
 ```
 
 ### 页面组件规范
+
 - 使用 `<script setup>` 和 `defineOptions`
 - 页面组件放在 `src/views/` 对应目录
 - 使用 TypeScript 严格模式
 
 ### Mock 数据规范
+
 - **项目使用手动 Mock 模式**，不使用 vite-plugin-mock 自动拦截
 - Mock 文件需要导出具体的 Mock 函数，而不是 MockMethod 数组
 - API 文件中需要判断 `USE_MOCK` 环境变量，手动调用 Mock 函数
@@ -49,10 +54,12 @@
 - Mock API 延迟 300ms 返回结果
 
 ### API 请求方法规范
+
 - **正确使用方式**：使用 `request.get()`、`request.post()`、`request.put()`、`request.del()` 方法
 - **错误使用方式**：不要使用 `request()` 直接调用或使用 `method` 参数
 
 示例：
+
 ```typescript
 // ✅ 正确
 export function getList(params: ListParams) {
@@ -66,43 +73,48 @@ export function getList(params: ListParams) {
 export function getList(params: ListParams) {
   return request({
     url: '/admin/list',
-    method: 'get',  // 不要使用 method 参数
+    method: 'get', // 不要使用 method 参数
     params
   })
 }
 ```
 
 ### 类型定义规范
+
 - 类型定义统一放在 `src/types/` 目录下，按模块分文件
 - **查询参数类型定义**：状态、类型、难度等筛选字段需要支持 `number | string | null` 类型
   - 原因：从 URL 查询参数传过来的值可能是字符串类型
   - 在 Mock 函数中需要进行类型转换：`typeof value === 'string' ? parseInt(value) : value`
 
 示例：
+
 ```typescript
 /**
  * 列表查询参数
  */
 export interface ListParams {
   name?: string
-  status?: number | string | null  // 支持 number | string | null
-  type?: number | string | null    // 支持 number | string | null
+  status?: number | string | null // 支持 number | string | null
+  type?: number | string | null // 支持 number | string | null
   page: number
   pageSize: number
 }
 ```
 
 ### API 函数命名规范
+
 - 遵循 RESTful 风格：get/add/update/delete + 资源名称
 - 批量操作：batch + 操作 + 资源名称（如 `batchDeleteItems`）
 
 ### 清理脚本规范
+
 - **清理脚本已固定**：`scripts/clean-demo-modules.js` 已配置好保留的模块列表
 - **实现新功能时不需要更新清理脚本**
 
 ## 页面布局核心原则
 
 ### 布局原则
+
 1. **纯 Flex 布局** - 不写死页面高度，完全使用 flex 自动计算
 2. **固定高度** - `.layout-content` 使用 `height: 100%` 确保页面不滚动
 3. **统一内边距** - `.layout-content` 使用 `padding: 0 20px 0`（左右20px）
@@ -111,16 +123,18 @@ export interface ListParams {
 6. **自动撑满** - 数据卡片使用 `flex: 1` 自动占满剩余空间
 
 ### 页面根容器
+
 ```scss
 .page-container {
-  height: 100%;  // 继承父容器高度
+  height: 100%; // 继承父容器高度
   display: flex;
   flex-direction: column;
-  gap: 16px;  // 卡片间距
+  gap: 16px; // 卡片间距
 }
 ```
 
 ### 卡片样式规范
+
 - 无边框：`border: none !important;`
 - 无阴影：`box-shadow: none !important;`
 - 圆角：`border-radius: 12px`
@@ -129,6 +143,7 @@ export interface ListParams {
 - 卡片内表单项：`margin-bottom: 0`
 
 ### 间距规范
+
 - 卡片间距：使用 `gap: 16px`，不使用 `margin-bottom`
 - 表单项间距：使用 `gap: 16px`
 - 按钮间距：使用 `.el-button:not(:first-child) { margin-left: 12px; }`
@@ -137,9 +152,11 @@ export interface ListParams {
 ## 组件使用规范
 
 ### 滚动条组件
+
 - **必须使用 Element Plus 的 `el-scrollbar` 组件**，不使用原生浏览器滚动条
 - **适用场景**：所有需要滚动的内容区域（表单页面、详情页面、长列表等）
 - **基本用法**：
+
   ```vue
   <template>
     <div class="page-container">
@@ -156,25 +173,26 @@ export interface ListParams {
   </template>
 
   <style scoped lang="scss">
-  .page-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .content-scrollbar {
-    flex: 1;
-    overflow: hidden;
-
-    :deep(.el-scrollbar__view) {
-      padding-bottom: 20px;  // 底部留白
+    .page-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-  }
+
+    .content-scrollbar {
+      flex: 1;
+      overflow: hidden;
+
+      :deep(.el-scrollbar__view) {
+        padding-bottom: 20px; // 底部留白
+      }
+    }
   </style>
   ```
 
 **关键点**：
+
 - 固定内容（如面包屑、顶部操作栏）放在 `el-scrollbar` 外面
 - 可滚动内容包裹在 `el-scrollbar` 内
 - 滚动容器使用 `flex: 1` 占据剩余空间
@@ -183,6 +201,7 @@ export interface ListParams {
 - ✅ 正确：使用 `<el-scrollbar>` 组件
 
 ### 表格组件
+
 - 使用 Element Plus 的 ElTable，不使用项目内 artTable 组件
 - **表格边框**：默认不使用 `border` 属性，表格只有横向分隔线，没有竖边框
   - ✅ 正确：`<el-table :data="tableData" height="100%">`
@@ -197,15 +216,18 @@ export interface ListParams {
 ### 按钮规范
 
 **按钮分类**：
+
 - **操作按钮**：面包屑区域、卡片头部的功能按钮（如"保存草稿"、"发布考试"、"创建考试"）
 - **表格按钮**：表格操作列中的按钮（如"编辑"、"删除"、"查看详情"）
 - **返回按钮**：面包屑左侧的返回按钮
 
 **按钮间距**：
+
 - 按钮组使用 `.el-button:not(:first-child) { margin-left: 12px; }` 控制间距
 - 不使用 `gap` 属性，因为按钮本身有 `margin-left: 12px`
 
 **按钮类型**：
+
 - 主要操作：`type="primary"`（如"搜索"、"保存"、"确定"）
 - 次要操作：不设置 type（如"重置"、"取消"）
 - 危险操作：`type="danger"`（如"删除"）
@@ -213,15 +235,18 @@ export interface ListParams {
 - 警告操作：`type="warning"`（如"警告"、"发布考试"）
 
 **按钮尺寸**：
+
 - 默认尺寸：不设置 size（用于表单、筛选区域、操作按钮）
 - 小尺寸：`size="small"`（用于特殊场景）
 - 大尺寸：`size="large"`（用于重要的主操作）
 
 **按钮图标**：
+
 - 使用 Element Plus 图标：`<el-icon><Plus /></el-icon>`
 - 图标位置：图标在文字左侧
 
 **⚠️ 操作按钮规范**（面包屑区域、卡片头部）：
+
 - **保持 Element Plus 默认样式**，不添加自定义的 font-size、color、padding 等样式
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
@@ -246,6 +271,7 @@ export interface ListParams {
   ```
 
 **⚠️ 表格操作列按钮规范**：
+
 - **必须使用 `link` 类型**，不使用 `text` 类型
 - **不添加 `size` 属性**（保持默认尺寸）
 - 根据操作性质设置 `type` 属性
@@ -270,9 +296,11 @@ export interface ListParams {
 - ✅ 正确：`<el-button link>`
 
 **返回按钮规范**（面包屑左侧）：
+
 - 使用 `text` 类型
 - 可以添加自定义样式，但 CSS 选择器必须精确，避免影响其他按钮
 - 示例：
+
   ```scss
   .breadcrumb-left {
     display: flex;
@@ -300,6 +328,7 @@ export interface ListParams {
 使用 `vue-draggable-plus` 库实现拖动排序功能。
 
 **基本用法**：
+
 ```vue
 <VueDraggable
   v-model="list"
@@ -318,24 +347,28 @@ export interface ListParams {
 ```
 
 **关键配置**：
+
 - `v-model`：绑定数据列表
 - `:animation="200"`：拖动动画时长（毫秒）
 - `handle=".drag-handle"`：指定拖动手柄的 CSS 选择器
 - `@end`：拖动结束事件，用于保存排序
 
 **注意事项**：
+
 - 必须为每个项目设置唯一的 `key`（通常使用 `id`）
 - 拖动手柄使用 `☰` 符号（Unicode: U+2630）
 - 拖动结束后需要更新每个项目的 `order` 字段
 - 建议在拖动结束后调用 API 保存新的排序
 
 ### 图标使用
+
 - 使用 `iconfont-sys` 类显示图标，不使用 `iconfont` 类
 - 图标代码使用 HTML 实体格式（如 `&#xe88a;`）
 - 在 template 中使用 `v-html` 渲染：`<i class="iconfont-sys" v-html="icon"></i>`
 - 图标字体大小一般设置为 18px
 
 ### 表单组件
+
 - 筛选表单不使用 `inline` 属性，使用自定义 flexbox 布局
 - 表单项容器使用 `gap: 16px` 控制间距
 - 按钮的 form-item 使用 `label=" "` 确保对齐

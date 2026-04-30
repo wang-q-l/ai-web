@@ -26,30 +26,30 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores/user'
+  import { reactive } from 'vue'
+  import { ElMessage } from 'element-plus'
+  import { useUserStore } from '@/stores/user'
 
-const userStore = useUserStore()
+  const userStore = useUserStore()
 
-const profileForm = reactive({
-  name: userStore.userInfo.name,
-  email: userStore.userInfo.email,
-  phone: userStore.userInfo.phone || '',
-  avatar: userStore.userInfo.avatar
-})
-
-const handleSave = () => {
-  userStore.setUserInfo({
-    ...userStore.userInfo,
-    ...profileForm
+  const profileForm = reactive({
+    name: userStore.userInfo.name,
+    email: userStore.userInfo.email,
+    phone: userStore.userInfo.phone || '',
+    avatar: userStore.userInfo.avatar
   })
-  ElMessage.success('保存成功')
-}
+
+  const handleSave = () => {
+    userStore.setUserInfo({
+      ...userStore.userInfo,
+      ...profileForm
+    })
+    ElMessage.success('保存成功')
+  }
 </script>
 
 <style scoped>
-h1 {
-  margin-bottom: var(--spacing-xl);
-}
+  h1 {
+    margin-bottom: var(--spacing-xl);
+  }
 </style>

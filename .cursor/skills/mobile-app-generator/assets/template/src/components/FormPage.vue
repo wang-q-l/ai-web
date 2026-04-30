@@ -18,12 +18,7 @@
           placeholder="请输入手机号"
           :rules="[{ required: true, message: '请输入手机号' }]"
         />
-        <van-field
-          v-model="formData.email"
-          name="email"
-          label="邮箱"
-          placeholder="请输入邮箱"
-        />
+        <van-field v-model="formData.email" name="email" label="邮箱" placeholder="请输入邮箱" />
         <van-field
           v-model="formData.address"
           name="address"
@@ -44,54 +39,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { showToast } from 'vant'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { showToast } from 'vant'
 
-interface Props {
-  title?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  title: '表单页',
-})
-
-const router = useRouter()
-const loading = ref(false)
-
-const formData = ref({
-  name: '',
-  phone: '',
-  email: '',
-  address: '',
-})
-
-const onSubmit = async () => {
-  loading.value = true
-  try {
-    // 模拟 API 请求
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    showToast('提交成功')
-    router.back()
-  } catch (error) {
-    showToast('提交失败')
-  } finally {
-    loading.value = false
+  interface Props {
+    title?: string
   }
-}
 
-const onBack = () => {
-  router.back()
-}
+  const props = withDefaults(defineProps<Props>(), {
+    title: '表单页'
+  })
+
+  const router = useRouter()
+  const loading = ref(false)
+
+  const formData = ref({
+    name: '',
+    phone: '',
+    email: '',
+    address: ''
+  })
+
+  const onSubmit = async () => {
+    loading.value = true
+    try {
+      // 模拟 API 请求
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      showToast('提交成功')
+      router.back()
+    } catch (error) {
+      showToast('提交失败')
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const onBack = () => {
+    router.back()
+  }
 </script>
 
 <style scoped>
-.form-page {
-  background-color: var(--background-color);
-  min-height: 100vh;
-}
+  .form-page {
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
 
-.submit-btn {
-  padding: 20px;
-}
+  .submit-btn {
+    padding: 20px;
+  }
 </style>

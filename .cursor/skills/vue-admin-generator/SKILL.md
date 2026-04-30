@@ -10,6 +10,7 @@ description: 管理后台框架生成器。采用Vue3 + Element Plus + Vite + Ty
 根据用户描述的需求(登录页样式、布局方式、菜单结构、主题颜色等)或提供的参考图/手稿图,快速生成一个完整的 Vue3 + Element Plus 管理后台项目,包含完整的项目结构、路由配置、Mock 数据,开箱即用。
 
 **支持两种输入方式:**
+
 1. 文字描述: 用户直接描述需求
 2. 参考图/手稿图: 分析图片中的布局结构、配色方案、菜单结构(页面内容不需要实现)
 
@@ -24,10 +25,12 @@ description: 管理后台框架生成器。采用Vue3 + Element Plus + Vite + Ty
 从用户描述中提取以下信息:
 
 **必需信息:**
+
 - 布局方式: 左右布局(默认) / 顶部导航 / 混合布局
 - 菜单项: 需要哪些页面(如: 首页、用户管理、数据统计等)
 
 **可选信息:**
+
 - 主题色: 默认 `#409eff`
 - 侧边栏背景色: 默认 `#001529`
 - 侧边栏文字色: 默认 `#ffffff`
@@ -68,6 +71,7 @@ description: 管理后台框架生成器。采用Vue3 + Element Plus + Vite + Ty
    - 字体大小
 
 **分析步骤:**
+
 1. 仔细观察图片,识别布局结构
 2. 使用取色工具或视觉估计提取主要颜色
 3. 列出所有菜单项和层级关系
@@ -75,6 +79,7 @@ description: 管理后台框架生成器。采用Vue3 + Element Plus + Vite + Ty
 5. 向用户确认分析结果是否准确
 
 **注意事项:**
+
 - 页面内容区域的具体内容不需要实现,只需要创建空状态页面
 - 重点关注布局结构、配色方案、菜单结构
 - 如果图片不清晰或信息不完整,询问用户补充
@@ -92,11 +97,13 @@ cp -r assets/template/* ./
 ```
 
 **注意事项：**
+
 - 直接在当前目录创建项目文件，不要使用 `/path/to/new-project/` 这样的子目录
 - 如果当前目录已有文件，先确认是否可以覆盖
 - 项目创建后，所有文件应该与技能所在的 `.claude` 目录同级
 
 模板包含:
+
 - 完整的项目配置(package.json, vite.config.ts, tsconfig.json)
 - 基础布局组件(登录页、主布局)
 - 路由配置
@@ -108,6 +115,7 @@ cp -r assets/template/* ./
 项目包含 `src/styles/element-custom.scss` 文件,用于统一定制 Element Plus 组件样式:
 
 **已定制的组件样式:**
+
 - 输入框: 8px 圆角,优化边框和过渡效果
 - 按钮: 8px 圆角,500 字重
 - 卡片: 12px 圆角,无边框,无阴影
@@ -125,7 +133,7 @@ cp -r assets/template/* ./
 
 ```scss
 .el-input__wrapper {
-  border-radius: 12px !important;  // 改为 12px
+  border-radius: 12px !important; // 改为 12px
 }
 ```
 
@@ -137,17 +145,17 @@ cp -r assets/template/* ./
 
 ```css
 :root {
-  --primary-color: #409eff;      /* 用户指定的主题色 */
-  --sidebar-bg: #001529;         /* 用户指定的侧边栏背景色 */
-  --sidebar-text: #ffffff;       /* 侧边栏文字色 */
-  --sidebar-active-bg: #1890ff;  /* 激活状态背景色 */
+  --primary-color: #409eff; /* 用户指定的主题色 */
+  --sidebar-bg: #001529; /* 用户指定的侧边栏背景色 */
+  --sidebar-text: #ffffff; /* 侧边栏文字色 */
+  --sidebar-active-bg: #1890ff; /* 激活状态背景色 */
 }
 ```
 
 修改 `src/layout/index.vue` 中的侧边栏颜色变量:
 
 ```typescript
-const sidebarBg = ref('#001529')        // 用户指定的颜色
+const sidebarBg = ref('#001529') // 用户指定的颜色
 const sidebarText = ref('#ffffff')
 const sidebarActiveText = ref('#1890ff')
 ```
@@ -157,6 +165,7 @@ const sidebarActiveText = ref('#1890ff')
 登录页采用现代化的居中卡片设计:
 
 **布局结构:**
+
 - 整体: 900px 宽度居中卡片,浮动在灰色背景上
 - 左侧(50%): 品牌展示区域(渐变背景 + Logo + 标题 + 副标题)
 - 右侧(50%): 登录表单区域(白色背景 + 表单)
@@ -189,6 +198,7 @@ const footerText = ref('© 2024 All Rights Reserved')
 ```
 
 **常用渐变配色参考:**
+
 - 蓝紫: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
 - 蓝绿: `linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)`
 - 橙红: `linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 100%)`
@@ -205,6 +215,7 @@ const footerText = ref('© 2024 All Rights Reserved')
 ```
 
 **功能特性:**
+
 - 记住账号功能(勾选后保存用户名到 localStorage)
 - 响应式设计(小屏幕自动隐藏左侧品牌区域)
 - 表单验证
@@ -215,6 +226,7 @@ const footerText = ref('© 2024 All Rights Reserved')
 **重要原则:为所有菜单项创建完整的路由和页面**
 
 根据用户需求的菜单项,在 `src/router/index.ts` 中添加路由。**必须为每个菜单项创建对应的路由和页面组件**,即使页面内容暂时为空,也要使用空状态模板,确保:
+
 - 所有菜单项都可以点击
 - 不会出现 404 或空白页面
 - 项目结构完整,便于后续开发
@@ -270,10 +282,12 @@ const footerText = ref('© 2024 All Rights Reserved')
 ```
 
 **注意:**
+
 - 带子菜单的路由需要创建一个容器组件(如 `views/system/index.vue`),内容为 `<router-view />`
 - 必须添加 `redirect` 属性,指向第一个子路由
 
 **常用图标参考:**
+
 - `HomeFilled` - 首页
 - `User` - 用户
 - `Setting` - 设置
@@ -289,6 +303,7 @@ const footerText = ref('© 2024 All Rights Reserved')
 为每个菜单项创建对应的页面组件,在 `src/views/` 下创建目录和文件。即使页面内容暂时为空,也必须创建空状态页面,确保所有菜单都可以正常访问。
 
 **目录结构示例:**
+
 ```
 src/views/
 ├── dashboard/
@@ -310,11 +325,11 @@ src/views/
   <router-view />
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 ```
 
 **页面样式规范:**
+
 - 所有卡片使用 `border: none !important; box-shadow: none !important; border-radius: 12px;`
 - 页面容器使用 Flex 布局,使用 `gap` 控制间距
 - 参考 page-generator 的样式规范
@@ -333,35 +348,34 @@ src/views/
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
-.empty-page {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: 12px;
-}
+  .empty-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 12px;
+  }
 
-.empty-content {
-  text-align: center;
-}
+  .empty-content {
+    text-align: center;
+  }
 
-.page-title {
-  font-size: 24px;
-  font-weight: 500;
-  color: #303133;
-  margin-bottom: 12px;
-}
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #303133;
+    margin-bottom: 12px;
+  }
 
-.page-subtitle {
-  font-size: 14px;
-  color: #909399;
-}
+  .page-subtitle {
+    font-size: 14px;
+    color: #909399;
+  }
 </style>
 ```
 
@@ -375,7 +389,12 @@ src/views/
       <el-form :inline="true" :model="searchForm">
         <div class="filter-form-content">
           <el-form-item label="关键词">
-            <el-input v-model="searchForm.keyword" placeholder="请输入关键词" clearable style="width: 250px" />
+            <el-input
+              v-model="searchForm.keyword"
+              placeholder="请输入关键词"
+              clearable
+              style="width: 250px"
+            />
           </el-form-item>
           <el-form-item label=" ">
             <div class="filter-buttons">
@@ -418,97 +437,97 @@ src/views/
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+  import { ref, reactive } from 'vue'
 
-const searchForm = reactive({
-  keyword: ''
-})
+  const searchForm = reactive({
+    keyword: ''
+  })
 
-const tableData = ref([])
+  const tableData = ref([])
 
-const pagination = reactive({
-  page: 1,
-  pageSize: 10,
-  total: 0
-})
+  const pagination = reactive({
+    page: 1,
+    pageSize: 10,
+    total: 0
+  })
 
-const handleSearch = () => {}
-const handleReset = () => {}
-const handleAdd = () => {}
-const handleEdit = (row: any) => {}
-const handleDelete = (row: any) => {}
-const fetchList = () => {}
+  const handleSearch = () => {}
+  const handleReset = () => {}
+  const handleAdd = () => {}
+  const handleEdit = (row: any) => {}
+  const handleDelete = (row: any) => {}
+  const fetchList = () => {}
 </script>
 
 <style scoped lang="scss">
-.page-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.filter-card {
-  flex-shrink: 0;
-
-  :deep(.el-card__body) {
-    padding: 12px 20px;
-  }
-
-  .filter-form-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-
-    :deep(.el-form-item) {
-      margin-bottom: 0;
-    }
-  }
-
-  .filter-buttons {
-    display: flex;
-
-    .el-button:not(:first-child) {
-      margin-left: 12px;
-    }
-  }
-}
-
-.data-card {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  :deep(.el-card__body) {
-    padding: 20px;
+  .page-container {
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap: 16px;
   }
 
-  .table-header {
+  .filter-card {
     flex-shrink: 0;
-    display: flex;
-    margin-bottom: 16px;
 
-    .el-button:not(:first-child) {
-      margin-left: 12px;
+    :deep(.el-card__body) {
+      padding: 12px 20px;
+    }
+
+    .filter-form-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+
+      :deep(.el-form-item) {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-buttons {
+      display: flex;
+
+      .el-button:not(:first-child) {
+        margin-left: 12px;
+      }
     }
   }
 
-  .table-container {
+  .data-card {
     flex: 1;
     overflow: hidden;
-  }
+    display: flex;
+    flex-direction: column;
 
-  .el-pagination {
-    flex-shrink: 0;
-    margin-top: 16px;
-    justify-content: flex-end;
+    :deep(.el-card__body) {
+      padding: 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-header {
+      flex-shrink: 0;
+      display: flex;
+      margin-bottom: 16px;
+
+      .el-button:not(:first-child) {
+        margin-left: 12px;
+      }
+    }
+
+    .table-container {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .el-pagination {
+      flex-shrink: 0;
+      margin-top: 16px;
+      justify-content: flex-end;
+    }
   }
-}
 </style>
 ```
 
@@ -549,11 +568,13 @@ if (MOCK_ENABLED) {
       code: 200,
       data: {
         list: Mock.mock({
-          'list|10': [{
-            'id|+1': 1,
-            'name': '@cname',
-            'createTime': '@datetime'
-          }]
+          'list|10': [
+            {
+              'id|+1': 1,
+              name: '@cname',
+              createTime: '@datetime'
+            }
+          ]
         }).list,
         total: 100
       }
@@ -565,6 +586,7 @@ if (MOCK_ENABLED) {
 ```
 
 **注意事项：**
+
 - Mock 配置已在 `main.ts` 中自动导入
 - 开发和生产环境都使用 Mock 数据
 - 如需关闭 Mock，修改 `MOCK_ENABLED` 为 `false`
@@ -586,21 +608,19 @@ if (MOCK_ENABLED) {
 # 项目名称
 
 ## 安装依赖
-\`\`\`bash
-npm install
-\`\`\`
+
+\`\`\`bash npm install \`\`\`
 
 ## 运行项目
-\`\`\`bash
-npm run dev
-\`\`\`
+
+\`\`\`bash npm run dev \`\`\`
 
 ## 构建项目
-\`\`\`bash
-npm run build
-\`\`\`
+
+\`\`\`bash npm run build \`\`\`
 
 ## 默认账号
+
 - 用户名: admin
 - 密码: 123456
 ```
@@ -610,22 +630,26 @@ npm run build
 项目创建完成后,按以下顺序执行命令:
 
 **步骤 1: 安装依赖**
+
 ```bash
 npm install
 ```
 
 **步骤 2: 验证构建(重要!)**
+
 ```bash
 npm run build
 ```
 
 这一步非常重要,可以提前发现:
+
 - TypeScript 类型错误
 - 导入路径错误
 - 语法错误
 - 配置问题
 
 **如果构建失败:**
+
 1. 根据错误信息修复问题
 2. 再次运行 `npm run build` 验证
 3. 重复此过程直到构建成功
@@ -633,11 +657,13 @@ npm run build
 只有构建成功后,才进行下一步。
 
 **步骤 3: 启动开发服务器**
+
 ```bash
 npm run dev
 ```
 
 **注意事项:**
+
 - 服务器配置了 `host: true`,可以从外部访问
 - 默认端口为 3000,浏览器会自动打开
 - 如果端口被占用,Vite 会自动使用下一个可用端口

@@ -41,6 +41,6 @@ export const organizationTemplateRoutes: AppRouteRecord = {
         title: 'menus.organizationTemplate.department',
         keepAlive: true
       }
-    },
+    }
   ]
 }

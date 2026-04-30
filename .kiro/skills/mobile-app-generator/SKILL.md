@@ -22,16 +22,19 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 ### 方式一：自然语言描述
 
 **示例 1：**
+
 ```
 创建一个电商移动端应用，底部导航包含首页、分类、购物车、我的，主题色用蓝色，需要暗黑模式
 ```
 
 **示例 2：**
+
 ```
 创建一个工具类应用，底部有首页、工具、我的三个导航，主题色用绿色
 ```
 
 **示例 3：**
+
 ```
 创建一个社交应用，底部导航有首页、消息、发现、我的，主题色用微信绿 #07c160，支持暗黑模式
 ```
@@ -41,11 +44,13 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 你可以上传移动端设计稿或参考截图，我会自动分析：
 
 **使用方式：**
+
 ```
 /mobile-app-generator [上传截图] 根据这个设计稿创建移动端应用
 ```
 
 **我会分析：**
+
 - 底部 Tabbar 的结构（有几个标签页，分别是什么）
 - 配色方案（主题色、背景色等）
 - 页面布局风格
@@ -53,6 +58,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 - 是否使用暗色主题
 
 **示例：**
+
 ```
 /mobile-app-generator [上传淘宝首页截图] 参考这个布局创建一个电商应用
 /mobile-app-generator [上传微信截图] 参考这个风格创建一个社交应用
@@ -61,6 +67,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 ### 方式三：简单调用（触发问答）
 
 如果你不确定如何描述，直接调用：
+
 ```
 /mobile-app-generator
 ```
@@ -70,6 +77,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 ---
 
 **描述要素：**
+
 - 应用类型（电商、社交、工具等）
 - 底部导航栏的标签页（如：首页、工作台、我的）
 - 主题颜色（如：蓝色、绿色、#1989fa）
@@ -84,6 +92,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 如果你在调用技能时已经提供了应用描述（如"创建一个电商应用，底部有首页、分类、购物车、我的，主题色用蓝色"），我会直接解析你的需求并开始生成项目。
 
 **必要信息：**
+
 - 应用类型或用途
 - 底部导航栏的标签页名称（如：首页、工作台、我的）
 - 主题颜色（可选，默认蓝色 #1989fa）
@@ -94,6 +103,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 如果你没有提供完整描述，我会通过以下方式收集信息：
 
 **方式一：交互式问答**
+
 - 应用类型（电商、社交、工具等）
 - 底部导航栏配置
 - 主题颜色选择
@@ -104,6 +114,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 你可以上传移动端设计稿、参考截图或手绘草图，我会分析并提取：
 
 **分析内容：**
+
 - **底部 Tabbar 结构**：识别有几个标签页，每个标签页的名称和功能
 - **配色方案**：提取主题色、背景色、文字颜色等
 - **页面布局**：分析页面组件类型（列表、卡片、网格等）
@@ -111,12 +122,14 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 - **主题模式**：判断是亮色还是暗色主题
 
 **支持的图片类型：**
+
 - 移动端应用截图（微信、淘宝、美团等）
 - UI 设计稿（Figma、Sketch 导出的图片）
 - 手绘草图或原型图
 - 参考应用的截图
 
 **使用示例：**
+
 ```
 /mobile-app-generator [上传截图] 参考这个布局创建应用
 /mobile-app-generator [上传设计稿] 按照这个设计稿生成项目，主题色改成蓝色
@@ -204,6 +217,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 我会创建一个符合移动端设计规范的登录页：
 
 **设计特点：**
+
 - 顶部：渐变背景 + Logo + 系统名称（占 40% 高度）
 - 中部：白色卡片 + 登录表单
 - 底部：版权信息
@@ -211,6 +225,7 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 - 使用 Vant 表单组件
 
 **可定制内容：**
+
 - Logo 图片
 - 系统名称
 - 渐变背景颜色
@@ -221,12 +236,14 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 根据你的需求，我会配置底部导航栏：
 
 **配置内容：**
+
 - 导航标签数量（通常 3-5 个）
 - 每个标签的名称、图标、路由
 - 徽标（badge）配置（如购物车数量）
 - 激活颜色和默认颜色
 
 **Vant 图标选择：**
+
 - home-o（首页）
 - apps-o（分类）
 - shopping-cart-o（购物车）
@@ -243,12 +260,14 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 为每个 Tabbar 标签创建对应的页面组件：
 
 **页面类型：**
+
 - **首页**：轮播图 + 分类入口 + 商品列表
 - **分类页**：侧边分类 + 商品网格
 - **购物车**：商品列表 + 结算栏
 - **我的**：用户信息 + 功能入口 + 主题切换
 
 **页面模板复用：**
+
 - 使用 `components/ListPage.vue` 快速创建列表页
 - 使用 `components/FormPage.vue` 快速创建表单页
 - 使用 `components/DetailPage.vue` 快速创建详情页
@@ -261,12 +280,14 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 我会实现完整的暗黑模式功能：
 
 **实现方式：**
+
 - 使用 `useTheme` composable 管理主题状态
 - CSS 变量 + `data-theme` 属性切换
 - localStorage 持久化主题选择
 - 在"我的"页面添加主题切换开关
 
 **支持的组件：**
+
 - Vant 所有组件自动适配
 - 自定义组件通过 CSS 变量适配
 - 页面背景、卡片背景、文字颜色等
@@ -276,11 +297,13 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 我会配置流畅的页面切换动画：
 
 **动画效果：**
+
 - 前进：从右向左滑入（slide-left）
 - 后退：从左向右滑出（slide-right）
 - 支持自定义动画类型
 
 **配置方式：**
+
 - 在路由 meta 中配置 transition 字段
 - 使用 Vue transition 组件
 - CSS 动画实现
@@ -292,16 +315,19 @@ description: 移动端应用框架生成器。采用 Vue3 + Vant + Vite + TypeSc
 我会创建移动端特有的 Mock 数据：
 
 **Mock 文件：**
+
 - `mock/user.ts`：用户登录、用户信息
 - `mock/product.ts`：商品列表、商品详情
 
 **数据特点：**
+
 - 支持分页（page, pageSize）
 - 包含 hasMore 字段（判断是否还有更多数据）
 - 使用 Mock.js 生成随机数据
 - 图片使用占位图
 
 **响应格式：**
+
 ```typescript
 {
   code: 200,
@@ -343,6 +369,7 @@ npm run dev
 ```
 
 **验证内容：**
+
 - 依赖安装成功
 - TypeScript 编译无错误
 - 构建成功
@@ -389,11 +416,13 @@ npm run dev
 ### 示例 1：通过描述创建电商应用
 
 **调用方式：**
+
 ```
 /mobile-app-generator 创建一个电商移动端应用，底部导航包含首页、分类、购物车、我的，主题色用蓝色，需要暗黑模式
 ```
 
 **生成结果：**
+
 - 完整的电商移动端项目
 - 4 个 Tabbar 页面（首页、分类、购物车、我的）
 - 蓝色主题配色 #1989fa
@@ -404,11 +433,13 @@ npm run dev
 ### 示例 2：通过描述创建工具应用
 
 **调用方式：**
+
 ```
 /mobile-app-generator 创建一个工具类应用，底部有首页、工具、我的三个导航，主题色用绿色
 ```
 
 **生成结果：**
+
 - 完整的工具类移动端项目
 - 3 个 Tabbar 页面（首页、工具、我的）
 - 绿色主题配色 #07c160
@@ -418,11 +449,13 @@ npm run dev
 ### 示例 3：通过截图分析创建应用
 
 **调用方式：**
+
 ```
 /mobile-app-generator [上传淘宝/美团/微信等应用截图] 参考这个布局创建移动端应用
 ```
 
 **分析过程：**
+
 1. 识别底部 Tabbar 结构（有几个标签页）
 2. 提取每个标签页的名称和功能
 3. 分析主题配色方案
@@ -430,6 +463,7 @@ npm run dev
 5. 确定是否使用暗色主题
 
 **生成结果：**
+
 - 根据截图自动配置 Tabbar 页面
 - 匹配相似的主题配色
 - 创建对应的页面结构
@@ -438,11 +472,13 @@ npm run dev
 ### 示例 4：通过描述创建社交应用
 
 **调用方式：**
+
 ```
 /mobile-app-generator 创建一个社交应用，底部导航有首页、消息、发现、我的，主题色用微信绿 #07c160，支持暗黑模式
 ```
 
 **生成结果：**
+
 - 完整的社交类移动端项目
 - 4 个 Tabbar 页面（首页、消息、发现、我的）
 - 微信绿主题配色 #07c160
@@ -453,11 +489,13 @@ npm run dev
 ### 示例 5：简单调用（会触发问答）
 
 **调用方式：**
+
 ```
 /mobile-app-generator
 ```
 
 **交互流程：**
+
 1. 系统询问应用类型（电商/社交/工具/自定义）
 2. 系统询问主题颜色
 3. 系统询问是否需要暗黑模式
@@ -504,20 +542,15 @@ npm run dev
 
 ## 常见问题
 
-**Q: 如何修改主题颜色？**
-A: 修改 `src/styles/variables.css` 中的 CSS 变量，或在 `src/main.ts` 中配置 ConfigProvider。
+**Q: 如何修改主题颜色？** A: 修改 `src/styles/variables.css` 中的 CSS 变量，或在 `src/main.ts` 中配置 ConfigProvider。
 
-**Q: 如何添加新的 Tabbar 页面？**
-A: 参考 `references/tabbar-configuration.md`，在路由配置中添加新页面，并设置 `meta.tabbar: true`。
+**Q: 如何添加新的 Tabbar 页面？** A: 参考 `references/tabbar-configuration.md`，在路由配置中添加新页面，并设置 `meta.tabbar: true`。
 
-**Q: 如何使用页面模板？**
-A: 参考 `references/page-templates.md`，导入对应的模板组件并传入配置。
+**Q: 如何使用页面模板？** A: 参考 `references/page-templates.md`，导入对应的模板组件并传入配置。
 
-**Q: 如何修改 Viewport 适配基准？**
-A: 修改 `postcss.config.js` 中的 `viewportWidth` 配置。
+**Q: 如何修改 Viewport 适配基准？** A: 修改 `postcss.config.js` 中的 `viewportWidth` 配置。
 
-**Q: 如何禁用某些元素的 px 转换？**
-A: 在 `postcss.config.js` 的 `selectorBlackList` 中添加类名，或给元素添加 `.ignore` 类。
+**Q: 如何禁用某些元素的 px 转换？** A: 在 `postcss.config.js` 的 `selectorBlackList` 中添加类名，或给元素添加 `.ignore` 类。
 
 ## 开始使用
 
@@ -528,6 +561,7 @@ A: 在 `postcss.config.js` 的 `selectorBlackList` 中添加类名，或给元�
 ```
 
 **示例：**
+
 - `/mobile-app-generator 创建一个电商应用，底部有首页、分类、购物车、我的，主题色用蓝色`
 - `/mobile-app-generator 创建一个工具应用，底部有首页、工具、我的，主题色用绿色`
 - `/mobile-app-generator 创建一个社交应用，底部有首页、消息、发现、我的，主题色用微信绿`
@@ -535,4 +569,3 @@ A: 在 `postcss.config.js` 的 `selectorBlackList` 中添加类名，或给元�
 **简单调用：**
 
 如果你不确定如何描述，直接调用 `/mobile-app-generator`，我会通过问答方式收集信息。
-
