@@ -15,13 +15,14 @@ export const auditRecommendationRoutes: AppRouteRecord = {
   },
   children: [
     {
-      path: '',
+      path: 'ai/assistant',
       name: 'AuditRecommendationAI',
       component: () => import('@/views/audit-management/project-recommendation/index.vue'),
       meta: {
         title: 'menus.auditRecommendation.title',
         keepAlive: true,
-        isHide: true
+        isHide: true,
+        activePath: '/audit-recommendation'
       }
     }
   ]
