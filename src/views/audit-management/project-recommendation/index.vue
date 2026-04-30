@@ -2,10 +2,16 @@
   <div class="ai-chat-container">
     <!-- 查看推荐列表按钮 -->
     <div class="view-recommendations-btn">
-      <el-button type="primary" @click="handleViewRecommendations">
-        <el-icon><List /></el-icon>
-        查看推荐列表
-      </el-button>
+      <el-badge
+        :value="currentRecommendations.length"
+        :hidden="currentRecommendations.length === 0"
+        :max="99"
+      >
+        <el-button type="primary" @click="handleViewRecommendations">
+          <el-icon><List /></el-icon>
+          查看推荐列表
+        </el-button>
+      </el-badge>
     </div>
 
     <!-- 聊天消息区域 -->
@@ -875,6 +881,21 @@
     top: 20px;
     right: 20px;
     z-index: 10;
+
+    :deep(.el-badge__content) {
+      animation: pulse 2s infinite;
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.1);
+    }
   }
 
   // 推荐列表弹窗
