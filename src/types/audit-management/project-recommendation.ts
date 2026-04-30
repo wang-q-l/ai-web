@@ -75,6 +75,8 @@ export interface ChatMessage {
   content: string
   /** 推荐列表（仅assistant类型） */
   recommendations?: RecommendationItem[]
+  /** 是否有推荐列表 */
+  hasRecommendations?: boolean
   /** 时间戳 */
   timestamp: number
 }

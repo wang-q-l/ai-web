@@ -53,6 +53,15 @@
             </div>
             <div class="message-bubble">
               <div class="message-text" v-html="message.content.replace(/\n/g, '<br>')"></div>
+
+              <!-- 查看推荐列表按钮 -->
+              <div v-if="message.hasRecommendations" class="view-list-btn">
+                <el-button type="primary" size="small" @click="handleViewRecommendations">
+                  <el-icon><List /></el-icon>
+                  查看推荐列表
+                </el-button>
+              </div>
+
               <div class="message-time">{{ formatTime(message.timestamp) }}</div>
             </div>
           </div>
@@ -496,6 +505,7 @@
           id: (Date.now() + 1).toString(),
           type: 'assistant',
           content: typingMessage.value.replace(/<br>/g, '\n'),
+          hasRecommendations: recommendations && recommendations.length > 0,
           timestamp: Date.now()
         }
         messages.value.push(assistantMessage)
@@ -691,6 +701,10 @@
 
     .recommendations-list {
       margin-top: 16px;
+    }
+
+    .view-list-btn {
+      margin-top: 12px;
     }
 
     .action-buttons {

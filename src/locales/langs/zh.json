@@ -267,6 +267,9 @@
       "title": "项目打卡",
       "submit": "现场打卡",
       "statistics": "打卡统计"
+    },
+    "intelligentWriting": {
+      "title": "智能撰写"
     }
   },
   "table": {

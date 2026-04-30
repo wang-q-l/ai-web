@@ -267,6 +267,9 @@
       "title": "Project Check-in",
       "submit": "On-site Check-in",
       "statistics": "Check-in Statistics"
+    },
+    "intelligentWriting": {
+      "title": "Intelligent Writing"
     }
   },
   "table": {
