@@ -240,32 +240,24 @@ export function generateThinkingSteps(message: string): string[] {
     steps.push('💭 让我全面分析一下当前的审计情况...')
     steps.push('📊 发现2位领导干部已离职但未完成离任审计')
     steps.push('⚙️ 按照优先级：离任审计最紧急，然后是从未审计的单位，最后是轮审到期的')
-    steps.push(
-      '✅ 给您推荐了一个建议立项的被审计单位清单，您可以一键全部列入计划或选择部分单位列入计划'
-    )
+    steps.push('✅ 给您推荐了一个建议立项的被审计单位清单，已为您打开推荐列表')
   } else if (message.includes('从未审计')) {
     steps.push('💭 让我全面分析一下当前的审计情况...')
     steps.push('📊 发现2个单位从未进行过经济责任审计')
     steps.push('⚙️ 按照优先级：离任审计最紧急，然后是从未审计的单位，最后是轮审到期的')
-    steps.push(
-      '✅ 给您推荐了一个建议立项的被审计单位清单，您可以一键全部列入计划或选择部分单位列入计划'
-    )
+    steps.push('✅ 给您推荐了一个建议立项的被审计单位清单，已为您打开推荐列表')
   } else if (message.includes('轮审') || message.includes('到期')) {
     steps.push('💭 让我全面分析一下当前的审计情况...')
     steps.push('📊 发现2个单位的5年轮审期已到期，2个单位即将到期')
     steps.push('⚙️ 按照优先级：离任审计最紧急，然后是从未审计的单位，最后是轮审到期的')
-    steps.push(
-      '✅ 给您推荐了一个建议立项的被审计单位清单，您可以一键全部列入计划或选择部分单位列入计划'
-    )
+    steps.push('✅ 给您推荐了一个建议立项的被审计单位清单，已为您打开推荐列表')
   } else {
     steps.push('💭 让我全面分析一下当前的审计情况...')
     steps.push('📊 发现2位领导干部已离职但未完成离任审计')
     steps.push('📊 发现2个单位从未进行过经济责任审计')
     steps.push('📊 发现2个单位的5年轮审期已到期，2个单位即将到期')
     steps.push('⚙️ 按照优先级：离任审计最紧急，然后是从未审计的单位，最后是轮审到期的')
-    steps.push(
-      '✅ 给您推荐了一个建议立项的被审计单位清单，您可以一键全部列入计划或选择部分单位列入计划'
-    )
+    steps.push('✅ 给您推荐了一个建议立项的被审计单位清单，已为您打开推荐列表')
   }
 
   return steps
@@ -292,17 +284,17 @@ export function chatMock(request: ChatRequest): ChatResponse {
 
     if (message.includes('离任') || message.includes('p0')) {
       filteredRecommendations = recommendations.filter((item) => item.priority === 'P0')
-      replyText = `详细推荐列表如下：`
+      replyText = ''
     } else if (message.includes('从未审计') || message.includes('p1')) {
       filteredRecommendations = recommendations.filter((item) => item.priority === 'P1')
-      replyText = `详细推荐列表如下：`
+      replyText = ''
     } else if (message.includes('轮审到期') || message.includes('到期')) {
       filteredRecommendations = recommendations.filter(
         (item) => item.priority === 'P2' || item.priority === 'P3'
       )
-      replyText = `详细推荐列表如下：`
+      replyText = ''
     } else {
-      replyText = `详细推荐列表如下：`
+      replyText = ''
     }
 
     return {
