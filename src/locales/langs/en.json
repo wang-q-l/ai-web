@@ -250,7 +250,11 @@
       "create": "Launch Project",
       "work": "Project Work",
       "items": "Audit Items Management",
-      "personnelTransfer": "Personnel Transfer"
+      "personnelTransfer": "Personnel Transfer",
+      "projectRecommendation": "Project Recommendation Assistant"
+    },
+    "auditRecommendation": {
+      "title": "Project Recommendation"
     },
     "auditItems": {
       "title": "Audit Items Management"

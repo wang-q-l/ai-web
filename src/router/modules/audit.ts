@@ -49,7 +49,7 @@ export const auditRoutes: AppRouteRecord = {
     {
       path: 'personnel/transfer',
       name: 'AuditPersonnelTransfer',
-      component: () => import('@/views/audit-management/personnel-transfer/index.vue'),
+      component: () => import('@/views/audit-management/personnel-transfer/index-new.vue'),
       meta: {
         title: 'menus.audit.personnelTransfer',
         keepAlive: true,

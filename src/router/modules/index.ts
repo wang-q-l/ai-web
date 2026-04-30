@@ -6,6 +6,7 @@ import { auditRoutes } from './audit'
 // import { auditItemsRoutes } from './auditItems'
 // import { auditDocumentRoutes } from './auditDocument'
 import { checkinRoutes } from './checkin'
+import { auditRecommendationRoutes } from './audit-recommendation'
 export const routeModules: AppRouteRecord[] = [
   // workbenchRoutes,
   // organizationTemplateRoutes,
@@ -13,5 +14,6 @@ export const routeModules: AppRouteRecord[] = [
   auditRoutes,
   // auditItemsRoutes,
   // auditDocumentRoutes,
-  checkinRoutes
+  checkinRoutes,
+  auditRecommendationRoutes
 ]

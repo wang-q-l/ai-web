@@ -483,7 +483,15 @@
 
   // 人员变更
   function handlePersonnelTransfer() {
-    router.push('/audit/personnel/transfer')
+    console.log('跳转到人员变更页面')
+    router
+      .push('/audit/personnel/transfer')
+      .then(() => {
+        console.log('路由跳转成功')
+      })
+      .catch((err) => {
+        console.error('路由跳转失败:', err)
+      })
   }
 
   function handleEdit(row: AuditProject) {
