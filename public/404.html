@@ -19,9 +19,7 @@
     <script>
       // 保存当前路径到 sessionStorage，然后重定向到 index.html
       sessionStorage.redirect = location.href
-      location.replace(
-        location.origin + location.pathname.split('/').slice(0, 2).join('/') + '/index.html'
-      )
+      location.replace('/ai-web/')
     </script>
   </body>
 </html>
