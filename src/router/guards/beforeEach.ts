@@ -174,10 +174,9 @@ async function handleRouteGuard(
     // 标记路由已注册（跳过动态路由逻辑）
     isRouteRegistered.value = true
 
-    // 设置菜单数据（从已注册的路由构建，确保路径完整）
+    // 设置菜单数据（直接使用 asyncRoutes）
     const menuStore = useMenuStore()
-    const menuTree = buildMenuTreeFromRoutes(router)
-    menuStore.setMenuList(menuTree)
+    menuStore.setMenuList(asyncRoutes)
   }
 
   // 处理动态路由注册（Mock 模式下跳过）
