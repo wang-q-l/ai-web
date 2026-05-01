@@ -116,6 +116,7 @@
   /**
    * 递归过滤菜单路由，移除隐藏的菜单项
    * 如果一个父菜单的所有子菜单都被隐藏，则父菜单也会被隐藏
+   * 特殊情况：对于一级菜单（isFirstLevel: true），即使所有子菜单都隐藏，也保留父菜单
    * @param items 菜单项数组
    * @returns 过滤后的菜单项数组
    */
@@ -130,6 +131,11 @@
         // 如果有子菜单，递归过滤子菜单
         if (item.children && item.children.length > 0) {
           const filteredChildren = filterRoutes(item.children)
+          // 对于一级菜单（isFirstLevel: true），即使所有子菜单都隐藏，也保留父菜单
+          // 因为子路由的 path 是空字符串，点击父菜单时会导航到子路由
+          if (item.meta?.isFirstLevel) {
+            return true
+          }
           // 如果所有子菜单都被过滤掉了，则隐藏父菜单
           return filteredChildren.length > 0
         }

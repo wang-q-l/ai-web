@@ -175,12 +175,12 @@
   const isDualMenu = computed(() => menuType.value === MenuTypeEnum.DUAL_MENU)
 
   // 路由相关
-  const firstLevelMenuPath = computed(() => route.matched[0]?.path)
   const routerPath = computed(() => String(route.meta.activePath || route.path))
 
   // 菜单数据
   const firstLevelMenus = computed(() => {
-    return useMenuStore().menuList.filter((menu) => !menu.meta.isHide)
+    const menuStore = useMenuStore()
+    return menuStore.menuList.filter((menu) => !menu.meta?.isHide)
   })
 
   const menuList = computed(() => {
