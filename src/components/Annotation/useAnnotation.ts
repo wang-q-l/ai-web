@@ -39,7 +39,9 @@ export function useAnnotation() {
   const loadAnnotations = async () => {
     const fileName = routeToFileName(route)
     try {
-      const res = await fetch(`/annotations/${fileName}.json?t=${Date.now()}`)
+      // 使用 BASE_URL 兼容部署在子路径下的场景（例如 GitHub Pages）
+      const baseUrl = import.meta.env.BASE_URL || '/'
+      const res = await fetch(`${baseUrl}annotations/${fileName}.json?t=${Date.now()}`)
       if (res.ok) {
         const data: PageAnnotation = await res.json()
         annotations.value = data.annotations || []
