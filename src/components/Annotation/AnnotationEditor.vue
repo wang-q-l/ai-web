@@ -146,14 +146,7 @@
                 "
               />
             </div>
-            <button
-              type="button"
-              @click="
-                editor?.chain().focus().unsetColor().run()
-                editor?.chain().focus().unsetHighlight().run()
-              "
-              title="清除颜色格式"
-            >
+            <button type="button" @click="handleClearColors" title="清除颜色格式">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M6.1 20.5L4 18.4l7.4-7.4-2.1-2.1-1.4 1.4-1.1-1.1V7.5l-3-3 1.1-1.1 16.9 16.9-1.1 1.1-4.5-4.5H9.5l-3.4 3.6zm9.4-9.5l-1.5-1.5 3.5-3.5H15V4H9v2.1L5.9 3 7 1.9 8.1 3H17v4h2l-3.5 4z"
@@ -395,6 +388,12 @@
   // 颜色状态（用于显示当前选中色）
   const currentTextColor = ref('#000000')
   const currentHighlight = ref('#ffff00')
+
+  // 清除颜色格式（取消文本色 + 取消高亮）
+  const handleClearColors = () => {
+    editor.value?.chain().focus().unsetColor().run()
+    editor.value?.chain().focus().unsetHighlight().run()
+  }
 
   // v-click-outside 指令（点击外部关闭下拉）
   const vClickOutside = {
