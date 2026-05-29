@@ -72,6 +72,16 @@
         align="left"
         label-class-name="col-transfer-review-status-header"
       >
+        <template #header>
+          <span class="status-header-cell">
+            状态
+            <span
+              class="status-header-badge"
+              @click.stop="statusHeaderTipVisible = !statusHeaderTipVisible"
+              >3</span
+            >
+          </span>
+        </template>
         <template #default="{ row }">
           <span class="status-cell">
             <el-tag v-if="row.reviewStatus === 1" type="info">待提交</el-tag>
@@ -171,6 +181,13 @@
         :edit-mode="false"
         @close="feedbackedTipVisible = false"
       />
+      <AnnotationPanel
+        v-if="statusHeaderTipVisible"
+        :annotation="statusHeaderAnnotation"
+        :index="2"
+        :edit-mode="false"
+        @close="statusHeaderTipVisible = false"
+      />
     </Teleport>
   </div>
 </template>
@@ -261,6 +278,21 @@
     category: 'rule',
     source: '',
     createdAt: '2026-05-28'
+  }
+
+  // 状态列表头批注（项目详情页第 3 个批注）
+  const statusHeaderTipVisible = ref(false)
+  const statusHeaderAnnotation: AnnotationItem = {
+    id: 'transfer-status-header-tip',
+    type: 'position',
+    selector: '',
+    position: { x: 0, y: 0 },
+    title: '移送清单状态列说明',
+    content:
+      '状态分为五种：\n\n- **待提交**：保存未提交，可编辑和删除\n- **待审批**：已提交未审批，编辑和删除禁用\n- **已退回**：审批退回，可编辑和删除\n- **待反馈**：审核通过、未维护移送反馈信息，可维护移送反馈\n- **已反馈**：已保存移送反馈信息，可维护移送反馈',
+    category: 'rule',
+    source: '',
+    createdAt: '2026-05-29'
   }
 
   // 获取列表数据
@@ -427,6 +459,29 @@
     position: relative;
     display: inline-flex;
     align-items: center;
+  }
+
+  /* 状态列表头批注徽章 */
+  .status-header-cell {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .status-header-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background: #1677ff;
+    border-radius: 50%;
   }
 
   /* 状态后批注徽章：绝对定位到状态标签右外侧，不影响列表左对齐 */
