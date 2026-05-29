@@ -1,6 +1,7 @@
 <template>
   <ElConfigProvider size="default" :locale="locales[language]" :z-index="3000">
     <RouterView></RouterView>
+    <AnnotationOverlay />
   </ElConfigProvider>
 </template>
 
@@ -9,6 +10,7 @@
   import zh from 'element-plus/es/locale/lang/zh-cn'
   import en from 'element-plus/es/locale/lang/en'
   import { systemUpgrade } from './utils/sys'
+  import AnnotationOverlay from './components/Annotation/AnnotationOverlay.vue'
 
   import { setThemeTransitionClass } from './utils/theme/animation'
   import { checkStorageCompatibility } from './utils/storage'

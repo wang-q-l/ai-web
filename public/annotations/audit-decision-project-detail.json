@@ -1,0 +1,40 @@
+{
+  "page": "/audit-decision/project/:id",
+  "title": "整改项目详情",
+  "updatedAt": "2026-05-28",
+  "annotations": [
+    {
+      "id": "ann-rectification-status-001",
+      "type": "selector",
+      "selector": ".col-rectification-status-header",
+      "position": { "x": 0, "y": 0 },
+      "title": "审计决定整改进展状态规则",
+      "content": "**进展状态计算规则**\n\n该列状态由当前决定下的所有关联问题的整改状态聚合得出：\n\n| 进展状态 | 触发条件 |\n| --- | --- |\n| 未整改 | 所有关联问题均为\"未整改\" |\n| 整改中 | 已有关联问题提交了整改进展，但未全部完成整改 |\n| 已整改 | 所有关联问题均为\"已整改\" |",
+      "category": "rule",
+      "source": "用户补充说明",
+      "createdAt": "2026-05-28"
+    },
+    {
+      "id": "ann-review-status-001",
+      "type": "selector",
+      "selector": ".col-review-status-header",
+      "position": { "x": 0, "y": 0 },
+      "title": "状态列说明",
+      "content": "状态分为：\n\n- **待提交**：保存未提交\n- **待审批**：已提交未审批\n- **待下达**：审批通过未下达\n- **已下达**：已执行下达操作\n- **已退回**：审批退回",
+      "category": "rule",
+      "source": "用户补充说明",
+      "createdAt": "2026-05-28"
+    },
+    {
+      "id": "ann-transfer-review-status-001",
+      "type": "selector",
+      "selector": ".col-transfer-review-status-header",
+      "position": { "x": 0, "y": 0 },
+      "title": "移送清单状态列说明",
+      "content": "状态分为五种：\n\n- **待提交**：保存未提交，可编辑和删除\n- **待审批**：已提交未审批，编辑和删除禁用\n- **已退回**：审批退回，可编辑和删除\n- **待反馈**：审核通过、未维护移送反馈信息，可维护移送反馈\n- **已反馈**：已保存移送反馈信息，可维护移送反馈",
+      "category": "rule",
+      "source": "用户补充说明",
+      "createdAt": "2026-05-28"
+    }
+  ]
+}

@@ -270,6 +270,10 @@
     },
     "intelligentWriting": {
       "title": "Intelligent Writing"
+    },
+    "auditTransfer": {
+      "title": "Audit Transfer",
+      "list": "Transfer List"
     }
   },
   "table": {

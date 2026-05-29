@@ -36,6 +36,31 @@ export const staticRoutes: AppRouteRecordRaw[] = [
     component: () => import('@views/auth/forget-password/index.vue'),
     meta: { title: 'menus.forgetPassword.title', isHideTab: true }
   },
+  // 审计决定模块的子页面
+  {
+    path: '/audit-decision/project/:id',
+    name: 'AuditDecisionProjectDetail',
+    component: () => import('@views/audit-decision/project-detail.vue'),
+    meta: { title: '整改项目详情', isHideTab: false }
+  },
+  {
+    path: '/audit-decision/decision-add',
+    name: 'AuditDecisionAdd',
+    component: () => import('@views/audit-decision/decision-add.vue'),
+    meta: { title: '新增决定', isHideTab: false }
+  },
+  {
+    path: '/audit-decision/decision-edit',
+    name: 'AuditDecisionEdit',
+    component: () => import('@views/audit-decision/decision-edit.vue'),
+    meta: { title: '编辑决定', isHideTab: false }
+  },
+  {
+    path: '/audit-decision/decision-detail',
+    name: 'AuditDecisionDetail',
+    component: () => import('@views/audit-decision/decision-detail.vue'),
+    meta: { title: '决定详情', isHideTab: false }
+  },
   {
     path: '/403',
     name: 'Exception403',

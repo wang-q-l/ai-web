@@ -270,6 +270,10 @@
     },
     "intelligentWriting": {
       "title": "智能撰写"
+    },
+    "auditTransfer": {
+      "title": "审计移送",
+      "list": "移送清单"
     }
   },
   "table": {

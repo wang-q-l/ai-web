@@ -12,6 +12,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AiAssistantDrawer: typeof import('./../components/business/ai-assistant-drawer/index.vue')['default']
+    AnnotationDot: typeof import('./../components/Annotation/AnnotationDot.vue')['default']
+    AnnotationEditor: typeof import('./../components/Annotation/AnnotationEditor.vue')['default']
+    AnnotationOverlay: typeof import('./../components/Annotation/AnnotationOverlay.vue')['default']
+    AnnotationPanel: typeof import('./../components/Annotation/AnnotationPanel.vue')['default']
     ArtBackToTop: typeof import('./../components/core/base/art-back-to-top/index.vue')['default']
     ArtBarChart: typeof import('./../components/core/charts/art-bar-chart/index.vue')['default']
     ArtBarChartCard: typeof import('./../components/core/cards/art-bar-chart-card/index.vue')['default']
