@@ -16,6 +16,33 @@ const delay = (ms: number = 300) => new Promise((resolve) => setTimeout(resolve,
 // 模拟审计移送数据
 const mockTransfers: AuditTransfer[] = [
   {
+    id: 5,
+    transferName: '关于多人员违规行为的审计移送',
+    transferCode: 'YS005',
+    issueDate: '2026-05-22',
+    responsibleUnit: 'ZK审计部',
+    transferType: 2,
+    mainRecipient: '市纪委监委',
+    ccRecipient: '市监察委',
+    transferContent:
+      '经审计发现，多名相关责任人在项目实施过程中存在违规审批、徇私舞弊等行为，现移送贵单位依规处理。',
+    personnelCount: 3,
+    reviewStatus: 3,
+    feedbackStatus: 1,
+    attachments: [
+      {
+        id: 5,
+        name: '多人员违规审计移送文书.pdf',
+        url: 'https://example.com/files/transfer-005.pdf',
+        size: 1380000,
+        type: 'pdf'
+      }
+    ],
+    createdBy: '李三',
+    createdAt: '2026-05-22 09:00:00',
+    updatedAt: '2026-05-22 09:00:00'
+  },
+  {
     id: 1,
     transferName: '关于张某违纪问题的审计移送',
     transferCode: 'YS001',
@@ -159,6 +186,42 @@ const mockPersonnel: TransferPersonnel[] = [
     isPartyMember: 0,
     problemOccurredUnit: '市建设集团',
     feedbackStatus: 2
+  },
+  {
+    id: 4,
+    transferId: 5,
+    personnelName: '陈某',
+    personnelCategory: 1,
+    personnelUnit: '市规划局',
+    personnelPosition: '审批处处长',
+    positionLevel: 2,
+    isPartyMember: 1,
+    problemOccurredUnit: '市规划局',
+    feedbackStatus: 1
+  },
+  {
+    id: 5,
+    transferId: 5,
+    personnelName: '刘某',
+    personnelCategory: 1,
+    personnelUnit: '市规划局',
+    personnelPosition: '审批处副处长',
+    positionLevel: 3,
+    isPartyMember: 1,
+    problemOccurredUnit: '市规划局',
+    feedbackStatus: 1
+  },
+  {
+    id: 6,
+    transferId: 5,
+    personnelName: '赵某',
+    personnelCategory: 2,
+    personnelUnit: '市建设集团',
+    personnelPosition: '工程部经理',
+    positionLevel: 3,
+    isPartyMember: 0,
+    problemOccurredUnit: '市建设集团',
+    feedbackStatus: 1
   }
 ]
 
@@ -188,6 +251,54 @@ const mockPersonnelFeedbacks: PersonnelFeedback[] = [
     acceptDate: '2026-05-22',
     createdAt: '2026-05-22 10:00:00',
     updatedAt: '2026-05-22 10:00:00'
+  },
+  {
+    id: 3,
+    personnelId: 4,
+    transferId: 5,
+    acceptOrganization: '市纪委监委',
+    acceptDate: '2026-05-25',
+    resultFileName: '关于陈某违规审批问题的处理决定',
+    resultFileCode: 'JW-2026-031',
+    handleOrganization: '市纪委监委',
+    handleDate: '2026-06-02',
+    handleResult: 1,
+    resultDescription:
+      '经查，陈某在担任审批处处长期间，违规简化审批流程、徇私舞弊。根据《中国共产党纪律处分条例》，给予撤销党内职务处分，并降级使用。',
+    createdAt: '2026-05-25 09:00:00',
+    updatedAt: '2026-06-02 14:00:00'
+  },
+  {
+    id: 4,
+    personnelId: 5,
+    transferId: 5,
+    acceptOrganization: '市纪委监委',
+    acceptDate: '2026-05-25',
+    resultFileName: '关于刘某违规审批问题的处理决定',
+    resultFileCode: 'JW-2026-032',
+    handleOrganization: '市纪委监委',
+    handleDate: '2026-06-02',
+    handleResult: 3,
+    resultDescription:
+      '经查，刘某在审批环节未能尽到审核职责，但情节较轻。运用第一种形态进行处理，给予谈话提醒。',
+    createdAt: '2026-05-25 09:00:00',
+    updatedAt: '2026-06-02 14:30:00'
+  },
+  {
+    id: 5,
+    personnelId: 6,
+    transferId: 5,
+    acceptOrganization: '市监察委',
+    acceptDate: '2026-05-26',
+    resultFileName: '关于赵某违规问题的处理决定',
+    resultFileCode: 'JW-2026-033',
+    handleOrganization: '市监察委',
+    handleDate: '2026-06-05',
+    handleResult: 2,
+    resultDescription:
+      '经查，赵某在工程项目实施过程中，私自调整施工方案、收受好处费。给予政务降级处分，并退还违法所得。',
+    createdAt: '2026-05-26 09:30:00',
+    updatedAt: '2026-06-05 16:00:00'
   }
 ]
 
