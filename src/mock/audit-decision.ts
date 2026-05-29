@@ -680,9 +680,10 @@ export const batchIssueDecisions = async (ids: number[]) => {
   }
 }
 
-export const exportAuditDecisionList = async () => {
+export const exportAuditDecisionList = async (params?: AuditDecisionQuery) => {
   await delay()
-  // 模拟导出，实际应返回文件流
+  // 模拟导出，实际应返回文件流；保留参数以兼容调用方
+  void params
   return { code: 200, message: '导出成功', data: null }
 }
 

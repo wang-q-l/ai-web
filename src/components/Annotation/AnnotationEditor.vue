@@ -399,13 +399,13 @@
   // v-click-outside 指令（点击外部关闭下拉）
   const vClickOutside = {
     mounted(el: HTMLElement, binding: any) {
-      el._clickOutside = (e: Event) => {
+      ;(el as any)._clickOutside = (e: Event) => {
         if (!el.contains(e.target as Node)) binding.value(e)
       }
-      document.addEventListener('click', el._clickOutside)
+      document.addEventListener('click', (el as any)._clickOutside)
     },
     unmounted(el: HTMLElement) {
-      document.removeEventListener('click', el._clickOutside)
+      document.removeEventListener('click', (el as any)._clickOutside)
     }
   }
 

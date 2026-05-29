@@ -123,9 +123,7 @@
                           <el-icon><Document /></el-icon>
                           <span class="file-name">{{ file.name }}</span>
                           <span class="file-size">({{ formatFileSize(file.size) }})</span>
-                          <el-button link type="primary" @click="handleDownload(file)"
-                            >下载</el-button
-                          >
+                          <el-button link type="primary" @click="handleDownload">下载</el-button>
                         </div>
                       </div>
                       <span v-else>暂无附件</span>
