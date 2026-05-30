@@ -58,10 +58,20 @@
           <el-table-column
             prop="feedbackStatus"
             label="反馈状态"
-            width="90"
+            width="120"
             align="center"
             fixed="right"
           >
+            <template #header>
+              <span class="feedback-status-header">
+                反馈状态
+                <span
+                  class="feedback-status-tip-badge"
+                  @click.stop="feedbackStatusTipVisible = !feedbackStatusTipVisible"
+                  >1</span
+                >
+              </span>
+            </template>
             <template #default="{ row }">
               <el-tag v-if="row.feedbackStatus === 2" type="success" size="small">已反馈</el-tag>
               <el-tag v-else type="info" size="small">未反馈</el-tag>
@@ -177,6 +187,17 @@
         <el-button type="primary" :loading="submitLoading" @click="handleSubmit"> 保存 </el-button>
       </div>
     </template>
+
+    <!-- 反馈状态批注 -->
+    <Teleport to="body">
+      <AnnotationPanel
+        v-if="feedbackStatusTipVisible"
+        :annotation="feedbackStatusAnnotation"
+        :index="0"
+        :edit-mode="false"
+        @close="feedbackStatusTipVisible = false"
+      />
+    </Teleport>
   </el-drawer>
 </template>
 
@@ -202,6 +223,22 @@
     savePersonnelFeedback,
     getAuditTransferDetail
   } from '@/api/audit-transfer'
+  import AnnotationPanel from '@/components/Annotation/AnnotationPanel.vue'
+  import type { AnnotationItem } from '@/components/Annotation/types'
+
+  // 反馈状态批注
+  const feedbackStatusTipVisible = ref(false)
+  const feedbackStatusAnnotation: AnnotationItem = {
+    id: 'personnel-feedback-status-tip',
+    type: 'position',
+    selector: '',
+    position: { x: 0, y: 0 },
+    title: '反馈状态',
+    content: '反馈信息的内容保存后，状态即变更为已反馈。',
+    category: 'rule',
+    source: '',
+    createdAt: '2026-05-29'
+  }
 
   // Props
   interface Props {
@@ -433,6 +470,29 @@
 </script>
 
 <style scoped lang="scss">
+  /* 反馈状态列表头批注徽章 */
+  .feedback-status-header {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .feedback-status-tip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background: #1677ff;
+    border-radius: 50%;
+  }
+
   .feedback-container {
     display: flex;
     flex-direction: column;
