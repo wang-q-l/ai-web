@@ -122,7 +122,15 @@
             <el-tag v-else type="danger">已退回</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right" align="left">
+        <el-table-column label="操作" width="240" fixed="right" align="left">
+          <template #header>
+            <span class="action-header">
+              操作
+              <span class="action-tip-badge" @click.stop="issueTipVisible = !issueTipVisible"
+                >4</span
+              >
+            </span>
+          </template>
           <template #default="{ row }">
             <el-button
               link
@@ -137,6 +145,13 @@
               type="primary"
               @click="handleSubmit(row)"
               >提交</el-button
+            >
+            <el-button
+              v-if="row.reviewStatus === 3 && row.issueStatus !== 1"
+              link
+              type="primary"
+              @click="handleIssue(row)"
+              >下达</el-button
             >
             <el-button
               link
@@ -180,6 +195,13 @@
         :edit-mode="false"
         @close="batchSubmitTipVisible = false"
       />
+      <AnnotationPanel
+        v-if="issueTipVisible"
+        :annotation="issueAnnotation"
+        :index="3"
+        :edit-mode="false"
+        @close="issueTipVisible = false"
+      />
     </Teleport>
   </div>
 </template>
@@ -193,7 +215,12 @@
   import { useRouter } from 'vue-router'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import type { AuditDecision, AuditDecisionQuery } from '@/types/audit-decision'
-  import { getAuditDecisionList, deleteAuditDecision, submitForReview } from '@/api/audit-decision'
+  import {
+    getAuditDecisionList,
+    deleteAuditDecision,
+    submitForReview,
+    issueDecision
+  } from '@/api/audit-decision'
   import DecisionDrawer from './DecisionDrawer.vue'
   import AnnotationPanel from '@/components/Annotation/AnnotationPanel.vue'
   import type { AnnotationItem } from '@/components/Annotation/types'
@@ -242,6 +269,21 @@
     category: 'rule',
     source: '',
     createdAt: '2026-05-28'
+  }
+
+  // 下达批注
+  const issueTipVisible = ref(false)
+  const issueAnnotation: AnnotationItem = {
+    id: 'decision-issue-tip',
+    type: 'position',
+    selector: '',
+    position: { x: 0, y: 0 },
+    title: '下达',
+    content:
+      '当节点配置需要下达时，决定信息审批通过后显示下达按钮，下达操作同问题清单，下达记录的页面同问题清单，名称默认显示"审计决定"，不显示签收期限与签收时间两列。',
+    category: 'rule',
+    source: '',
+    createdAt: '2026-05-29'
   }
 
   // 获取列表数据
@@ -337,6 +379,24 @@
     }
   }
 
+  // 下达：审批通过（reviewStatus=3）且未下达（issueStatus !== 1）时可下达
+  const handleIssue = async (row: AuditDecision) => {
+    try {
+      await ElMessageBox.confirm('确定要下达该审计决定吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      await issueDecision(row.id)
+      ElMessage.success('下达成功')
+      fetchList()
+    } catch (error) {
+      if (error !== 'cancel') {
+        ElMessage.error('下达失败')
+      }
+    }
+  }
+
   // 批量提交：勾选时只提交勾选中处于待提交/已退回的；未勾选时默认提交所有待提交/已退回的
   const handleBatchSubmit = async () => {
     const submittable = (
@@ -385,6 +445,29 @@
 </script>
 
 <style scoped lang="scss">
+  /* 操作列表头批注 */
+  .action-header {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .action-tip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background: #1677ff;
+    border-radius: 50%;
+  }
+
   .decision-list-wrapper {
     display: flex;
     flex-direction: column;
