@@ -271,6 +271,12 @@
     "intelligentWriting": {
       "title": "智能撰写"
     },
+    "aiApp": {
+      "title": "AI 应用",
+      "intelligentWriting": "智能撰写",
+      "regulationRecommend": "法规推荐",
+      "recommendationStrategy": "法规推荐策略"
+    },
     "auditTransfer": {
       "title": "审计移送",
       "list": "移送清单"

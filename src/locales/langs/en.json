@@ -271,6 +271,12 @@
     "intelligentWriting": {
       "title": "Intelligent Writing"
     },
+    "aiApp": {
+      "title": "AI Apps",
+      "intelligentWriting": "Intelligent Writing",
+      "regulationRecommend": "Regulation Recommend",
+      "recommendationStrategy": "Recommendation Strategy"
+    },
     "auditTransfer": {
       "title": "Audit Transfer",
       "list": "Transfer List"
