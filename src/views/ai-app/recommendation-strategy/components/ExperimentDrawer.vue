@@ -15,7 +15,8 @@
     admin: '行政法规',
     rule: '部门规章',
     local: '地方法规',
-    normative: '规范性文件'
+    normative: '规范性文件',
+    internal: '内部规章制度'
   }
 
   // 5 维度名映射，用于评分明细行

@@ -17,7 +17,8 @@
     { label: '行政法规', value: 'admin' },
     { label: '部门规章', value: 'rule' },
     { label: '地方法规', value: 'local' },
-    { label: '规范性文件', value: 'normative' }
+    { label: '规范性文件', value: 'normative' },
+    { label: '内部规章制度', value: 'internal' }
   ]
 
   // 5 维权重的展示文案
@@ -227,7 +228,7 @@
 
       <!-- 阈值 / Top N -->
       <el-divider content-position="left">召回控制</el-divider>
-      <el-form-item label="相关度阈值">
+      <el-form-item label="最低推荐阈值">
         <el-slider v-model="form.threshold" :min="0" :max="1" :step="0.01" style="width: 320px" />
         <span class="form-tip">{{ form.threshold.toFixed(2) }}</span>
       </el-form-item>

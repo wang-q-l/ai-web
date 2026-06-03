@@ -10,6 +10,7 @@ export type RegulationLevel =
   | 'rule' // 部门规章
   | 'local' // 地方法规
   | 'normative' // 规范性文件
+  | 'internal' // 内部规章制度
 
 /** 推荐打分维度（5 个权重） */
 export interface StrategyWeights {

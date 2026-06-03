@@ -23,7 +23,8 @@
     admin: '行政法规',
     rule: '部门规章',
     local: '地方法规',
-    normative: '规范性文件'
+    normative: '规范性文件',
+    internal: '内部规章制度'
   }
 
   // 法规层级标签颜色
@@ -32,7 +33,8 @@
     admin: 'success',
     rule: 'warning',
     local: 'warning',
-    normative: 'info'
+    normative: 'info',
+    internal: 'info'
   }
 
   // 推荐卡片结构

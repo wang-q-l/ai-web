@@ -45,7 +45,7 @@ let globalStrategy: StrategyConfig = {
   },
   threshold: 0.5,
   topN: 5,
-  regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative'],
+  regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative', 'internal'],
   tagFilter: ['财务', '采购', '医疗', '工程', '资产', '招投标'],
   llmRerankEnabled: true
 }
@@ -69,7 +69,8 @@ let levelBaseScore: LevelBaseScore = {
   admin: 0.85,
   rule: 0.7,
   local: 0.6,
-  normative: 0.5
+  normative: 0.5,
+  internal: 0.4
 }
 
 /** 获取法规层级基准分 */

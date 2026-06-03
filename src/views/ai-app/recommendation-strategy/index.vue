@@ -32,7 +32,8 @@
     { label: '行政法规', value: 'admin' },
     { label: '部门规章', value: 'rule' },
     { label: '地方法规', value: 'local' },
-    { label: '规范性文件', value: 'normative' }
+    { label: '规范性文件', value: 'normative' },
+    { label: '内部规章制度', value: 'internal' }
   ]
 
   // 5 维权重定义（含 tooltip 文案）
@@ -62,7 +63,7 @@
     },
     threshold: 0.5,
     topN: 5,
-    regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative'],
+    regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative', 'internal'],
     tagFilter: [...TAG_OPTIONS],
     llmRerankEnabled: true
   })
@@ -124,7 +125,7 @@
       },
       threshold: 0.5,
       topN: 5,
-      regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative'],
+      regulationLevelFilter: ['law', 'admin', 'rule', 'local', 'normative', 'internal'],
       tagFilter: [...TAG_OPTIONS],
       llmRerankEnabled: true
     })
@@ -143,7 +144,8 @@
     admin: '行政法规',
     rule: '部门规章',
     local: '地方法规',
-    normative: '规范性文件'
+    normative: '规范性文件',
+    internal: '内部规章制度'
   }
 
   const loadOverrideList = async () => {
@@ -247,7 +249,8 @@
     admin: 0.85,
     rule: 0.7,
     local: 0.6,
-    normative: 0.5
+    normative: 0.5,
+    internal: 0.4
   })
   const savingLevel = ref(false)
 
@@ -273,7 +276,8 @@
       admin: 0.85,
       rule: 0.7,
       local: 0.6,
-      normative: 0.5
+      normative: 0.5,
+      internal: 0.4
     })
     ElMessage.info('已重置为默认值，记得点保存')
   }
@@ -348,7 +352,7 @@
 
             <!-- 阈值 / Top N -->
             <el-divider content-position="left">召回控制</el-divider>
-            <el-form-item label="相关度阈值">
+            <el-form-item label="最低推荐阈值">
               <el-slider
                 v-model="globalStrategy.threshold"
                 :min="0"
