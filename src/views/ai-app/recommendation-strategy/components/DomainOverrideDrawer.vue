@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  // 领域覆盖策略编辑抽屉：参数与全局策略一致，新增/编辑通用
+  // 场景覆盖策略编辑抽屉：参数与全局策略一致，新增/编辑通用
   import { ref, reactive, computed, watch } from 'vue'
   import { ElMessage } from 'element-plus'
   import { QuestionFilled } from '@element-plus/icons-vue'
@@ -82,7 +82,7 @@
   })
 
   const rules: FormRules = {
-    domain: [{ required: true, message: '请选择领域', trigger: 'change' }],
+    domain: [{ required: true, message: '请选择业务场景', trigger: 'change' }],
     topN: [{ required: true, message: '请输入 Top N', trigger: 'blur' }]
   }
 
@@ -182,21 +182,21 @@
 <template>
   <el-drawer
     v-model="visible"
-    :title="props.editing ? '编辑领域覆盖策略' : '新增领域覆盖策略'"
+    :title="props.editing ? '编辑场景覆盖策略' : '新增场景覆盖策略'"
     size="720px"
     :close-on-click-modal="false"
   >
     <el-form ref="formRef" :model="form" :rules="rules" label-width="140px" class="override-form">
-      <el-form-item label="领域" prop="domain">
+      <el-form-item label="业务场景" prop="domain">
         <el-select
           v-model="form.domain"
-          placeholder="请选择领域"
+          placeholder="请选择业务场景"
           style="width: 240px"
           :disabled="!!props.editing"
         >
           <el-option v-for="d in TAG_OPTIONS" :key="d" :label="d" :value="d" />
         </el-select>
-        <span class="form-tip">编辑模式下不允许修改领域</span>
+        <span class="form-tip">编辑模式下不允许修改业务场景</span>
       </el-form-item>
 
       <el-form-item label="启用状态">

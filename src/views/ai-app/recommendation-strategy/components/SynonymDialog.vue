@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  // 同义词组新增/编辑弹窗：标准词、同义词数组、所属领域
+  // 同义词组新增/编辑弹窗：标准词、同义词数组、适用场景
   import { ref, reactive, computed, watch } from 'vue'
   import { ElMessage } from 'element-plus'
   import type { FormInstance, FormRules } from 'element-plus'
   import { addSynonym, updateSynonym } from '@/api/recommendation-strategy'
   import type { SynonymGroup } from '@/types/recommendation-strategy'
 
-  // 领域选项（与全局策略可选领域保持一致）
+  // 业务场景选项（与全局策略可选标签集合保持一致）
   const TAG_OPTIONS = ['财务', '采购', '医疗', '工程', '资产', '招投标']
 
   const props = defineProps<{

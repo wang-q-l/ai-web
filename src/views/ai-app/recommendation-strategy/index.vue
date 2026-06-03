@@ -1,8 +1,15 @@
 <script setup lang="ts">
-  // 法规推荐策略页面：4 个 Tab（全局策略 / 领域覆盖 / 同义词 / 法规层级基准分）+ 顶部「推荐试验台」抽屉
+  // 法规推荐策略页面：4 个 Tab（全局策略 / 场景覆盖 / 同义词 / 法规层级基准分）+ 顶部「推荐试验台」抽屉
   import { ref, reactive, computed, onMounted } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { MagicStick, QuestionFilled, Plus, Upload } from '@element-plus/icons-vue'
+  import {
+    MagicStick,
+    QuestionFilled,
+    Plus,
+    Upload,
+    Download,
+    ArrowDown
+  } from '@element-plus/icons-vue'
   import {
     getGlobalStrategy,
     updateGlobalStrategy,
@@ -45,11 +52,32 @@
     { key: 'adoptionRate', label: '历史采纳率', tip: '该条款历史采纳次数 / 推荐次数' }
   ]
 
-  // 标签候选（全局可选，用作领域覆盖策略与同义词所属领域的标签备选）
+  // 标签候选（全局可选，用作场景覆盖策略与同义词适用场景的标签备选）
   const TAG_OPTIONS = ['财务', '采购', '医疗', '工程', '资产', '招投标']
 
   // 当前激活 Tab
   const activeTab = ref<'global' | 'override' | 'synonym' | 'level'>('global')
+
+  // 推荐流程总览节点：6 阶段，每个节点关联 Tab；recall 阶段无 UI 配置（tab 为 null）
+  const PIPELINE_NODES: {
+    key: string
+    name: string
+    tab: 'global' | 'override' | 'synonym' | 'level' | null
+    tabLabel: string
+  }[] = [
+    { key: 'load', name: '加载策略', tab: 'global', tabLabel: '全局/场景覆盖' },
+    { key: 'preprocess', name: '输入预处理', tab: 'synonym', tabLabel: '同义词表' },
+    { key: 'recall', name: '候选召回', tab: null, tabLabel: '自动执行' },
+    { key: 'filter', name: '硬过滤', tab: 'global', tabLabel: '过滤条件' },
+    { key: 'score', name: '多维度打分', tab: 'level', tabLabel: '权重 + 基准分' },
+    { key: 'output', name: '输出控制', tab: 'global', tabLabel: '阈值 + Top N' }
+  ]
+
+  // 节点点击：跳转对应 Tab；无 Tab 的节点不响应
+  const handleJumpTab = (tab: string | null) => {
+    if (!tab) return
+    activeTab.value = tab as typeof activeTab.value
+  }
 
   // ===================== 全局策略 =====================
   // 当前编辑中的全局策略（同时作为试验台的输入参数，未保存也可试）
@@ -132,7 +160,7 @@
     ElMessage.info('已重置为默认值，记得点保存')
   }
 
-  // ===================== 领域覆盖策略 =====================
+  // ===================== 场景覆盖策略 =====================
   const overrideList = ref<DomainOverride[]>([])
   const overrideLoading = ref(false)
   const overrideDrawerOpen = ref(false)
@@ -169,7 +197,7 @@
   }
 
   const handleDeleteOverride = async (row: DomainOverride) => {
-    await ElMessageBox.confirm(`确定删除领域「${row.domain}」的覆盖策略？`, '删除确认', {
+    await ElMessageBox.confirm(`确定删除场景「${row.domain}」的覆盖策略？`, '删除确认', {
       type: 'warning'
     })
     const res = await deleteDomainOverride(row.id)
@@ -282,6 +310,39 @@
     ElMessage.info('已重置为默认值，记得点保存')
   }
 
+  // 法规层级基准分的预设值（详见设计方案 8.5 节）
+  const LEVEL_PRESETS: Record<string, { name: string; values: LevelBaseScore }> = {
+    default: {
+      name: '通用默认',
+      values: { law: 1.0, admin: 0.85, rule: 0.7, local: 0.6, normative: 0.5, internal: 0.4 }
+    },
+    'internal-audit': {
+      name: '内审场景',
+      values: { internal: 1.0, rule: 0.85, normative: 0.8, admin: 0.65, law: 0.6, local: 0.4 }
+    },
+    'red-tape': {
+      name: '红头文件主导',
+      values: { law: 1.0, admin: 0.85, rule: 0.75, normative: 0.7, local: 0.6, internal: 0.4 }
+    }
+  }
+
+  // 加载预设：弹二次确认后填入数值（不立即保存，由用户点"保存基准分"）
+  const handleLoadPreset = async (key: string) => {
+    const preset = LEVEL_PRESETS[key]
+    if (!preset) return
+    try {
+      await ElMessageBox.confirm(
+        `将加载「${preset.name}」预设，当前未保存的修改将被覆盖。确定继续？`,
+        '加载预设确认',
+        { type: 'warning', confirmButtonText: '加载', cancelButtonText: '取消' }
+      )
+      Object.assign(levelBaseScore, preset.values)
+      ElMessage.info(`已加载「${preset.name}」预设，记得点保存`)
+    } catch {
+      // 用户取消，无需处理
+    }
+  }
+
   // ===================== 推荐试验台 =====================
   const experimentOpen = ref(false)
   const handleOpenExperiment = () => {
@@ -315,11 +376,50 @@
       </div>
     </el-card>
 
+    <!-- 推荐流程总览：6 节点横向流程图，可点击跳转对应 Tab -->
+    <el-card class="pipeline-card" shadow="never">
+      <div class="pipeline-header">
+        <span class="pipeline-title">推荐流程总览</span>
+        <span class="pipeline-desc"
+          >推荐过程依次经过 6 个阶段，下方节点可点击跳转到对应配置 Tab</span
+        >
+      </div>
+      <div class="pipeline-flow">
+        <template v-for="(node, idx) in PIPELINE_NODES" :key="node.key">
+          <div
+            class="pipe-node"
+            :class="{
+              'pipe-node-active': activeTab === node.tab,
+              'pipe-node-disabled': !node.tab
+            }"
+            @click="handleJumpTab(node.tab)"
+          >
+            <div class="pipe-no">{{ idx + 1 }}</div>
+            <div class="pipe-name">{{ node.name }}</div>
+            <div class="pipe-tab">{{ node.tabLabel }}</div>
+          </div>
+          <div v-if="idx < PIPELINE_NODES.length - 1" class="pipe-arrow">→</div>
+        </template>
+      </div>
+    </el-card>
+
     <!-- 4 个 Tab 区块 -->
     <el-card class="tabs-card" shadow="never">
       <el-tabs v-model="activeTab">
         <!-- ============ Tab A：全局策略 ============ -->
         <el-tab-pane label="全局策略" name="global">
+          <!-- 用途说明 -->
+          <el-alert class="tab-intro" type="info" :closable="false" show-icon>
+            <template #title>
+              <span class="intro-title">全局策略</span>
+              <span class="intro-flow"
+                >对应推荐流程：① 加载（默认值）→ ④ 过滤 → ⑤ 打分 → ⑥ 输出</span
+              >
+            </template>
+            <div class="intro-desc">
+              定义所有推荐请求的默认参数；可被「场景覆盖策略」局部覆盖。
+            </div>
+          </el-alert>
           <el-form label-width="160px" class="form-block">
             <!-- 5 维权重 -->
             <el-divider content-position="left">打分权重</el-divider>
@@ -351,7 +451,7 @@
             </el-form-item>
 
             <!-- 阈值 / Top N -->
-            <el-divider content-position="left">召回控制</el-divider>
+            <el-divider content-position="left">输出控制</el-divider>
             <el-form-item label="最低推荐阈值">
               <el-slider
                 v-model="globalStrategy.threshold"
@@ -375,12 +475,12 @@
                 </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="参与标签">
+            <el-form-item label="业务标签过滤">
               <el-select
                 v-model="globalStrategy.tagFilter"
                 multiple
                 collapse-tags
-                placeholder="留空表示不限制标签"
+                placeholder="留空表示不限制业务标签"
                 style="width: 360px"
               >
                 <el-option v-for="d in TAG_OPTIONS" :key="d" :label="d" :value="d" />
@@ -403,22 +503,32 @@
           </el-form>
         </el-tab-pane>
 
-        <!-- ============ Tab B：领域覆盖策略 ============ -->
-        <el-tab-pane label="领域覆盖策略" name="override">
+        <!-- ============ Tab B：场景覆盖策略 ============ -->
+        <el-tab-pane label="场景覆盖策略" name="override">
+          <!-- 用途说明 -->
+          <el-alert class="tab-intro" type="info" :closable="false" show-icon>
+            <template #title>
+              <span class="intro-title">场景覆盖策略</span>
+              <span class="intro-flow">对应推荐流程：① 加载（按场景命中后合并到全局之上）</span>
+            </template>
+            <div class="intro-desc">
+              当问题命中某场景时，用此处的参数覆盖全局策略的同名字段；未命中场景时回落全局策略。
+            </div>
+          </el-alert>
           <div class="table-toolbar">
             <el-button type="primary" @click="handleAddOverride">
               <el-icon><Plus /></el-icon>
               新增覆盖策略
             </el-button>
-            <span class="form-tip">未配置覆盖的领域将使用全局策略</span>
+            <span class="form-tip">未配置覆盖的场景将使用全局策略</span>
           </div>
           <el-table
             v-loading="overrideLoading"
             :data="overrideList"
             class="override-table"
-            empty-text="暂无领域覆盖策略"
+            empty-text="暂无场景覆盖策略"
           >
-            <el-table-column prop="domain" label="领域" min-width="100" />
+            <el-table-column prop="domain" label="场景" min-width="100" />
             <el-table-column label="阈值" width="100">
               <template #default="{ row }">{{ row.threshold.toFixed(2) }}</template>
             </el-table-column>
@@ -460,6 +570,17 @@
 
         <!-- ============ Tab C：同义词表 ============ -->
         <el-tab-pane label="同义词表" name="synonym">
+          <!-- 用途说明 -->
+          <el-alert class="tab-intro" type="info" :closable="false" show-icon>
+            <template #title>
+              <span class="intro-title">同义词表</span>
+              <span class="intro-flow">对应推荐流程：② 输入预处理</span>
+            </template>
+            <div class="intro-desc">
+              用户问题分词后，按"适用场景"扩展同义词，提高召回率。例如：「公车私用」→
+              关联标准词「三公经费」。
+            </div>
+          </el-alert>
           <!-- 筛选 + 操作 -->
           <div class="table-toolbar">
             <el-input
@@ -472,7 +593,7 @@
             />
             <el-select
               v-model="synonymDomain"
-              placeholder="按领域筛选"
+              placeholder="按适用场景筛选"
               clearable
               style="width: 160px"
               @change="loadSynonymList"
@@ -508,7 +629,7 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="所属领域" width="120">
+            <el-table-column label="适用场景" width="120">
               <template #default="{ row }">
                 <span v-if="row.domain">{{ row.domain }}</span>
                 <el-tag v-else size="small" type="info">全局</el-tag>
@@ -526,6 +647,47 @@
 
         <!-- ============ Tab D：法规层级基准分 ============ -->
         <el-tab-pane label="法规层级基准分" name="level">
+          <!-- 用途说明 -->
+          <el-alert class="tab-intro" type="info" :closable="false" show-icon>
+            <template #title>
+              <span class="intro-title">法规层级基准分</span>
+              <span class="intro-flow"
+                >对应推荐流程：⑤ 多维度打分（与"打分权重·法规层级"配合）</span
+              >
+            </template>
+            <div class="intro-desc">
+              定义不同层级法规的"出身分"（0~1）；最终该维度贡献 = 基准分 × 法规层级权重。
+            </div>
+          </el-alert>
+
+          <!-- 顶部操作区：加载预设 -->
+          <div class="level-toolbar">
+            <el-dropdown trigger="click" @command="handleLoadPreset">
+              <el-button>
+                <el-icon><Download /></el-icon>
+                加载预设
+                <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="default">
+                    通用默认
+                    <span class="preset-hint">政府审计 / 国家审计</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="internal-audit">
+                    内审场景
+                    <span class="preset-hint">内部制度=1.0，法律=0.6</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="red-tape">
+                    红头文件主导
+                    <span class="preset-hint">规范性文件=0.7</span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <span class="form-tip">切换预设会覆盖当前未保存修改</span>
+          </div>
+
           <el-form label-width="160px" class="form-block">
             <el-form-item v-for="opt in LEVEL_OPTIONS" :key="opt.value" :label="opt.label">
               <div class="weight-row">
@@ -559,7 +721,7 @@
       :level-base-score="levelBaseScore"
     />
 
-    <!-- 领域覆盖编辑抽屉 -->
+    <!-- 场景覆盖编辑抽屉 -->
     <DomainOverrideDrawer
       v-model:open="overrideDrawerOpen"
       :editing="editingOverride"
@@ -585,8 +747,133 @@
   }
 
   .header-card,
-  .tabs-card {
+  .tabs-card,
+  .pipeline-card {
     border-radius: 8px;
+  }
+
+  .pipeline-header {
+    margin-bottom: 14px;
+
+    .pipeline-title {
+      margin-right: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+    }
+
+    .pipeline-desc {
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+    }
+  }
+
+  .pipeline-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pipe-node {
+    display: flex;
+    flex: 0 0 150px;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    padding: 10px 8px;
+    cursor: pointer;
+    background: var(--el-fill-color-light);
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--el-color-primary-light-9);
+      border-color: var(--el-color-primary-light-5);
+    }
+  }
+
+  .pipe-node-active {
+    background: var(--el-color-primary-light-9);
+    border-color: var(--el-color-primary);
+    box-shadow: 0 0 0 2px var(--el-color-primary-light-8);
+
+    .pipe-no {
+      background: var(--el-color-primary);
+    }
+  }
+
+  .pipe-node-disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    &:hover {
+      background: var(--el-fill-color-light);
+      border-color: var(--el-border-color-lighter);
+    }
+  }
+
+  .pipe-no {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--el-color-info);
+    border-radius: 50%;
+  }
+
+  .pipe-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+  }
+
+  .pipe-tab {
+    font-size: 11px;
+    color: var(--el-text-color-secondary);
+  }
+
+  .pipe-arrow {
+    font-size: 18px;
+    color: var(--el-text-color-placeholder);
+    user-select: none;
+  }
+
+  .tab-intro {
+    margin-bottom: 16px;
+
+    .intro-title {
+      margin-right: 12px;
+      font-weight: 600;
+    }
+
+    .intro-flow {
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+    }
+
+    .intro-desc {
+      margin-top: 4px;
+      font-size: 12px;
+    }
+  }
+
+  .level-toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .preset-hint {
+    margin-left: 8px;
+    font-size: 11px;
+    color: var(--el-text-color-secondary);
   }
 
   .header-content {
