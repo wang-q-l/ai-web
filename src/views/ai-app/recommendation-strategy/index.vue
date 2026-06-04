@@ -752,8 +752,15 @@
     border-radius: 8px;
   }
 
+  /* 顶部标题卡 + 流程总览卡 收紧内边距，避免出现内部滚动 */
+  .header-card :deep(.el-card__body),
+  .pipeline-card :deep(.el-card__body) {
+    padding: 16px 20px;
+    overflow: visible;
+  }
+
   .pipeline-header {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
 
     .pipeline-title {
       margin-right: 12px;
@@ -779,9 +786,9 @@
     display: flex;
     flex: 0 0 150px;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     align-items: center;
-    padding: 10px 8px;
+    padding: 6px 8px;
     cursor: pointer;
     background: var(--el-fill-color-light);
     border: 1px solid var(--el-border-color-lighter);
