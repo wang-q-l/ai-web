@@ -30,6 +30,12 @@ export interface Clause {
   articleNo: string
   articleText: string
   year: number
+  /** 生效日期 YYYY-MM-DD，缺失时用 `${year}-01-01` 兜底 */
+  effectiveDate: string
+  /** 该条款替代了哪些前身条款（前身的 id 数组） */
+  supersedes?: string[]
+  /** 该条款被哪条新法规替代 */
+  supersededBy?: string
   /** 由 LLM 离线提取的关键词 */
   keywords: string[]
 }
@@ -51,6 +57,37 @@ export interface ExperimentRequest {
   draftStrategy: StrategyConfig
 }
 
+/** LLM 抽取的问题发生时间 */
+export interface OccurrencePeriod {
+  type: 'point' | 'period' | 'unknown'
+  /** YYYY-MM-DD */
+  start: string
+  /** YYYY-MM-DD */
+  end: string
+  /** 原文片段（用于回显与人工修正） */
+  rawText: string
+  /** 0~1 置信度 */
+  confidence: number
+}
+
+/** 时效校验状态 */
+export type TemporalStatus =
+  | 'valid' // 时效有效
+  | 'partial' // 部分冲突（法规生效落在问题区间内）
+  | 'conflict-with-replacement' // 全程冲突，有前身可替代
+  | 'conflict-no-replacement' // 全程冲突，无前身
+  | 'skipped' // 跳过（occurrence=unknown 或未启用）
+
+/** 简化版前身法规（仅展示用） */
+export interface PredecessorClause {
+  id: string
+  regulationName: string
+  articleNo: string
+  articleText: string
+  year: number
+  effectiveDate: string
+}
+
 /** 推荐试验台 - 单条结果 */
 export interface ExperimentResultItem {
   id: string
@@ -58,6 +95,8 @@ export interface ExperimentResultItem {
   articleNo: string
   articleText: string
   year: number
+  /** 法规生效日期，用于卡片展示 */
+  effectiveDate: string
   score: number
   /** 各维度评分明细（已乘权重） */
   scoreBreakdown: StrategyWeights
@@ -65,4 +104,10 @@ export interface ExperimentResultItem {
   reason: string
   /** 是否标记为低相关度 */
   lowConfidence?: boolean
+  /** 时效校验状态 */
+  temporalStatus?: TemporalStatus
+  /** 时效冲突时的前身法规建议（status 为 conflict-with-replacement 时填充） */
+  predecessors?: PredecessorClause[]
+  /** 部分冲突时的分段建议文案（status 为 partial 时填充） */
+  partialHint?: string
 }
