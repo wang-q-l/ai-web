@@ -3,36 +3,19 @@
   import { ref, computed, watch } from 'vue'
   import { ElMessage } from 'element-plus'
   import { runExperiment } from '@/api/recommendation-strategy'
-  import type {
-    StrategyConfig,
-    LevelBaseScore,
-    ExperimentResultItem
-  } from '@/types/recommendation-strategy'
+  import type { StrategyConfig, ExperimentResultItem } from '@/types/recommendation-strategy'
 
-  // 法规层级中文映射，用于结果展示
-  const LEVEL_LABEL: Record<string, string> = {
-    law: '法律',
-    admin: '行政法规',
-    rule: '部门规章',
-    local: '地方法规',
-    normative: '规范性文件',
-    internal: '内部规章制度'
-  }
-
-  // 5 维度名映射，用于评分明细行
+  // 3 维度名映射，用于评分明细行
   const DIM_LABEL: Record<string, string> = {
     keywordMatch: '关键词匹配',
-    tagMatch: '标签匹配',
-    levelPriority: '法规层级',
-    recency: '颁布年份',
-    adoptionRate: '历史采纳率'
+    caseMatch: '问题案例匹配',
+    recency: '颁布年份'
   }
 
   const props = defineProps<{
     open: boolean
-    // 当前内存中的策略与基准分（未保存也可试）
+    // 当前内存中的策略（未保存也可试）
     draftStrategy: StrategyConfig
-    levelBaseScore: LevelBaseScore
   }>()
 
   const emit = defineEmits<{
@@ -41,7 +24,6 @@
 
   // 表单字段
   const problemDescription = ref('')
-  const tagHint = ref('')
   const loading = ref(false)
   const results = ref<ExperimentResultItem[]>([])
   const lowConfidence = ref(false)
@@ -70,14 +52,12 @@
     try {
       const res = await runExperiment({
         problemDescription: problemDescription.value,
-        tagHint: tagHint.value || undefined,
-        draftStrategy: props.draftStrategy,
-        levelBaseScore: props.levelBaseScore
+        draftStrategy: props.draftStrategy
       })
       results.value = res.data || []
       lowConfidence.value = res.message?.includes('低相关度') || false
       if (results.value.length === 0) {
-        ElMessage.info('未匹配到合适法规，可调整关键词或同义词表后重试')
+        ElMessage.info('未匹配到合适法规，可调整问题描述或权重后重试')
       }
     } finally {
       loading.value = false
@@ -87,7 +67,6 @@
   // 清空
   const handleClear = () => {
     problemDescription.value = ''
-    tagHint.value = ''
     results.value = []
     lowConfidence.value = false
   }
@@ -108,21 +87,6 @@
               show-word-limit
               placeholder="例如：开发区医院将健康管理中心等5个科室与社会资本合作设立营利性项目"
             />
-          </el-form-item>
-          <el-form-item label="标签提示">
-            <el-select
-              v-model="tagHint"
-              placeholder="可选，命中标签时打分更高"
-              clearable
-              style="width: 240px"
-            >
-              <el-option
-                v-for="d in props.draftStrategy.tagFilter"
-                :key="d"
-                :label="d"
-                :value="d"
-              />
-            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :loading="loading" @click="handleRun">运行试推荐</el-button>
@@ -146,13 +110,12 @@
 
         <!-- 结果列表 -->
         <div v-else class="result-list">
-          <div v-for="(item, idx) in results" :key="idx" class="result-item">
+          <div v-for="(item, idx) in results" :key="item.id" class="result-item">
             <div class="item-head">
               <div class="item-title">
                 <span class="rank">#{{ idx + 1 }}</span>
                 <span class="reg-name">{{ item.regulationName }}</span>
                 <span class="article-no">{{ item.articleNo }}</span>
-                <el-tag size="small" type="primary">{{ LEVEL_LABEL[item.level] }}</el-tag>
                 <el-tag size="small" type="info">{{ item.year }}</el-tag>
               </div>
               <div class="item-score">
@@ -174,7 +137,7 @@
               >
                 <span class="dim-name">{{ DIM_LABEL[key] }}</span>
                 <el-progress
-                  :percentage="Math.min(100, item.scoreBreakdown[key] * 200)"
+                  :percentage="Math.min(100, item.scoreBreakdown[key] * 250)"
                   :show-text="false"
                   :stroke-width="6"
                   class="dim-bar"
@@ -300,7 +263,7 @@
     align-items: center;
 
     .dim-name {
-      flex: 0 0 84px;
+      flex: 0 0 90px;
       font-size: 12px;
       color: var(--el-text-color-secondary);
     }

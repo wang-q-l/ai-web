@@ -158,15 +158,15 @@
     {
       key: 'keyword',
       iconKey: 'keyword',
-      title: '分析问题描述',
-      loadingText: '正在抽取问题描述中的关键信息',
+      title: '关键词智能识别',
+      loadingText: '正在调用大模型抽取问题中的核心概念与扩展词',
       status: 'pending'
     },
     {
       key: 'synonym',
       iconKey: 'synonym',
-      title: '同义词扩展',
-      loadingText: '正在查询同义词表，扩展检索范围',
+      title: '问题案例匹配',
+      loadingText: '正在从历史问题案例库中查找相似案例',
       status: 'pending'
     },
     {
@@ -179,8 +179,8 @@
     {
       key: 'score',
       iconKey: 'score',
-      title: '多维度打分',
-      loadingText: '正在按 5 个维度对候选法规打分',
+      title: '三维度打分',
+      loadingText: '正在按 3 个维度对候选法规打分',
       status: 'pending'
     }
   ]
@@ -265,23 +265,27 @@
     stage.status = 'done'
   }
 
-  // 阶段 2：同义词扩展
+  // 阶段 2：问题案例匹配（基于历史相似案例引用过的法规打分）
   const runSynonymStage = async (msg: Message) => {
     const stage = msg.stages![1]
     await wait(400)
 
+    // 复用 synonymRows 字段展示"相似案例 → 引用法规"的关联
     stage.synonymRows = []
     const rows = [
-      { from: '合作', to: ['联营', '承包', '外包'] },
-      { from: '营利性', to: ['商业化', '对外经营'] },
-      { from: '科室', to: ['内设科室', '诊室'] }
+      {
+        from: '案例：医院出租科室给私营公司（相似度 0.85）',
+        to: ['医卫法40条', '医疗机构分类管理意见3条']
+      },
+      { from: '案例：公立医院与社会资本合作（相似度 0.72）', to: ['医卫法40条'] },
+      { from: '案例：医院承包科室违规（相似度 0.68）', to: ['医疗机构分类管理意见3条'] }
     ]
     for (const r of rows) {
       stage.synonymRows.push(r)
       await scrollToBottom()
       await wait(180)
     }
-    stage.doneText = '同义词扩展完成（来自同义词表）'
+    stage.doneText = '已找到 3 条相似历史案例，关联法规权重已累加'
     stage.status = 'done'
   }
 
@@ -298,11 +302,9 @@
 
     await tickNumber(stage, 'recallTotal', 8, 60)
     await wait(180)
-    await tickNumber(stage, 'recallAfterLevel', 8, 60)
-    await wait(180)
-    await tickNumber(stage, 'recallAfterTag', 5, 100)
+    await tickNumber(stage, 'recallAfterLevel', 5, 100)
 
-    stage.doneText = '已召回 5 条候选条款（按层级与标签过滤后）'
+    stage.doneText = '已召回 5 条候选条款'
     stage.status = 'done'
   }
 
@@ -314,18 +316,16 @@
     }
   }
 
-  // 阶段 4：多维度打分
+  // 阶段 4：三维度打分
   const runScoreStage = async (msg: Message) => {
     const stage = msg.stages![3]
     await wait(400)
 
     // running 期间逐条进度条增长
     stage.scoreRows = [
-      { name: '关键词匹配', weight: 0.4, percent: 0, targetPercent: 85 },
-      { name: '标签匹配', weight: 0.25, percent: 0, targetPercent: 100 },
-      { name: '法规层级', weight: 0.15, percent: 0, targetPercent: 70 },
-      { name: '颁布年份', weight: 0.1, percent: 0, targetPercent: 83 },
-      { name: '历史采纳率', weight: 0.1, percent: 0, targetPercent: 88 }
+      { name: '关键词匹配', weight: 0.4, percent: 0, targetPercent: 100 },
+      { name: '问题案例匹配', weight: 0.4, percent: 0, targetPercent: 100 },
+      { name: '颁布年份', weight: 0.2, percent: 0, targetPercent: 83 }
     ]
     await scrollToBottom()
 
@@ -337,7 +337,7 @@
       }
       await wait(120)
     }
-    stage.doneText = '5 维度打分完成（综合得分降序排列）'
+    stage.doneText = '3 维度打分完成（综合得分降序排列）'
     stage.status = 'done'
   }
 
@@ -602,13 +602,8 @@
                         <span>条</span>
                       </div>
                       <div class="recall-line sub">
-                        <span>通过法规层级过滤：</span>
+                        <span>关键词命中：</span>
                         <span class="num">{{ stage.recallAfterLevel }}</span>
-                        <span>条</span>
-                      </div>
-                      <div class="recall-line sub">
-                        <span>通过参与标签过滤：</span>
-                        <span class="num">{{ stage.recallAfterTag }}</span>
                         <span>条</span>
                       </div>
                     </div>
