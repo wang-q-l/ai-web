@@ -37,6 +37,14 @@
     internal: 'info'
   }
 
+  // 时效徽章映射
+  const TEMPORAL_TAG: Record<string, { type: 'success' | 'warning' | 'danger'; text: string }> = {
+    valid: { type: 'success', text: '✓ 时效有效' },
+    partial: { type: 'warning', text: '⚠ 时效部分冲突' },
+    'conflict-with-replacement': { type: 'warning', text: '⚠ 时效冲突·有替代' },
+    'conflict-no-replacement': { type: 'danger', text: '⚠ 时效冲突·无替代' }
+  }
+
   // 推荐卡片结构
   interface RecommendCard {
     rank: number
@@ -45,9 +53,22 @@
     articleText: string
     level: string
     year: number
+    /** 法规生效日期，用于时效冲突展示 */
+    effectiveDate?: string
     score: number
     reason: string
     lowConfidence: boolean
+    /** 时效状态：valid / partial / conflict-with-replacement / conflict-no-replacement */
+    temporalStatus?: 'valid' | 'partial' | 'conflict-with-replacement' | 'conflict-no-replacement'
+    /** 部分冲突的分段建议文案 */
+    partialHint?: string
+    /** 时效冲突时的前身法规建议 */
+    predecessors?: {
+      regulationName: string
+      articleNo: string
+      articleText: string
+      effectiveDate: string
+    }[]
   }
 
   // 单条对话消息
@@ -75,6 +96,8 @@
     status: 'pending' | 'running' | 'done'
     // 关键词阶段：chips
     keywordChips?: string[]
+    // 关键词阶段：识别到的问题发生时间（用于时效校验展示）
+    occurrence?: { start: string; end: string; rawText: string }
     // 同义词阶段：扩展行
     synonymRows?: { from: string; to: string[] }[]
     // 召回阶段：数字变化
@@ -260,8 +283,14 @@
       await scrollToBottom()
       await wait(120)
     }
+    // mock：识别到的问题发生时间（实际由 LLM 抽取，本示例硬编码为 2016-2018）
+    stage.occurrence = {
+      start: '2016-01-01',
+      end: '2018-12-31',
+      rawText: '2016-2018年'
+    }
     // 全部填完才标 done
-    stage.doneText = '已识别 6 个关键信息'
+    stage.doneText = '已识别 6 个关键信息 + 问题发生时间'
     stage.status = 'done'
   }
 
@@ -364,9 +393,22 @@
           '政府举办的医疗卫生机构不得与社会资本合作举办营利性医疗卫生机构，不得使用国有资产参与举办营利性医疗卫生机构。',
         level: 'law',
         year: 2020,
+        effectiveDate: '2020-06-01',
         score: 0.82,
         reason: '直接定性：公立医院与社会资本合作设立营利性项目违法',
-        lowConfidence: false
+        lowConfidence: false,
+        // 行为发生于 2016-2018，该法规 2020 年才生效 → 时效冲突
+        // 但其前身《医疗机构分类管理意见》2000 年已生效，可作为替代
+        temporalStatus: 'conflict-with-replacement',
+        predecessors: [
+          {
+            regulationName: '关于城镇医疗机构分类管理的实施意见',
+            articleNo: '第三条第7项',
+            articleText:
+              '非营利性医疗机构不得变相出租、承包科室，不得与社会资本合作举办营利性项目。',
+            effectiveDate: '2000-09-15'
+          }
+        ]
       },
       {
         rank: 2,
@@ -375,9 +417,11 @@
         articleText: '非营利性医疗机构不得变相出租、承包科室，不得与社会资本合作举办营利性项目。',
         level: 'normative',
         year: 2000,
+        effectiveDate: '2000-09-15',
         score: 0.61,
         reason: '细化情形：变相承包科室构成违规',
-        lowConfidence: false
+        lowConfidence: false,
+        temporalStatus: 'valid'
       },
       {
         rank: 3,
@@ -387,9 +431,12 @@
           '行政事业单位应当加强国有资产的日常管理，建立资产清查盘点制度，定期清查盘点，做到账实相符。',
         level: 'admin',
         year: 2021,
+        effectiveDate: '2021-04-01',
         score: 0.45,
         reason: '兜底依据：涉及国有医疗资产合规管理',
-        lowConfidence: true
+        lowConfidence: true,
+        // 行为跨越 2016-2018，该法规 2021 年才生效 → 全程冲突且无前身
+        temporalStatus: 'conflict-no-replacement'
       }
     ]
     msg.cards = []
@@ -412,6 +459,24 @@
       time: formatTime()
     })
     scrollToBottom()
+  }
+
+  // 引用前身法规（时效冲突时的替代）
+  const handleCitePredecessor = (pre: NonNullable<RecommendCard['predecessors']>[number]) => {
+    const text = `《${pre.regulationName}》${pre.articleNo}：${pre.articleText}`
+    emit('cite', text)
+    messages.value.push({
+      id: ++msgSeq,
+      role: 'ai',
+      text: `已为您引用前身法规《${pre.regulationName}》${pre.articleNo}（生效 ${pre.effectiveDate}）`,
+      time: formatTime()
+    })
+    scrollToBottom()
+  }
+
+  // 时效冲突时禁用引用：有替代时必须用前身、无替代时仍可强制引用
+  const isTemporalBlocked = (card: RecommendCard) => {
+    return card.temporalStatus === 'conflict-with-replacement'
   }
 
   // 用户继续提问
@@ -552,7 +617,8 @@
                       (stage.keywordChips?.length ||
                         stage.synonymRows?.length ||
                         stage.recallTotal !== undefined ||
-                        stage.scoreRows?.length)
+                        stage.scoreRows?.length ||
+                        stage.occurrence)
                     "
                     class="stage-detail"
                   >
@@ -569,6 +635,15 @@
                       >
                         {{ kw }}
                       </el-tag>
+                    </div>
+
+                    <!-- 识别到的问题发生时间 -->
+                    <div v-if="stage.key === 'keyword' && stage.occurrence" class="occurrence-row">
+                      <span class="occ-label">📅 发生时间</span>
+                      <span class="occ-period">
+                        {{ stage.occurrence.start }} 至 {{ stage.occurrence.end }}
+                      </span>
+                      <span class="occ-raw">（原文："{{ stage.occurrence.rawText }}"）</span>
                     </div>
 
                     <!-- 同义词扩展 -->
@@ -642,9 +717,63 @@
                       LEVEL_LABEL[card.level]
                     }}</el-tag>
                     <el-tag size="small" type="info">{{ card.year }}</el-tag>
+                    <!-- 时效徽章 -->
+                    <el-tag
+                      v-if="card.temporalStatus && TEMPORAL_TAG[card.temporalStatus]"
+                      size="small"
+                      :type="TEMPORAL_TAG[card.temporalStatus].type"
+                    >
+                      {{ TEMPORAL_TAG[card.temporalStatus].text }}
+                    </el-tag>
                   </div>
-                  <div class="rec-card-no">{{ card.articleNo }}</div>
+                  <div class="rec-card-no">
+                    {{ card.articleNo }}
+                    <span v-if="card.effectiveDate" class="effective-date">
+                      · 生效 {{ card.effectiveDate }}
+                    </span>
+                  </div>
                   <div class="rec-card-text">{{ card.articleText }}</div>
+
+                  <!-- 部分冲突分段建议 -->
+                  <div v-if="card.partialHint" class="rec-temporal-hint warn">
+                    {{ card.partialHint }}
+                  </div>
+
+                  <!-- 时效冲突·无替代 -->
+                  <div
+                    v-if="card.temporalStatus === 'conflict-no-replacement'"
+                    class="rec-temporal-hint danger"
+                  >
+                    ⚠ 行为发生时该法规尚未颁布，且未找到当时生效的同类法规，请审计人员人工判断。
+                  </div>
+
+                  <!-- 时效冲突·有替代：内嵌前身法规 -->
+                  <div v-if="card.predecessors?.length" class="rec-predecessor-block">
+                    <div class="rec-pre-title">
+                      ⚠
+                      行为发生于法规生效之前，依"法不溯及既往"原则不可作为定性依据。建议改用前身法规：
+                    </div>
+                    <div v-for="pre in card.predecessors" :key="pre.articleNo" class="rec-pre-card">
+                      <div class="rec-pre-head">
+                        <span class="rec-pre-name">
+                          《{{ pre.regulationName }}》{{ pre.articleNo }}
+                        </span>
+                        <el-tag size="small" type="success">生效 {{ pre.effectiveDate }}</el-tag>
+                      </div>
+                      <div class="rec-pre-text">{{ pre.articleText }}</div>
+                      <div class="rec-pre-action">
+                        <el-button
+                          type="primary"
+                          size="small"
+                          plain
+                          @click="handleCitePredecessor(pre)"
+                        >
+                          改用此前身法规 →
+                        </el-button>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="rec-card-bottom">
                     <div class="rec-score-wrap">
                       <span class="rec-score-label">综合得分</span>
@@ -661,9 +790,14 @@
                         class="rec-score-bar"
                       />
                     </div>
-                    <el-button type="primary" size="small" @click="handleCite(card)"
+                    <el-button
+                      v-if="!isTemporalBlocked(card)"
+                      type="primary"
+                      size="small"
+                      @click="handleCite(card)"
                       >引用 →</el-button
                     >
+                    <el-button v-else size="small" disabled>时效冲突·不建议引用</el-button>
                   </div>
                   <div v-if="card.reason" class="rec-card-reason">💡 {{ card.reason }}</div>
                   <div v-if="card.lowConfidence" class="rec-card-warn">
@@ -1026,6 +1160,33 @@
     gap: 4px;
   }
 
+  /* 识别到的问题发生时间 */
+  .occurrence-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding: 6px 8px;
+    margin-top: 8px;
+    font-size: 12px;
+    background: var(--el-color-primary-light-9);
+    border-radius: 4px;
+
+    .occ-label {
+      font-weight: 500;
+      color: var(--el-text-color-regular);
+    }
+
+    .occ-period {
+      font-weight: 600;
+      color: var(--el-color-primary);
+    }
+
+    .occ-raw {
+      color: var(--el-text-color-secondary);
+    }
+  }
+
   .kw-tag {
     animation: chip-in 0.25s ease;
   }
@@ -1277,6 +1438,82 @@
     margin-top: 4px;
     font-size: 11px;
     color: var(--el-color-warning);
+  }
+
+  /* 法规生效日期 */
+  .effective-date {
+    margin-left: 6px;
+    font-size: 11px;
+    color: var(--el-text-color-secondary);
+  }
+
+  /* 时效冲突提示 */
+  .rec-temporal-hint {
+    padding: 8px 10px;
+    margin: 8px 0;
+    font-size: 12px;
+    line-height: 1.6;
+    border-radius: 4px;
+
+    &.warn {
+      color: var(--el-color-warning-dark-2);
+      background: var(--el-color-warning-light-9);
+      border-left: 3px solid var(--el-color-warning);
+    }
+
+    &.danger {
+      color: var(--el-color-danger-dark-2);
+      background: var(--el-color-danger-light-9);
+      border-left: 3px solid var(--el-color-danger);
+    }
+  }
+
+  /* 前身法规迷你卡片 */
+  .rec-predecessor-block {
+    padding: 10px 12px;
+    margin: 10px 0;
+    background: var(--el-fill-color-light);
+    border: 1px solid var(--el-color-warning-light-5);
+    border-radius: 6px;
+
+    .rec-pre-title {
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--el-color-warning-dark-2);
+    }
+
+    .rec-pre-card {
+      padding: 8px 10px;
+      margin-top: 6px;
+      background: #fff;
+      border: 1px solid var(--el-border-color-lighter);
+      border-radius: 4px;
+
+      .rec-pre-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .rec-pre-name {
+          font-size: 13px;
+          font-weight: 600;
+        }
+      }
+
+      .rec-pre-text {
+        margin-bottom: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--el-text-color-regular);
+      }
+
+      .rec-pre-action {
+        text-align: right;
+      }
+    }
   }
 
   /* ============ 底部输入 ============ */
