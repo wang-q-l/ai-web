@@ -45,6 +45,16 @@ export const aiAppRoutes: AppRouteRecord = {
         title: 'menus.aiApp.recommendationStrategy',
         keepAlive: true
       }
+    },
+    {
+      // 大模型厂商管理
+      path: '/ai-app/model-provider',
+      name: 'AiAppModelProvider',
+      component: () => import('@/views/ai-app/model-provider/index.vue'),
+      meta: {
+        title: 'menus.aiApp.modelProvider',
+        keepAlive: true
+      }
     }
   ]
 }

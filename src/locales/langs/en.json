@@ -275,7 +275,8 @@
       "title": "AI Apps",
       "intelligentWriting": "Intelligent Writing",
       "regulationRecommend": "Regulation Recommend",
-      "recommendationStrategy": "Recommendation Strategy"
+      "recommendationStrategy": "Recommendation Strategy",
+      "modelProvider": "Model Providers"
     },
     "auditTransfer": {
       "title": "Audit Transfer",

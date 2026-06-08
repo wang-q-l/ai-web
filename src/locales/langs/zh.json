@@ -275,7 +275,8 @@
       "title": "AI 应用",
       "intelligentWriting": "智能撰写",
       "regulationRecommend": "法规推荐",
-      "recommendationStrategy": "法规推荐策略"
+      "recommendationStrategy": "法规推荐策略",
+      "modelProvider": "大模型厂商管理"
     },
     "auditTransfer": {
       "title": "审计移送",
