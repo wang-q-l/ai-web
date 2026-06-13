@@ -2,7 +2,7 @@
   // 问题新增抽屉：静态 UI 骨架，包含字段填写 + 全屏切换 + 暂存/保存/取消按钮
   import { ref, computed } from 'vue'
   import { ElMessage } from 'element-plus'
-  import { FullScreen, DocumentChecked, Close } from '@element-plus/icons-vue'
+  import { FullScreen, DocumentChecked, Close, Reading } from '@element-plus/icons-vue'
 
   // 问题类别下拉选项（静态）
   const CATEGORY_OPTIONS = [
@@ -23,6 +23,8 @@
     'update:open': [val: boolean]
     // 用户点击「法规推荐」按钮，把当前问题表述传给父组件，由父组件打开 AI 助理抽屉
     recommend: [query: string]
+    // 用户点击「引入法规」按钮，由父组件打开法规查询面板
+    'open-regulation-import': []
   }>()
 
   // 抽屉显隐双向绑定
@@ -60,6 +62,11 @@
     }
     // 抛给父组件打开 AI 助理抽屉
     emit('recommend', query)
+  }
+
+  // 引入法规：手动从知识中心法规库挑选条款，无需先填问题表述
+  const handleImportRegulation = () => {
+    emit('open-regulation-import')
   }
 
   // 父组件回填定性依据：追加到末尾，避免覆盖已有内容
@@ -164,6 +171,10 @@
           <div class="label-with-action">
             <span>定性依据</span>
             <el-button type="primary" link @click="handleRegulationRecommend">法规推荐</el-button>
+            <el-button type="primary" link @click="handleImportRegulation">
+              <el-icon><Reading /></el-icon>
+              引入法规
+            </el-button>
           </div>
         </template>
         <el-input

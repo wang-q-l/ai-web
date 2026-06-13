@@ -1,17 +1,20 @@
 <script setup lang="ts">
-  // 法规推荐页面：默认进入即弹出问题新增抽屉，点击「法规推荐」会同时打开左侧 AI 助理抽屉
-  import { ref, onMounted } from 'vue'
+  // 法规推荐页面：默认弹出问题新增抽屉；左侧两个面板（AI 助理 / 引入法规）互斥打开
+  import { ref, onMounted, watch } from 'vue'
   import { Plus } from '@element-plus/icons-vue'
   import ProblemDrawer from './components/ProblemDrawer.vue'
   import AiAssistantDrawer from './components/AiAssistantDrawer.vue'
+  import RegulationImportDrawer from './components/RegulationImportDrawer.vue'
 
   // 抽屉显隐状态
   const drawerOpen = ref(false)
   // AI 助理抽屉
   const aiOpen = ref(false)
+  // 引入法规面板
+  const regulationImportOpen = ref(false)
   // AI 助理初始查询内容
   const aiQuery = ref('')
-  // 问题抽屉组件引用，用于从 AI 助理回填到定性依据
+  // 问题抽屉组件引用，用于从两个左侧面板回填到定性依据
   const problemDrawerRef = ref<InstanceType<typeof ProblemDrawer>>()
 
   // 进入页面默认打开问题抽屉
@@ -30,10 +33,25 @@
     aiOpen.value = true
   }
 
-  // AI 助理用户引用 → 调用问题抽屉的回填方法
+  // 子组件抛出「引入法规」事件 → 打开法规查询面板
+  const handleOpenRegulationImport = () => {
+    regulationImportOpen.value = true
+  }
+
+  // 左侧面板回填定性依据：AI 助理与引入法规共用
   const handleCite = (text: string) => {
     problemDrawerRef.value?.appendQualitativeBasis(text)
   }
+
+  // 互斥：打开 AI 助理时关闭引入法规
+  watch(aiOpen, (val) => {
+    if (val && regulationImportOpen.value) regulationImportOpen.value = false
+  })
+
+  // 互斥：打开引入法规时关闭 AI 助理
+  watch(regulationImportOpen, (val) => {
+    if (val && aiOpen.value) aiOpen.value = false
+  })
 </script>
 
 <template>
@@ -58,10 +76,18 @@
     </el-card>
 
     <!-- 问题新增抽屉 -->
-    <ProblemDrawer ref="problemDrawerRef" v-model:open="drawerOpen" @recommend="handleRecommend" />
+    <ProblemDrawer
+      ref="problemDrawerRef"
+      v-model:open="drawerOpen"
+      @recommend="handleRecommend"
+      @open-regulation-import="handleOpenRegulationImport"
+    />
 
     <!-- 左侧 AI 助理抽屉 -->
     <AiAssistantDrawer v-model:open="aiOpen" :initial-query="aiQuery" @cite="handleCite" />
+
+    <!-- 左侧引入法规面板（与 AI 助理互斥） -->
+    <RegulationImportDrawer v-model:open="regulationImportOpen" @cite="handleCite" />
   </div>
 </template>
 
