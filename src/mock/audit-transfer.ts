@@ -20,9 +20,9 @@ const mockTransfers: AuditTransfer[] = [
     transferName: '关于多人员违规行为的审计移送',
     transferCode: 'YS005',
     issueDate: '2026-05-22',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏南京石油分公司',
     transferType: 2,
-    mainRecipient: '市纪委监委',
+    mainRecipient: '纪委监察部门',
     ccRecipient: '市监察委',
     transferContent:
       '经审计发现，多名相关责任人在项目实施过程中存在违规审批、徇私舞弊等行为，现移送贵单位依规处理。',
@@ -47,9 +47,9 @@ const mockTransfers: AuditTransfer[] = [
     transferName: '关于张某违纪问题的审计移送',
     transferCode: 'YS001',
     issueDate: '2026-05-10',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏无锡石油分公司',
     transferType: 2,
-    mainRecipient: '市纪委监委',
+    mainRecipient: '纪委监察部门',
     ccRecipient: '市委组织部',
     transferContent:
       '经审计发现，张某在担任财务部门负责人期间，存在违规审批、挪用公款等违纪违法行为，涉及金额150万元。根据《审计法》相关规定，现将该问题移送贵单位处理。',
@@ -74,9 +74,9 @@ const mockTransfers: AuditTransfer[] = [
     transferName: '关于采购项目违规问题的审计移送',
     transferCode: 'YS002',
     issueDate: '2026-05-15',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏徐州石油分公司',
     transferType: 1,
-    mainRecipient: '市监察委',
+    mainRecipient: '公安检察机关',
     ccRecipient: '市财政局',
     transferContent:
       '经审计发现，某采购项目存在违规操作、围标串标等问题，涉及金额300万元。根据《审计法》相关规定，现将该问题移送贵单位处理。',
@@ -108,9 +108,9 @@ const mockTransfers: AuditTransfer[] = [
     transferName: '关于王某、李某违纪问题的审计移送',
     transferCode: 'YS003',
     issueDate: '2026-05-20',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏南京石油分公司',
     transferType: 2,
-    mainRecipient: '市纪委监委',
+    mainRecipient: '主管部门',
     transferContent:
       '经审计发现，王某、李某在担任项目负责人期间，存在收受贿赂、滥用职权等违纪违法行为，涉及金额80万元。根据《审计法》相关规定，现将该问题移送贵单位处理。',
     personnelCount: 2,
@@ -125,9 +125,9 @@ const mockTransfers: AuditTransfer[] = [
     transferName: '关于资金挪用问题的审计移送',
     transferCode: 'YS004',
     issueDate: '2026-04-25',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏徐州石油分公司',
     transferType: 1,
-    mainRecipient: '市纪委监委',
+    mainRecipient: '其他',
     ccRecipient: '市财政局',
     transferContent:
       '经审计发现，某项目存在挪用专项资金的问题，涉及金额200万元。根据《审计法》相关规定，现将该问题移送贵单位处理。',
@@ -334,8 +334,13 @@ export const getAuditTransferList = async (params: AuditTransferQuery) => {
   ) {
     filteredData = filteredData.filter((item) => item.transferType === Number(params.transferType))
   }
+  // 主送部门：下拉精确匹配
   if (params.mainRecipient) {
-    filteredData = filteredData.filter((item) => item.mainRecipient.includes(params.mainRecipient!))
+    filteredData = filteredData.filter((item) => item.mainRecipient === params.mainRecipient)
+  }
+  // 责任单位：机构树精确匹配
+  if (params.responsibleUnit) {
+    filteredData = filteredData.filter((item) => item.responsibleUnit === params.responsibleUnit)
   }
   if (
     params.feedbackStatus !== null &&

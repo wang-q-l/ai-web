@@ -2,22 +2,41 @@
   <div class="transfer-list-container">
     <!-- 筛选区域 -->
     <el-form :model="queryParams" inline class="filter-form">
-      <el-form-item label="请输入">
+      <el-form-item label="文书名称">
         <el-input
           v-model="queryParams.transferName"
-          placeholder="请输入"
+          placeholder="请输入文书名称"
           clearable
           style="width: 200px"
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="填报单位">
-        <el-input
+      <el-form-item label="主送部门">
+        <el-select
           v-model="queryParams.mainRecipient"
-          placeholder="请输入"
+          placeholder="请选择"
           clearable
-          style="width: 200px"
-          @keyup.enter="handleQuery"
+          style="width: 180px"
+        >
+          <el-option
+            v-for="item in MAIN_RECIPIENT_OPTIONS"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="责任单位">
+        <el-tree-select
+          v-model="queryParams.responsibleUnit"
+          :data="departmentTreeOptions"
+          :props="{ label: 'name' }"
+          node-key="name"
+          placeholder="请选择"
+          clearable
+          check-strictly
+          :render-after-expand="false"
+          style="width: 180px"
         />
       </el-form-item>
       <el-form-item>
@@ -210,6 +229,7 @@
   import FeedbackDrawer from '@/views/audit-transfer/components/FeedbackDrawer.vue'
   import AnnotationPanel from '@/components/Annotation/AnnotationPanel.vue'
   import type { AnnotationItem } from '@/components/Annotation/types'
+  import { getDepartmentList } from '@/api/organization'
 
   // Props
   interface Props {
@@ -221,10 +241,31 @@
   // 加载状态
   const loading = ref(false)
 
+  // 主送部门字典（与移送维护一致：纪委监察部门 / 公安检察机关 / 主管部门 / 其他）
+  const MAIN_RECIPIENT_OPTIONS = [
+    { label: '纪委监察部门', value: '纪委监察部门' },
+    { label: '公安检察机关', value: '公安检察机关' },
+    { label: '主管部门', value: '主管部门' },
+    { label: '其他', value: '其他' }
+  ]
+
+  // 责任单位机构树（与移送维护抽屉同源）
+  const departmentTreeOptions = ref<any[]>([])
+  const loadDepartmentTree = async () => {
+    try {
+      const res = await getDepartmentList()
+      departmentTreeOptions.value = res.data || []
+    } catch {
+      departmentTreeOptions.value = []
+    }
+  }
+  loadDepartmentTree()
+
   // 查询参数
   const queryParams = ref<AuditTransferQuery>({
     transferName: '',
     mainRecipient: '',
+    responsibleUnit: '',
     page: 1,
     pageSize: 20
   })
@@ -319,6 +360,7 @@
   const handleReset = () => {
     queryParams.value.transferName = ''
     queryParams.value.mainRecipient = ''
+    queryParams.value.responsibleUnit = ''
     queryParams.value.page = 1
     fetchList()
   }

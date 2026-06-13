@@ -32,6 +32,7 @@ export interface AuditTransferQuery {
   transferCode?: string
   transferType?: number | string | null
   mainRecipient?: string
+  responsibleUnit?: string
   feedbackStatus?: number | string | null
   issueDateStart?: string
   issueDateEnd?: string

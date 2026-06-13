@@ -66,9 +66,9 @@ const mockDecisions: AuditDecision[] = [
     issueDate: '2026-04-10',
     involvedAmount: 150.5,
     problemCount: 5,
-    mainRecipient: 'ZK审计部',
+    mainRecipient: '江苏南京石油分公司',
     ccRecipient: '财务部、监察部',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏南京石油分公司',
     rectificationDeadline: '2026-04-30',
     decisionDescription: '经审计发现财务报表存在多处问题，需要整改',
     legalBasis: '《审计法》第三十条',
@@ -117,9 +117,9 @@ const mockDecisions: AuditDecision[] = [
     issueDate: '2026-04-11',
     involvedAmount: 80.0,
     problemCount: 3,
-    mainRecipient: 'ZK审计部',
+    mainRecipient: '江苏无锡石油分公司',
     ccRecipient: '内控部',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏无锡石油分公司',
     rectificationDeadline: '2026-05-15',
     decisionDescription: '内部控制存在缺陷，需要加强管理',
     legalBasis: '《审计法》第三十条',
@@ -150,9 +150,9 @@ const mockDecisions: AuditDecision[] = [
     issueDate: '2026-04-12',
     involvedAmount: 200.0,
     problemCount: 4,
-    mainRecipient: 'ZK审计部',
+    mainRecipient: '江苏徐州石油分公司',
     ccRecipient: '资产管理部、财务部',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏徐州石油分公司',
     rectificationDeadline: '2026-05-20',
     decisionDescription: '资产管理不规范，需要整改',
     legalBasis: '《审计法》第三十条',
@@ -191,9 +191,9 @@ const mockDecisions: AuditDecision[] = [
     issueDate: '2026-04-15',
     involvedAmount: 120.0,
     problemCount: 4,
-    mainRecipient: 'ZK审计部',
+    mainRecipient: '江苏南京石油分公司',
     ccRecipient: '法务部、合规部',
-    responsibleUnit: 'ZK审计部',
+    responsibleUnit: '江苏南京石油分公司',
     rectificationDeadline: '2026-05-30',
     decisionDescription: '经审计发现合规性管理存在多处问题，需要立即整改',
     legalBasis: '《审计法》第三十条、《公司法》第一百四十七条',
@@ -444,6 +444,16 @@ export const getAuditDecisionList = async (params: AuditDecisionQuery) => {
   if (params.decisionCode) {
     filteredDecisions = filteredDecisions.filter((d) =>
       d.decisionCode.includes(params.decisionCode!)
+    )
+  }
+  // 主送部门：下拉精确匹配
+  if (params.mainRecipient) {
+    filteredDecisions = filteredDecisions.filter((d) => d.mainRecipient === params.mainRecipient)
+  }
+  // 责任单位：机构树精确匹配
+  if (params.responsibleUnit) {
+    filteredDecisions = filteredDecisions.filter(
+      (d) => d.responsibleUnit === params.responsibleUnit
     )
   }
   if (params.reviewStatus) {

@@ -3,19 +3,24 @@
     <!-- 筛选区域 -->
     <div class="filter-section">
       <el-form :model="queryParams" inline>
-        <el-form-item label="请输入">
+        <el-form-item label="文书名称">
           <el-input
             v-model="queryParams.decisionName"
-            placeholder="请输入"
+            placeholder="请输入文书名称"
             clearable
             style="width: 200px"
           />
         </el-form-item>
-        <el-form-item label="填报单位">
-          <el-input
-            v-model="queryParams.decisionName"
-            placeholder="请输入"
+        <el-form-item label="主送部门">
+          <el-tree-select
+            v-model="queryParams.mainRecipient"
+            :data="departmentTreeOptions"
+            :props="{ label: 'name' }"
+            node-key="name"
+            placeholder="请选择"
             clearable
+            check-strictly
+            :render-after-expand="false"
             style="width: 200px"
           />
         </el-form-item>
@@ -224,6 +229,7 @@
   import DecisionDrawer from './DecisionDrawer.vue'
   import AnnotationPanel from '@/components/Annotation/AnnotationPanel.vue'
   import type { AnnotationItem } from '@/components/Annotation/types'
+  import { getDepartmentList } from '@/api/organization'
 
   // Props
   const props = defineProps<{
@@ -235,10 +241,23 @@
   // 加载状态
   const loading = ref(false)
 
+  // 主送部门机构树（审计决定的主送部门为机构树选择，与移送维护抽屉同源）
+  const departmentTreeOptions = ref<any[]>([])
+  const loadDepartmentTree = async () => {
+    try {
+      const res = await getDepartmentList()
+      departmentTreeOptions.value = res.data || []
+    } catch {
+      departmentTreeOptions.value = []
+    }
+  }
+  loadDepartmentTree()
+
   // 查询参数
   const queryParams = ref<AuditDecisionQuery>({
     projectId: props.projectId,
     decisionName: '',
+    mainRecipient: '',
     page: 1,
     pageSize: 20
   })
@@ -311,6 +330,7 @@
     queryParams.value = {
       projectId: props.projectId,
       decisionName: '',
+      mainRecipient: '',
       page: 1,
       pageSize: 20
     }

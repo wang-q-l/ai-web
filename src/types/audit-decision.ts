@@ -160,6 +160,8 @@ export interface AuditDecisionQuery {
   projectId?: number | string | null
   decisionName?: string
   decisionCode?: string
+  mainRecipient?: string
+  responsibleUnit?: string
   reviewStatus?: number | string | null
   issueStatus?: number | string | null
   rectificationStatus?: number | string | null

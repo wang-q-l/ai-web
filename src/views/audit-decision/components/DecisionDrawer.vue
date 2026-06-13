@@ -70,7 +70,6 @@
               </div>
 
               <div class="document-notes">
-                <p><strong>抄送：</strong>{{ formData.ccRecipient || '相关部门' }}</p>
                 <p class="print-info"
                   >本决定书一式三份，主送单位一份，抄送单位一份，我部门存档一份。</p
                 >
@@ -218,29 +217,19 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="决定主送部门" prop="mainRecipient" required>
-                  <el-input
+                  <el-tree-select
                     v-model="formData.mainRecipient"
-                    placeholder="请输入决定主送部门"
-                    maxlength="100"
-                    show-word-limit
+                    :data="departmentTreeOptions"
+                    :props="{ label: 'name' }"
+                    node-key="name"
+                    placeholder="请选择决定主送部门"
                     clearable
+                    check-strictly
+                    :render-after-expand="false"
+                    style="width: 100%"
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="决定抄送部门" prop="ccRecipient">
-                  <el-input
-                    v-model="formData.ccRecipient"
-                    placeholder="请输入决定抄送部门"
-                    maxlength="200"
-                    show-word-limit
-                    clearable
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="整改责任单位" prop="responsibleUnit" required>
                   <template #label>
@@ -595,7 +584,6 @@
     decisionCode: '',
     issueDate: '',
     mainRecipient: '',
-    ccRecipient: '',
     responsibleUnit: '',
     rectificationDeadline: '',
     decisionDescription: '',
@@ -609,7 +597,7 @@
     decisionName: [{ required: true, message: '请输入决定文书名称', trigger: 'blur' }],
     decisionCode: [{ required: true, message: '请输入决定文书文号', trigger: 'blur' }],
     issueDate: [{ required: true, message: '请选择文书出具时间', trigger: 'change' }],
-    mainRecipient: [{ required: true, message: '请输入决定主送部门', trigger: 'blur' }],
+    mainRecipient: [{ required: true, message: '请选择决定主送部门', trigger: 'change' }],
     responsibleUnit: [{ required: true, message: '请选择整改责任单位', trigger: 'change' }],
     rectificationDeadline: [{ required: true, message: '请选择整改期限', trigger: 'change' }],
     decisionDescription: [{ required: true, message: '请输入决定信息描述', trigger: 'blur' }],
@@ -663,7 +651,6 @@
         decisionCode: decision.decisionCode,
         issueDate: decision.issueDate,
         mainRecipient: decision.mainRecipient,
-        ccRecipient: decision.ccRecipient,
         responsibleUnit: decision.responsibleUnit,
         rectificationDeadline: decision.rectificationDeadline,
         decisionDescription: decision.decisionDescription,
@@ -698,7 +685,6 @@
       decisionCode: '',
       issueDate: '',
       mainRecipient: '',
-      ccRecipient: '',
       responsibleUnit: '',
       rectificationDeadline: '',
       decisionDescription: '',

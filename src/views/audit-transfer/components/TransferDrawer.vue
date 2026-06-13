@@ -223,12 +223,29 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="主送部门" prop="mainRecipient">
-                  <el-input
+                  <template #label>
+                    <span class="form-label-with-badge">
+                      <span
+                        class="form-label-badge"
+                        @click.stop="mainRecipientTipVisible = !mainRecipientTipVisible"
+                        >3</span
+                      >
+                      主送部门
+                    </span>
+                  </template>
+                  <el-select
                     v-model="formData.mainRecipient"
-                    placeholder="请输入主送部门"
-                    maxlength="100"
-                    show-word-limit
-                  />
+                    placeholder="请选择主送部门"
+                    clearable
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in MAIN_RECIPIENT_OPTIONS"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -397,6 +414,13 @@
         @close="responsibleUnitTipVisible = false"
       />
       <AnnotationPanel
+        v-if="mainRecipientTipVisible"
+        :annotation="mainRecipientAnnotation"
+        :index="3"
+        :edit-mode="false"
+        @close="mainRecipientTipVisible = false"
+      />
+      <AnnotationPanel
         v-if="documentTipVisible"
         :annotation="documentTipAnnotation"
         :index="2"
@@ -464,6 +488,21 @@
     createdAt: '2026-05-28'
   }
 
+  // 主送部门批注（字典维护）
+  const mainRecipientTipVisible = ref(false)
+  const mainRecipientAnnotation: AnnotationItem = {
+    id: 'transfer-main-recipient-tip',
+    type: 'position',
+    selector: '',
+    position: { x: 0, y: 0 },
+    title: '字典维护',
+    content:
+      '主送部门为下拉单选，下拉值来源于字典维护，包括：纪委监察部门、公安检察机关、主管部门、其他。',
+    category: 'rule',
+    source: '',
+    createdAt: '2026-06-10'
+  }
+
   // 打开文书批注
   const documentTipVisible = ref(false)
   const documentTipAnnotation: AnnotationItem = {
@@ -490,6 +529,14 @@
     }
   }
   loadDepartmentTree()
+
+  // 主送部门字典（字典维护：纪委监察部门 / 公安检察机关 / 主管部门 / 其他）
+  const MAIN_RECIPIENT_OPTIONS = [
+    { label: '纪委监察部门', value: '纪委监察部门' },
+    { label: '公安检察机关', value: '公安检察机关' },
+    { label: '主管部门', value: '主管部门' },
+    { label: '其他', value: '其他' }
+  ]
 
   // Props
   interface Props {
