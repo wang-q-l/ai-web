@@ -251,7 +251,9 @@
       "work": "项目作业",
       "items": "审计事项管理",
       "personnelTransfer": "人员变更",
-      "projectRecommendation": "项目推荐助手"
+      "projectRecommendation": "项目推荐助手",
+      "suggestionLibrary": "管理建议库",
+      "suggestionLibraryImport": "从问题清单引入"
     },
     "auditRecommendation": {
       "title": "项目推荐"

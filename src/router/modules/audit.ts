@@ -56,6 +56,16 @@ export const auditRoutes: AppRouteRecord = {
         isHide: true,
         activePath: '/audit'
       }
+    },
+    {
+      // 管理建议库：审计建议的集中管理与复用
+      path: '/audit/suggestion-library',
+      name: 'AuditSuggestionLibrary',
+      component: () => import('@/views/audit/suggestion-library/index.vue'),
+      meta: {
+        title: 'menus.audit.suggestionLibrary',
+        keepAlive: true
+      }
     }
   ]
 }

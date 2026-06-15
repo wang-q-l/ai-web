@@ -251,7 +251,9 @@
       "work": "Project Work",
       "items": "Audit Items Management",
       "personnelTransfer": "Personnel Transfer",
-      "projectRecommendation": "Project Recommendation Assistant"
+      "projectRecommendation": "Project Recommendation Assistant",
+      "suggestionLibrary": "Suggestion Library",
+      "suggestionLibraryImport": "Import from Problems"
     },
     "auditRecommendation": {
       "title": "Project Recommendation"
