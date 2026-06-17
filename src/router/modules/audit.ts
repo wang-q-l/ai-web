@@ -66,6 +66,16 @@ export const auditRoutes: AppRouteRecord = {
         title: 'menus.audit.suggestionLibrary',
         keepAlive: true
       }
+    },
+    {
+      // 报告库：审计报告的集中管理、收藏、预览与从项目引入
+      path: '/audit/report-library',
+      name: 'AuditReportLibrary',
+      component: () => import('@/views/audit/report-library/index.vue'),
+      meta: {
+        title: 'menus.audit.reportLibrary',
+        keepAlive: true
+      }
     }
   ]
 }

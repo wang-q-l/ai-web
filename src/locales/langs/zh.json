@@ -253,7 +253,8 @@
       "personnelTransfer": "人员变更",
       "projectRecommendation": "项目推荐助手",
       "suggestionLibrary": "管理建议库",
-      "suggestionLibraryImport": "从问题清单引入"
+      "suggestionLibraryImport": "从问题清单引入",
+      "reportLibrary": "报告库"
     },
     "auditRecommendation": {
       "title": "项目推荐"

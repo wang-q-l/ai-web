@@ -253,7 +253,8 @@
       "personnelTransfer": "Personnel Transfer",
       "projectRecommendation": "Project Recommendation Assistant",
       "suggestionLibrary": "Suggestion Library",
-      "suggestionLibraryImport": "Import from Problems"
+      "suggestionLibraryImport": "Import from Problems",
+      "reportLibrary": "Report Library"
     },
     "auditRecommendation": {
       "title": "Project Recommendation"
