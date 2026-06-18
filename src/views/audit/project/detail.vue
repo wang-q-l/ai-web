@@ -80,7 +80,14 @@
 
         <!-- 项目成员 -->
         <el-card class="info-card">
-          <template #header>项目成员</template>
+          <template #header>
+            <div class="card-header">
+              <span>项目成员</span>
+              <el-button type="primary" size="small" @click="handleManageMembers">
+                人员管理
+              </el-button>
+            </div>
+          </template>
           <el-table :data="project.members" size="small">
             <el-table-column label="姓名" prop="name" width="100" />
             <el-table-column label="角色" prop="role" width="100" />
@@ -266,6 +273,33 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 人员管理弹窗 -->
+    <MemberManageDialog
+      v-if="project"
+      v-model:visible="memberDialogVisible"
+      :project-id="Number(route.params.id)"
+      :members="project.members"
+      @change="handleChangeMember"
+      @removed="handleMemberRemoved"
+      @open-records="recordDialogVisible = true"
+    />
+
+    <!-- 工作移交向导 -->
+    <WorkTransferWizard
+      v-model:visible="wizardVisible"
+      :project-id="Number(route.params.id)"
+      :from-member="changingMember"
+      :candidates="transferCandidates"
+      :operator-name="operatorName"
+      @success="handleTransferSuccess"
+    />
+
+    <!-- 人员变更记录 -->
+    <TransferRecordDialog
+      v-model:visible="recordDialogVisible"
+      :project-id="Number(route.params.id)"
+    />
   </div>
 </template>
 
@@ -276,7 +310,11 @@
   import { ElMessage } from 'element-plus'
   import { getProjectDetail, getProjectStages, setProjectViewers } from '@/api/audit'
   import { ProjectStatus, StageStatus, OrganizationType } from '@/types/audit'
-  import type { AuditProject, ProjectStage, ProjectViewer } from '@/types/audit'
+  import type { AuditProject, ProjectStage, ProjectViewer, AuditProjectMember } from '@/types/audit'
+  import { useUserStore } from '@/store/modules/user'
+  import MemberManageDialog from './components/MemberManageDialog.vue'
+  import WorkTransferWizard from './components/WorkTransferWizard.vue'
+  import TransferRecordDialog from './components/TransferRecordDialog.vue'
 
   defineOptions({ name: 'AuditProjectDetail' })
 
@@ -430,28 +468,67 @@
     }
   }
 
+  // ---- 人员管理 / 工作移交 ----
+  const userStore = useUserStore()
+  const memberDialogVisible = ref(false)
+  const wizardVisible = ref(false)
+  const recordDialogVisible = ref(false)
+  // 当前正在变更（移交）的成员
+  const changingMember = ref<AuditProjectMember | null>(null)
+
+  // 发起人姓名（当前登录用户）
+  const operatorName = computed(() => userStore.getUserInfo?.nickname || '当前用户')
+
+  // 候选接收人：同项目其他在职成员，排除移出成员本人
+  const transferCandidates = computed<AuditProjectMember[]>(() => {
+    if (!project.value) return []
+    return project.value.members.filter((m) => m.id !== changingMember.value?.id)
+  })
+
+  // 打开人员管理弹窗
+  function handleManageMembers() {
+    memberDialogVisible.value = true
+  }
+
+  // 发起变更：打开工作移交向导
+  function handleChangeMember(member: AuditProjectMember) {
+    changingMember.value = member
+    wizardVisible.value = true
+  }
+
+  // 成员移除成功后刷新
+  function handleMemberRemoved() {
+    loadData()
+  }
+
+  // 移交成功后刷新数据
+  function handleTransferSuccess() {
+    ElMessage.success('工作已移交，可在「人员变更记录」中查看')
+    loadData()
+  }
+
   loadData()
 </script>
 
 <style scoped lang="scss">
   .audit-detail-page {
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    height: 100%;
   }
 
   .breadcrumb-card {
     flex-shrink: 0;
     border: none !important;
-    box-shadow: none !important;
     border-radius: 12px;
+    box-shadow: none !important;
 
     :deep(.el-card__body) {
-      padding: 0 20px;
-      height: 60px;
       display: flex;
       align-items: center;
+      height: 60px;
+      padding: 0 20px;
     }
 
     .breadcrumb-content {
@@ -463,13 +540,13 @@
 
       .breadcrumb-left {
         display: flex;
-        align-items: center;
         gap: 12px;
+        align-items: center;
 
         .el-button {
+          padding: 0;
           font-size: 14px;
           color: #606266;
-          padding: 0;
 
           &:hover {
             color: var(--el-color-primary);
@@ -481,14 +558,14 @@
         }
 
         .divider {
-          color: #dcdfe6;
           font-size: 14px;
+          color: #dcdfe6;
         }
 
         .page-info {
           font-size: 14px;
-          color: #303133;
           font-weight: 500;
+          color: #303133;
         }
       }
     }
@@ -511,8 +588,8 @@
 
   .info-card {
     border: none !important;
-    box-shadow: none !important;
     border-radius: 12px;
+    box-shadow: none !important;
 
     .card-header {
       display: flex;
@@ -534,10 +611,10 @@
 
     .viewer-group {
       .viewer-group-title {
+        margin-bottom: 8px;
         font-size: 14px;
         font-weight: 600;
         color: #303133;
-        margin-bottom: 8px;
       }
 
       .viewer-list {
@@ -579,9 +656,9 @@
 
       .empty-hint {
         padding: 16px;
-        text-align: center;
-        color: #c0c4cc;
         font-size: 13px;
+        color: #c0c4cc;
+        text-align: center;
       }
     }
   }
