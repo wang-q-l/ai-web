@@ -12,9 +12,9 @@
     Search,
     Star,
     StarFilled,
-    View,
     Files,
-    Refresh
+    Refresh,
+    Download
   } from '@element-plus/icons-vue'
   import {
     getCategoryTree,
@@ -53,7 +53,8 @@
     selector: '',
     position: { x: 0, y: 0 },
     title: '报告排序说明',
-    content: '页面数据按创建时间倒序。',
+    content:
+      '页面数据按创建时间倒序。收藏与下载为查看页按钮；列表上方的「只看收藏」开关也仅在查看页显示，维护页不显示。',
     category: 'rule',
     source: '',
     createdAt: '2026-06-15'
@@ -290,6 +291,15 @@
   const handlePreview = (row: Report) => {
     previewReport.value = row
     previewOpen.value = true
+  }
+
+  // 下载报告文件（mock 阶段走 fileUrl 新窗口打开）
+  const handleDownload = (row: Report) => {
+    if (row.fileUrl) {
+      window.open(row.fileUrl, '_blank')
+    } else {
+      ElMessage.warning('该报告暂无可下载文件')
+    }
   }
 
   // ==================== 批量移动 ====================
@@ -545,8 +555,8 @@
 
               <!-- 右侧操作 -->
               <div class="card-actions">
-                <el-button type="primary" link @click="handlePreview(item)">
-                  <el-icon><View /></el-icon>预览
+                <el-button type="primary" link @click="handleDownload(item)">
+                  <el-icon><Download /></el-icon>下载
                 </el-button>
                 <el-button type="primary" link @click="handleEditReport(item)">
                   <el-icon><Edit /></el-icon>编辑
