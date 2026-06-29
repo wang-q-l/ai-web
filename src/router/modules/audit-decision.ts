@@ -34,6 +34,16 @@ export const auditDecisionRoutes: AppRouteRecord = {
         title: '节点配置',
         keepAlive: true
       }
+    },
+    {
+      // 统计报表比对（新增二级菜单）
+      path: '/audit-decision/report-compare',
+      name: 'AuditDecisionReportCompare',
+      component: () => import('@/views/audit-decision/report-compare/index.vue'),
+      meta: {
+        title: '统计报表比对',
+        keepAlive: true
+      }
     }
   ]
 }

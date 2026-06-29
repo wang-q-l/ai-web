@@ -62,6 +62,12 @@ export const staticRoutes: AppRouteRecordRaw[] = [
     meta: { title: '决定详情', isHideTab: false }
   },
   {
+    path: '/audit-decision/report-compare/detail',
+    name: 'AuditDecisionReportCompareDetail',
+    component: () => import('@views/audit-decision/report-compare/compare.vue'),
+    meta: { title: '统计报表比对', isHideTab: false }
+  },
+  {
     path: '/403',
     name: 'Exception403',
     component: () => import('@views/exception/403/index.vue'),
