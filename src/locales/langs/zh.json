@@ -245,6 +245,7 @@
     },
     "audit": {
       "title": "项目管理",
+      "workspace": "成员管理",
       "project": "项目管理",
       "detail": "项目详情",
       "create": "启动项目",

@@ -245,6 +245,7 @@
     },
     "audit": {
       "title": "Project Management",
+      "workspace": "Member Management",
       "project": "Project Management",
       "detail": "Project Detail",
       "create": "Launch Project",
