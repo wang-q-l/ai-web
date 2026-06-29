@@ -1,5 +1,5 @@
 <template>
-  <!-- 人员管理弹窗：按角色行展示项目成员，每行提供「变更/移除」操作，纯权限位保留直接选择 -->
+  <!-- 人员管理弹窗：按角色行展示项目成员，每行提供「变更」操作，纯权限位保留直接选择 -->
   <el-dialog
     :model-value="visible"
     title="人员管理"
@@ -14,7 +14,7 @@
         <el-button link type="primary" @click="emit('open-records')">人员变更记录</el-button>
       </div>
 
-      <!-- 项目成员（含工作归属，走变更/移除流程） -->
+      <!-- 项目成员（含工作归属，通过变更发起工作移交） -->
       <el-table :data="memberRows" border class="mm-table">
         <el-table-column label="角色" prop="role" width="120" />
         <el-table-column label="成员">
@@ -25,10 +25,11 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" align="center">
+        <el-table-column label="操作" width="120">
           <template #default="{ row }">
-            <el-button link type="primary" @click="emit('change', row)">变更</el-button>
-            <el-button link type="danger" @click="handleRemove(row)">移除</el-button>
+            <el-button class="btn-change-member" link type="primary" @click="emit('change', row)">
+              变更
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,10 +64,8 @@
 </template>
 
 <script setup lang="ts">
-  // 人员管理弹窗：变更触发工作移交向导，移除前校验名下未完结工作
+  // 人员管理弹窗：变更触发工作移交向导；纯权限位（收件人）保留直接选择
   import { computed } from 'vue'
-  import { ElMessage, ElMessageBox } from 'element-plus'
-  import { checkMemberWork } from '@/api/audit-management/work-transfer'
   import type { AuditProjectMember } from '@/types/audit'
 
   const props = defineProps<{
@@ -80,8 +79,6 @@
     'update:visible': [v: boolean]
     /** 发起变更（打开工作移交向导） */
     change: [member: AuditProjectMember]
-    /** 移除成功 */
-    removed: [member: AuditProjectMember]
     /** 打开变更记录 */
     'open-records': []
   }>()
@@ -90,31 +87,6 @@
 
   // 单位默认收件人（示例占位，纯权限位）
   const recipientRows = computed(() => [{ unit: 'ZY股份', name: '单位经办人员（ZY股份）' }])
-
-  // 移除成员：先校验名下是否有未完结工作
-  async function handleRemove(member: AuditProjectMember) {
-    const res = await checkMemberWork(props.projectId, member.id)
-    if (res.data.hasUnfinished) {
-      ElMessageBox.alert(
-        `成员「${member.name}」名下尚有未完结的审计事项 / 文书 / 审批，请先通过「变更」完成工作移交后再移除。`,
-        '无法直接移除',
-        { type: 'warning', confirmButtonText: '去移交' }
-      )
-        .then(() => emit('change', member))
-        .catch(() => {})
-      return
-    }
-    ElMessageBox.confirm(`确认将「${member.name}」从项目成员中移除？`, '移除确认', {
-      type: 'warning',
-      confirmButtonText: '确认移除',
-      cancelButtonText: '取消'
-    })
-      .then(() => {
-        ElMessage.success('已移除成员')
-        emit('removed', member)
-      })
-      .catch(() => {})
-  }
 </script>
 
 <style scoped lang="scss">

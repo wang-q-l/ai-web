@@ -281,7 +281,6 @@
       :project-id="Number(route.params.id)"
       :members="project.members"
       @change="handleChangeMember"
-      @removed="handleMemberRemoved"
       @open-records="recordDialogVisible = true"
     />
 
@@ -494,11 +493,6 @@
   function handleChangeMember(member: AuditProjectMember) {
     changingMember.value = member
     wizardVisible.value = true
-  }
-
-  // 成员移除成功后刷新
-  function handleMemberRemoved() {
-    loadData()
   }
 
   // 移交成功后刷新数据
