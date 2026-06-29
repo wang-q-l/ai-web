@@ -39,6 +39,8 @@ jobs:
         run: pnpm build
         env:
           NODE_ENV: production
+          # 抬高 Node 堆上限，避免大型项目在 CI runner 上 terser 压缩阶段 OOM 导致 Build 早退
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
