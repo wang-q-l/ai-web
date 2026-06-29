@@ -62,6 +62,18 @@ export const staticRoutes: AppRouteRecordRaw[] = [
     meta: { title: '决定详情', isHideTab: false }
   },
   {
+    path: '/audit-decision/rectification-unit/report-fill',
+    name: 'RectificationReportFill',
+    component: () => import('@views/audit-decision/rectification-report.vue'),
+    meta: { title: '填报整改', isHideTab: false }
+  },
+  {
+    path: '/audit-decision/rectification-unit/adjustment-detail',
+    name: 'RectificationAdjustmentDetail',
+    component: () => import('@views/audit-decision/adjustment-detail.vue'),
+    meta: { title: '调整申请详情', isHideTab: false }
+  },
+  {
     path: '/audit-decision/report-compare/detail',
     name: 'AuditDecisionReportCompareDetail',
     component: () => import('@views/audit-decision/report-compare/compare.vue'),

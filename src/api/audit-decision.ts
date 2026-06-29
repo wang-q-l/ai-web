@@ -12,7 +12,14 @@ import type {
   RelatedProblem,
   RelatedProblemQuery,
   ReviewRecord,
-  RectificationStatistics
+  RectificationStatistics,
+  RectificationProgressItem,
+  RectificationProgressQuery,
+  RectificationReportDetail,
+  ProblemDetail,
+  RectificationAdjustment,
+  AdjustApprovalRecord,
+  AdjustmentItem
 } from '@/types/audit-decision'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
@@ -263,5 +270,194 @@ export const getAuditedUnitDecisions = (projectId: number) => {
   }
   return request.get<AuditDecision[]>({
     url: `/api/audit-decision/audited-unit/projects/${projectId}/decisions`
+  })
+}
+
+// ==================== 整改进展（整改单位端）====================
+
+/** 获取整改进展列表（整改单位端），支持关键字/整改状态/问题类别筛选与分页 */
+export const getRectificationProgressList = (params: RectificationProgressQuery) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getRectificationProgressList(params))
+  }
+  return request.get<{ list: RectificationProgressItem[]; total: number }>({
+    url: '/api/audit-decision/rectification-unit/progress',
+    params
+  })
+}
+
+// ==================== 填报整改（进展填报，整改单位端）====================
+
+/** 获取填报整改详情（按问题ID），含措施表与整改成效 */
+export const getRectificationReportDetail = (problemId: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getRectificationReportDetail(problemId))
+  }
+  return request.get<RectificationReportDetail>({
+    url: `/api/audit-decision/rectification-unit/report-detail/${problemId}`
+  })
+}
+
+/** 保存填报整改详情 */
+export const saveRectificationReport = (data: RectificationReportDetail) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.saveRectificationReport(data))
+  }
+  return request.post<boolean>({
+    url: '/api/audit-decision/rectification-unit/report-save',
+    data
+  })
+}
+
+/** 获取问题详情（基础信息+整改进展+整改成效+销号结果），用于填报进展页大弹窗 */
+export const getProblemDetail = (problemId: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getProblemDetail(problemId))
+  }
+  return request.get<ProblemDetail>({
+    url: `/api/audit-decision/rectification-unit/problem-detail/${problemId}`
+  })
+}
+
+// ==================== 整改调整（整改单位端）====================
+
+/** 调整申请查询参数（筛选：项目名称关键字 / 状态 / 提交单位） */
+export interface AdjustmentQuery {
+  projectName?: string
+  approvalStatus?: number | null
+  applyUnit?: string
+  page: number
+  pageSize: number
+}
+
+/** 获取可调整问题列表（跨项目，含不可选标记） */
+export const getAdjustableProblems = () => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getAdjustableProblems())
+  }
+  return request.get<{ list: any[] }>({
+    url: '/api/audit-decision/adjustment/adjustable-problems'
+  })
+}
+
+/** 获取调整申请列表（分页 + 筛选） */
+export const getAdjustmentList = (params: AdjustmentQuery) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getAdjustmentList(params))
+  }
+  return request.get<{ list: RectificationAdjustment[]; total: number }>({
+    url: '/api/audit-decision/adjustment/list',
+    params
+  })
+}
+
+/** 获取提交单位选项（用于列表筛选下拉） */
+export const getAdjustmentUnitOptions = () => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getAdjustmentUnitOptions())
+  }
+  return request.get<string[]>({
+    url: '/api/audit-decision/adjustment/unit-options'
+  })
+}
+
+/** 获取调整申请详情 */
+export const getAdjustmentDetail = (id: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getAdjustmentDetail(id))
+  }
+  return request.get<RectificationAdjustment>({
+    url: `/api/audit-decision/adjustment/${id}`
+  })
+}
+
+/** 新增调整申请（草稿或提交，approvalStatus=1 草稿 / 2 提交审批） */
+export const addAdjustment = (data: Partial<RectificationAdjustment>) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.addAdjustment(data))
+  }
+  return request.post<{ id: number }>({
+    url: '/api/audit-decision/adjustment',
+    data
+  })
+}
+
+/** 编辑调整申请 */
+export const updateAdjustment = (id: number, data: Partial<RectificationAdjustment>) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.updateAdjustment(id, data))
+  }
+  return request.put<null>({
+    url: `/api/audit-decision/adjustment/${id}`,
+    data
+  })
+}
+
+/** 撤回调整申请（审批中 → 草稿） */
+export const withdrawAdjustment = (id: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.withdrawAdjustment(id))
+  }
+  return request.post<null>({
+    url: `/api/audit-decision/adjustment/${id}/withdraw`
+  })
+}
+
+/** 提交调整申请（待提交 → 审批中，支持批量） */
+export const submitAdjustment = (ids: number[]) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.submitAdjustment(ids))
+  }
+  return request.post<{ success: number }>({
+    url: '/api/audit-decision/adjustment/submit',
+    data: { ids }
+  })
+}
+
+/** 删除调整申请（仅草稿） */
+export const deleteAdjustment = (id: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.deleteAdjustment(id))
+  }
+  return request.del<null>({
+    url: `/api/audit-decision/adjustment/${id}`
+  })
+}
+
+/** 获取调整申请审批记录 */
+export const getAdjustmentApprovalRecords = (id: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getAdjustmentApprovalRecords(id))
+  }
+  return request.get<AdjustApprovalRecord[]>({
+    url: `/api/audit-decision/adjustment/${id}/approval-records`
+  })
+}
+
+/** 获取待审批的调整申请列表（审批中态） */
+export const getPendingApprovals = () => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getPendingApprovals())
+  }
+  return request.get<{ list: any[] }>({
+    url: '/api/audit-decision/adjustment/pending-approvals'
+  })
+}
+
+/** 提交审批（同意/退回，审批人可附带修改后的时限/措施明细） */
+export const approveAdjustment = (params: {
+  id: number
+  result: '通过' | '驳回'
+  opinion: string
+  approver?: string
+  level?: string
+  items?: AdjustmentItem[]
+}) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.approveAdjustment(params))
+  }
+  return request.post<null>({
+    url: `/api/audit-decision/adjustment/${params.id}/approve`,
+    data: params
   })
 }

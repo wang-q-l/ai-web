@@ -315,3 +315,228 @@ export enum ReviewResult {
   APPROVED = 1, // 通过
   REJECTED = 2 // 不通过
 }
+
+// ==================== 整改进展（整改单位端）====================
+
+/**
+ * 整改进展列表项（整改单位端）
+ * 对应整改进展页表格中的每一条审计问题
+ */
+export interface RectificationProgressItem {
+  id: number
+  problemCode: string // 问题编号，如 ZGXM-2026-0020-zgwt-0003
+  problemTitle: string // 问题标题
+  problemDesc: string // 问题表述
+  legalBasis: string // 定性依据
+  problemType: string // 问题类别
+  // 整改状态：1-未整改，2-整改中，3-已整改
+  rectificationStatus: number
+  // 流程状态：1-未整改，2-整改中，3-已完成
+  processStatus: number
+}
+
+/**
+ * 整改进展查询参数（整改单位端）
+ */
+export interface RectificationProgressQuery {
+  keyword?: string // 编号、问题标题
+  rectificationStatus?: number | null // 整改状态
+  problemType?: string | null // 问题类别
+  page: number
+  pageSize: number
+}
+
+// ==================== 填报整改（进展填报，整改单位端）====================
+
+/**
+ * 整改进展情况——具体措施行
+ */
+export interface RectificationMeasure {
+  id: number
+  measure: string // 具体措施（目标）
+  responsible: string // 措施整改责任人
+  // 措施完成状态：1-未完成，2-进行中，3-已完成；null 表示未选择
+  finishStatus: number | null
+  progressDesc: string // 整改进展情况（≤1000字）
+}
+
+/**
+ * 累计出台、修订制度行
+ */
+export interface SystemRecord {
+  id: number
+  systemName: string // 制度名称
+  improveType: string // 制度完善类型
+  systemFile: string // 制度文件
+  docNo: string // 文号
+  publishDate: string // 发布日期
+}
+
+/**
+ * 累计完善优化业务流程行
+ */
+export interface ProcessRecord {
+  id: number
+  processName: string // 流程名称
+  file: string // 文件
+  publishDate: string // 发布日期
+}
+
+/**
+ * 填报整改详情（单个问题）
+ */
+export interface RectificationReportDetail {
+  problemId: number
+  problemCode: string // 问题编号
+  problemTitle: string // 问题标题
+  // 整改状态：1-未整改，2-正在整改，3-已整改
+  rectificationStatus: number
+  measures: RectificationMeasure[] // 整改进展情况表
+  attachments: string[] // 佐证附件
+  // 整改成效——整改金额（单位：元）
+  correctedAmount: number // 已纠正违纪金
+  recoveredAmount: number // 挽回损失金额
+  auditReducedAmount: number // 工程审减金额
+  otherSavingAmount: number // 其他增收节支
+  systemRecords: SystemRecord[] // 累计出台、修订制度
+  processRecords: ProcessRecord[] // 累计完善优化业务流程
+}
+
+// ==================== 问题详情大弹窗（填报进展页）====================
+
+/**
+ * 整改进展——提交记录行
+ */
+export interface ProblemProgressRecord {
+  id: number
+  seq: number // 提交记录序号
+  completedProgress: string // 完成整改-整改进展
+  ongoingProgress: string // 正在整改-整改进展
+  notRectifiedReason: string // 尚未整改-未整改原因
+  reporter: string // 填报人
+  reportTime: string // 填报时间
+}
+
+/**
+ * 销号结果行
+ */
+export interface CancelResult {
+  id: number
+  checkTime: string // 检查时间
+  checkMethod: string // 检查方式
+  cancelDesc: string // 销号说明
+}
+
+/**
+ * 整改方案——具体措施行
+ */
+export interface ProblemPlanItem {
+  id: number
+  seq: number // 序号
+  measure: string // 具体的措施（目标）
+  planFinishTime: string // 计划完成时间
+  responsible: string // 措施整改责任人
+}
+
+/**
+ * 问题详情（基础信息 + 整改进展 + 整改成效 + 销号结果）
+ */
+export interface ProblemDetail {
+  // 基础信息
+  problemCode: string // 问题编号
+  problemTitle: string // 问题标题
+  problemDesc: string // 问题表述
+  legalBasis: string // 定性依据
+  auditSuggestion: string // 审计建议（意见）
+  problemType: string // 问题类别
+  isAmountType: boolean // 是否金额类问题
+  involvedAmount: number // 涉及金额（万元）
+  rectificationType: string // 整改类型
+  rectificationDeadline: string // 整改时限
+  leadUnit: string // 整改牵头单位
+  belongUnit: string // 问题归属单位
+  // 整改方案
+  planItems: ProblemPlanItem[] // 整改方案措施
+  // 整改进展
+  progressRecords: ProblemProgressRecord[] // 提交记录
+  evidenceCount: number // 佐证材料数量
+  // 整改成效
+  correctedAmount: number // 已纠正违纪金
+  recoveredAmount: number // 挽回损失金额
+  auditReducedAmount: number // 工程审减金额
+  otherSavingAmount: number // 其他增收节支
+  systemRecords: SystemRecord[] // 累计出台、修订制度
+  // 销号结果
+  cancelResults: CancelResult[]
+}
+
+// ==================== 整改调整（整改单位端）====================
+
+/** 整改措施项（原方案快照与新方案共用） */
+export interface AdjustMeasure {
+  id: number
+  measure: string // 具体措施/目标
+  responsible: string // 措施责任人
+  planFinishDate: string // 计划完成时间
+}
+
+/** 审批流转记录 */
+export interface AdjustApprovalRecord {
+  level: string // 审批级别
+  approver: string // 审批人
+  approveTime: string // 审批时间
+  result: '通过' | '驳回' // 审批结果
+  opinion: string // 审批意见
+}
+
+/**
+ * 调整申请问题明细
+ * 一个问题的一次调整，时限/方案可单选也可同时选（adjustTypes 含 1 和/或 2）
+ */
+export interface AdjustmentItem {
+  id: number
+  projectId: number // 所属整改项目（可与同单其他明细不同）
+  projectName: string
+  problemId: number
+  problemCode: string
+  problemTitle: string
+  adjustTypes: number[] // 调整类型集合：1-时限 2-方案，至少一项
+  reason: string // 该明细的调整/延期理由（必填）
+  attachments: AttachmentFile[] // 佐证附件
+  // —— 时限调整：申请前/申请后（adjustTypes 含 1 时填写）——
+  originalDeadline?: string // 申请前·原整改期限（快照）
+  newDeadline?: string // 申请后·新整改期限
+  delayTimes?: number // 该问题历史累计延期次数
+  // —— 方案调整：申请前/申请后（adjustTypes 含 2 时填写）——
+  hasProgress?: boolean // 该问题是否已填报过进展（false 时方案可直接在列表中修改）
+  originalPlanSnapshot?: AdjustMeasure[] // 申请前·原方案快照
+  originalProgressBrief?: string // 申请前·原已填进展概要
+  newPlan?: AdjustMeasure[] // 申请后·新措施清单（未填报进展时直接承载可编辑方案）
+  planAdjustDesc?: string // 方案调整说明
+  archivedProgressId?: number // 归档的原进展版本ID
+}
+
+/**
+ * 调整申请主单
+ * 一次申请可含多个问题、可跨项目，整单走一条审批流
+ */
+export interface RectificationAdjustment {
+  id: number
+  applyCode: string // 申请编号
+  title: string // 标题（自动生成：申请调整X个问题）
+  applyUnit: string // 发起单位
+  applyUser: string // 申请人
+  applySummary?: string // 申请总说明
+  items: AdjustmentItem[] // 问题明细（≥1 条，可跨项目）
+  projectName: string // 涉及项目名称（多个时取首个 + 等，用于列表展示/筛选）
+  projectCount: number // 涉及项目数
+  problemCount: number // 涉及问题数
+  adjustTypeText: string // 调整类型构成（如"时限2/方案1"）
+  approvalStatus: number // 1-草稿 2-审批中 3-已通过 4-已驳回（撤回后回到草稿）
+  approvalRecords?: AdjustApprovalRecord[] // 审批流转记录
+  effected: boolean // 是否已生效
+  effectedAt?: string // 生效时间
+  applyTime: string // 申请时间
+  createdAt: string
+  updatedAt: string
+}

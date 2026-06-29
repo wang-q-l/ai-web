@@ -1,0 +1,30 @@
+{
+  "page": "/audit-decision/rectification-unit/adjustment/list",
+  "title": "调整申请",
+  "updatedAt": "2026-06-29",
+  "annotations": [
+    {
+      "id": "ann-001",
+      "type": "selector",
+      "selector": ".btn-add",
+      "position": { "x": 0, "y": 0 },
+      "offset": { "x": 6, "y": -20 },
+      "title": "调整申请发起说明",
+      "content": "1、整改调整由单位端发起，发起端只能查看自己发起的申请数据；\n2、审计端可查看所有单位发起的数据",
+      "category": "action",
+      "createdAt": "2026-06-29"
+    },
+    {
+      "id": "ann-002",
+      "type": "selector",
+      "selector": ".problem-selector-filter",
+      "container": "modal",
+      "position": { "x": 0, "y": 0 },
+      "offset": { "x": 6, "y": 0 },
+      "title": "问题列表范围说明",
+      "content": "1、问题列表只展示本单位所有整改项目未销号的问题；\n2、具体的列表项根据动态的整改问题表单的内容显示",
+      "category": "rule",
+      "createdAt": "2026-06-29"
+    }
+  ]
+}
