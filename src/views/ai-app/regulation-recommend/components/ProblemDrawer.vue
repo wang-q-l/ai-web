@@ -2,7 +2,7 @@
   // 问题新增抽屉：静态 UI 骨架，包含字段填写 + 全屏切换 + 暂存/保存/取消按钮
   import { ref, computed } from 'vue'
   import { ElMessage } from 'element-plus'
-  import { FullScreen, DocumentChecked, Close, Reading } from '@element-plus/icons-vue'
+  import { FullScreen, DocumentChecked, Close, Reading, Collection } from '@element-plus/icons-vue'
 
   // 问题类别下拉选项（静态）
   const CATEGORY_OPTIONS = [
@@ -25,6 +25,8 @@
     recommend: [query: string]
     // 用户点击「引入法规」按钮，由父组件打开法规查询面板
     'open-regulation-import': []
+    // 用户点击「引用知识中心」按钮，由父组件打开知识引用面板
+    'open-knowledge-cite': []
   }>()
 
   // 抽屉显隐双向绑定
@@ -69,6 +71,11 @@
     emit('open-regulation-import')
   }
 
+  // 引用知识中心：打开知识引用面板（管理建议库 / 典型问题库）
+  const handleOpenKnowledgeCite = () => {
+    emit('open-knowledge-cite')
+  }
+
   // 父组件回填定性依据：追加到末尾，避免覆盖已有内容
   const appendQualitativeBasis = (text: string) => {
     if (!text) return
@@ -80,8 +87,18 @@
     ElMessage.success('已引用至定性依据')
   }
 
+  // 知识引用按目标字段回填：追加到对应字段末尾，不覆盖已有内容
+  const appendToField = (
+    field: 'description' | 'qualitativeBasis' | 'auditAdvice',
+    text: string
+  ) => {
+    if (!text) return
+    const cur = form.value[field]
+    form.value[field] = cur ? `${cur}\n${text}` : text
+  }
+
   // 暴露给父组件调用
-  defineExpose({ appendQualitativeBasis })
+  defineExpose({ appendQualitativeBasis, appendToField })
 
   // 暂存：仅 UI 提示
   const handleSaveDraft = () => {
@@ -114,6 +131,11 @@
       <div class="drawer-header">
         <span class="drawer-title">问题新增</span>
         <div class="drawer-actions">
+          <!-- 知识中心引用入口：打开管理建议库 / 典型问题库引用面板 -->
+          <el-button type="primary" link @click="handleOpenKnowledgeCite">
+            <el-icon><Collection /></el-icon>
+            <span>知识中心引用</span>
+          </el-button>
           <el-button text @click="toggleFullscreen">
             <el-icon><FullScreen /></el-icon>
             <span>{{ isFullscreen ? '退出全屏' : '全屏' }}</span>

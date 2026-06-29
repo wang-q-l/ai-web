@@ -84,6 +84,16 @@ export const deleteSuggestion = (id: string) => {
   return request.del({ url: `/api/suggestion/${id}` })
 }
 
+/** 引用量自增（业务实际选用某条建议时调用，引用量 +1） */
+export const incrementSuggestionUsage = (id: string) => {
+  if (USE_MOCK) {
+    return import('@/mock/suggestion-library').then((m) => m.incrementSuggestionUsage(id))
+  }
+  return request.post<{ id: string; usageCount: number }>({
+    url: `/api/suggestion/${id}/usage`
+  })
+}
+
 /** 批量删除建议 */
 export const batchDeleteSuggestion = (ids: string[]) => {
   if (USE_MOCK) {

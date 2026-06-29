@@ -11,6 +11,7 @@
  * - DELETE /api/suggestion/{id}                       删除建议
  * - POST   /api/suggestion/batch-delete               批量删除
  * - POST   /api/suggestion/batch-move                 批量移动分类
+ * - POST   /api/suggestion/{id}/usage                 引用量自增
  * - GET    /api/audit-project/tree                    项目树（年份→项目）
  * - GET    /api/audit-project/{id}/problems           项目下问题清单
  * - POST   /api/suggestion/check-duplicate            引入预览查重
@@ -496,6 +497,16 @@ export async function getSuggestionList(params: SuggestionListQuery) {
   const list = result.slice(start, start + params.pageSize)
 
   return { code: 200, message: '成功', data: { list, total } }
+}
+
+/** 引用量自增（业务实际选用某条建议时 +1） */
+export async function incrementSuggestionUsage(id: string) {
+  await delay(150)
+  const target = suggestions.find((s) => s.id === id)
+  if (!target) return { code: 404, message: '建议不存在', data: null }
+  // 选用一次，引用量累加
+  target.usageCount += 1
+  return { code: 200, message: '更新成功', data: { id, usageCount: target.usageCount } }
 }
 
 /** 新增建议 */
