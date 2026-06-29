@@ -27,6 +27,8 @@ export interface AnnotationItem {
   createdAt: string
   color?: string // 自定义颜色，不填则按 category 默认色
   container?: AnnotationContainer // 宿主容器，不填默认为 page
+  /** selector 定位时的额外偏移量（像素），用于把标注点从元素左上角推开，避免遮挡 */
+  offset?: { x: number; y: number }
 }
 
 /** 页面标注数据 */

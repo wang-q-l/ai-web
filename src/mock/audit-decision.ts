@@ -1201,7 +1201,8 @@ const mockAdjustableProblems: AdjustableProblemMock[] = [
     projectName: '2026年度财务审计项目',
     originalDeadline: '2026-09-15',
     delayTimes: 0,
-    status: 'in-adjust',
+    // 措施未填报进展、无在途调整，保持可选（用于整改措施填报进展交互）
+    status: 'normal',
     hasProgress: false,
     originalPlan: [
       {

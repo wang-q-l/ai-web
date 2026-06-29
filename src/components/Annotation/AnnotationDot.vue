@@ -77,14 +77,15 @@
       // 页面标注：弹窗或抽屉打开时隐藏
       return !props.modalOpen && !props.drawerOpen
     }
-    if (container.value === 'modal') {
-      // 弹窗标注：只有弹窗打开时显示
-      return props.modalOpen
+    // modal / drawer 容器：
+    // selector 类型的元素仅在对应弹窗/抽屉打开时才存在于 DOM，
+    // 因此「已找到可见元素(selectorPos 有值)」即等价于「容器已打开」，
+    // 直接据此显示，不依赖全局浮层检测时机（更稳健）。
+    if (props.annotation.type === 'selector') {
+      return !!selectorPos.value
     }
-    if (container.value === 'drawer') {
-      // 抽屉标注：只有抽屉打开时显示
-      return props.drawerOpen
-    }
+    if (container.value === 'modal') return props.modalOpen
+    if (container.value === 'drawer') return props.drawerOpen
     return true
   })
 
@@ -96,15 +97,14 @@
    *
    * 目标容器不存在时返回 null，Teleport disabled，标注点不渲染
    */
-  const teleportTarget = computed<string | null>(() => {
-    if (container.value === 'modal') {
-      return document.querySelector('.ant-modal-wrap') ? '.ant-modal-wrap' : null
-    }
-    if (container.value === 'drawer') {
-      return document.querySelector('.ant-drawer-body') ? '.ant-drawer-body' : null
-    }
-    return null // page 容器不需要 teleport
-  })
+  /**
+   * Teleport 目标：统一不 teleport，所有标注点都渲染在全局 overlay 内。
+   * overlay 为 fixed 且 z-index=9980，高于 Ant Design 弹窗(1000) 与 Element Plus 弹窗(2000+)，
+   * 标注点用 fixed + 视口坐标定位，可精准落在目标元素上并浮于弹窗/抽屉之上。
+   * （早期版本曾 teleport 到 .ant-modal-wrap，但依赖 DOM 查询时机，在 Element Plus
+   *  及"抽屉内开弹窗"等嵌套场景下不可靠，故改为统一渲染在 overlay。）
+   */
+  const teleportTarget = computed<string | null>(() => null)
 
   const isDragging = ref(false)
   let hasMoved = false
@@ -160,6 +160,20 @@
 
   // 选择器定位：找到元素后取其屏幕坐标
   const selectorPos = ref<{ x: number; y: number } | null>(null)
+
+  /**
+   * 查找选择器对应的「可见」元素
+   * 同一选择器可能在多个 tab 面板中存在（如各 Tab 都有「接收人」列头），
+   * 隐藏面板的元素 rect 为 0，需跳过，取第一个真正可见的，避免标注点错位到左上角
+   */
+  const findVisible = (selector: string): Element | null => {
+    const els = document.querySelectorAll(selector)
+    for (let i = 0; i < els.length; i++) {
+      const rect = els[i].getBoundingClientRect()
+      if (rect.width > 0 && rect.height > 0) return els[i]
+    }
+    return els[0] || null
+  }
 
   /**
    * 根据 category 和 title 动态推断候选选择器列表
@@ -251,10 +265,14 @@
 
     // 第一步：直接用 selector 查
     if (props.annotation.selector) {
-      const el = document.querySelector(props.annotation.selector)
+      const el = findVisible(props.annotation.selector)
       if (el) {
         const rect = el.getBoundingClientRect()
-        selectorPos.value = { x: rect.left + 8, y: rect.top + 8 }
+        // 默认锚定元素左上角偏内 8px；offset 可把标注点推到元素右侧/下方，避免遮挡
+        const off = props.annotation.offset
+        const baseX = off ? rect.right : rect.left + 8
+        const baseY = off ? rect.top + rect.height / 2 : rect.top + 8
+        selectorPos.value = { x: baseX + (off?.x ?? 0), y: baseY + (off?.y ?? 0) }
         return
       }
       // selector 已显式配置但 DOM 中找不到（例如切换到不含该元素的 tab）：清空位置，不再回退
@@ -302,12 +320,13 @@
     // 选择器定位
     if (props.annotation.type === 'selector' && selectorPos.value) {
       if (isInContainer) {
-        // teleport 到容器内：用 fixed 定位，z-index 高于弹窗内容但低于弹窗遮罩
+        // teleport 到容器内：用 fixed 定位
+        // z-index 取足够高，兼容 Element Plus 弹窗（z-index 2000+）
         return {
           position: 'fixed' as const,
           left: `${selectorPos.value.x - 13}px`,
           top: `${selectorPos.value.y - 13}px`,
-          zIndex: 1100 // 高于 ant-modal(1000) 但合理
+          zIndex: 9999
         }
       }
       return {
@@ -319,7 +338,7 @@
     }
 
     // 手动标注（position 类型）
-    const z = isInContainer ? 1100 : 9990
+    const z = isInContainer ? 9999 : 9990
     return {
       position: 'fixed' as const,
       left: `${props.annotation.position.x - 13}px`,

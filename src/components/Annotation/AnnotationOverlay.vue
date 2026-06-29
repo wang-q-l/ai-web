@@ -231,27 +231,45 @@
   let modalObserver: MutationObserver | null = null
 
   const checkOverlayState = () => {
-    // Ant Design：Modal/Drawer 打开时 body 加 ant-scrolling-effect
-    const hasAntScrolling = document.body.classList.contains('ant-scrolling-effect')
-    // Element Plus：Dialog/Drawer 打开时 body 加 el-popup-parent--hidden
-    const hasElPopup = document.body.classList.contains('el-popup-parent--hidden')
+    // 元素存在且可见（排除 display:none / visibility:hidden / opacity:0 / 0 宽度）
+    const isShown = (el: Element | null): boolean => {
+      if (!el) return false
+      const style = getComputedStyle(el as HTMLElement)
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+        return false
+      }
+      return (el as HTMLElement).getBoundingClientRect().width > 0
+    }
+    const zIndexOf = (el: Element): number => {
+      // Element Plus 的层级 z-index 在 .el-overlay 祖先上，Ant Design 在元素自身
+      const target = (el.closest('.el-overlay') as HTMLElement | null) || (el as HTMLElement)
+      const z = parseInt(getComputedStyle(target).zIndex, 10)
+      return Number.isNaN(z) ? 0 : z
+    }
 
-    const hasAnyOverlay = hasAntScrolling || hasElPopup
+    // 收集所有可见浮层（弹窗 / 抽屉），按 z-index 取最顶层，据此判定当前上下文
+    // 兼容 Ant Design 与 Element Plus；可正确处理"抽屉内打开弹窗"等嵌套场景
+    type Layer = { kind: 'modal' | 'drawer'; z: number }
+    const layers: Layer[] = []
+    const collect = (sel: string, kind: 'modal' | 'drawer') => {
+      document.querySelectorAll(sel).forEach((el) => {
+        if (isShown(el)) layers.push({ kind, z: zIndexOf(el) })
+      })
+    }
+    collect('.ant-modal-wrap', 'modal')
+    collect('.el-overlay-dialog', 'modal')
+    collect('.ant-drawer-open', 'drawer')
+    collect('.el-drawer', 'drawer')
 
-    if (!hasAnyOverlay) {
+    if (layers.length === 0) {
       modalOpen.value = false
       drawerOpen.value = false
       return
     }
-
-    // 进一步区分是 modal 还是 drawer
-    // Ant Design 抽屉：.ant-drawer-open 存在
-    // Element Plus 抽屉：.el-drawer__open 存在
-    drawerOpen.value = !!(
-      document.querySelector('.ant-drawer-open') || document.querySelector('.el-drawer__open')
-    )
-    modalOpen.value = !drawerOpen.value
-    modalOpen.value = !drawerOpen.value // 有 scrolling-effect 但不是 drawer，就是 modal
+    // 取 z-index 最大的浮层为当前激活上下文
+    const top = layers.reduce((a, b) => (b.z >= a.z ? b : a))
+    modalOpen.value = top.kind === 'modal'
+    drawerOpen.value = top.kind === 'drawer'
   }
 
   onMounted(() => {
@@ -259,12 +277,16 @@
     startFabIdleTimer()
     document.addEventListener('click', handleOutsideClick, true)
 
-    // 只监听 body 的 class 变化，ant-scrolling-effect 增删即弹窗开关信号
+    // 监听 body 子树变化：弹窗/抽屉的挂载与卸载（Element Plus teleport 到 body）
+    // 都会增删 body 下的节点，据此实时判断弹窗/抽屉开关状态
     modalObserver = new MutationObserver(checkOverlayState)
     modalObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class', 'style']
     })
+    checkOverlayState()
   })
   onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
