@@ -910,8 +910,12 @@ const mockReportDetails: Record<number, RectificationReportDetail> = {
         id: 2,
         measure: sampleMeasureText,
         responsible: '赵六',
-        finishStatus: null,
-        progressDesc: ''
+        // 措施已完成：状态与进展情况均锁定，回显上一轮填报内容
+        finishStatus: 3,
+        progressDesc:
+          '已完成该措施整改：已加大银行账户资金的监管力度，组织全员法律培训增强法律观念和责任意识，并建立资金使用台账与定期核查机制，确保公共资金安全。相关制度已印发执行。',
+        lastProgressDesc:
+          '已完成该措施整改：已加大银行账户资金的监管力度，组织全员法律培训增强法律观念和责任意识，并建立资金使用台账与定期核查机制，确保公共资金安全。相关制度已印发执行。'
       }
     ],
     attachments: [],

@@ -75,7 +75,13 @@
               <el-table-column prop="responsible" label="措施整改责任人" width="140" />
               <el-table-column label="措施完成状态" width="180">
                 <template #default="{ row }">
-                  <el-select v-model="row.finishStatus" placeholder="请选择" clearable>
+                  <!-- 措施已完成时锁定状态，不可再修改 -->
+                  <el-select
+                    v-model="row.finishStatus"
+                    placeholder="请选择"
+                    clearable
+                    :disabled="row.finishStatus === 3"
+                  >
                     <el-option label="未完成" :value="1" />
                     <el-option label="已完成" :value="3" />
                   </el-select>
@@ -83,6 +89,7 @@
               </el-table-column>
               <el-table-column label="整改进展情况" min-width="320">
                 <template #default="{ row }">
+                  <!-- 措施已完成时回显上一轮填报内容且禁用编辑 -->
                   <el-input
                     v-model="row.progressDesc"
                     type="textarea"
@@ -91,6 +98,7 @@
                     show-word-limit
                     resize="none"
                     placeholder=""
+                    :disabled="row.finishStatus === 3"
                   />
                 </template>
               </el-table-column>
@@ -306,6 +314,12 @@
     try {
       const res = await getRectificationReportDetail(activeProblemId.value)
       Object.assign(form, res.data)
+      // 措施已完成时，进展情况回显上一轮填报内容（若本轮未填）
+      form.measures.forEach((m) => {
+        if (m.finishStatus === 3 && !m.progressDesc && m.lastProgressDesc) {
+          m.progressDesc = m.lastProgressDesc
+        }
+      })
     } catch {
       ElMessage.error('获取填报详情失败')
     } finally {

@@ -358,6 +358,7 @@ export interface RectificationMeasure {
   // 措施完成状态：1-未完成，2-进行中，3-已完成；null 表示未选择
   finishStatus: number | null
   progressDesc: string // 整改进展情况（≤1000字）
+  lastProgressDesc?: string // 上一轮填报的整改进展情况（措施已完成时用于回显）
 }
 
 /**
