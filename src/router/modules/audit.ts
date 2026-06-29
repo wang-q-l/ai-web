@@ -25,6 +25,16 @@ export const auditRoutes: AppRouteRecord = {
       }
     },
     {
+      // 项目工作台：默认主页，承载顶部「项目成员」人员变更交互入口
+      path: '/audit/workspace',
+      name: 'AuditWorkspace',
+      component: () => import('@/views/audit/workspace/index.vue'),
+      meta: {
+        title: 'menus.audit.workspace',
+        keepAlive: true
+      }
+    },
+    {
       path: 'project/detail/:id',
       name: 'AuditProjectDetail',
       component: () => import('@/views/audit/project/detail.vue'),

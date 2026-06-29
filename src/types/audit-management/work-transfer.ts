@@ -42,6 +42,8 @@ export interface WorkTransferItem {
   refId: number
   /** 工作项名称（冗余，便于记录展示） */
   refName: string
+  /** 工作项状态文本（冗余，便于记录展示） */
+  statusText?: string
   /** 接收人ID */
   toMemberId: number
 }
@@ -66,6 +68,8 @@ export interface WorkTransferRecord {
   projectId: number
   /** 移出成员姓名 */
   fromMemberName: string
+  /** 移出成员角色（组长/主审/组员等） */
+  fromMemberRole: string
   /** 移交原因 */
   reason: string
   /** 发起人姓名（组长/主审） */
@@ -84,10 +88,24 @@ export interface WorkTransferReceiver {
   toMemberId: number
   /** 接收人姓名 */
   toMemberName: string
+  /** 接收人角色 */
+  toMemberRole: string
   /** 接收的事项数 */
   itemCount: number
   /** 接收的文书数 */
   documentCount: number
   /** 接收的审批数 */
   approvalCount: number
+  /** 接收的具体工作项明细（用于直观展示交接了哪些数据） */
+  items: WorkTransferDetailItem[]
+}
+
+/** 移交记录中的单条工作项明细 */
+export interface WorkTransferDetailItem {
+  /** 工作项类别 */
+  category: WorkCategory
+  /** 工作项名称 */
+  refName: string
+  /** 工作项状态文本 */
+  statusText: string
 }

@@ -9,6 +9,16 @@
     @closed="handleClosed"
   >
     <div class="wt-wizard" v-loading="loading">
+      <!-- 审批数据不可移交提示：移到抽屉最上方，存在审批数据时显示 -->
+      <el-alert
+        v-if="step === 1 && workload.approvals.length > 0"
+        class="alert-approval-tip"
+        :closable="false"
+        type="warning"
+        show-icon
+        title="审批数据无法移交，需完成审批后再进行人员变更操作。"
+        style="margin-bottom: 16px"
+      />
       <!-- 顶部：移出成员 + 移交原因 -->
       <div class="wt-header">
         <div class="wt-from">
@@ -94,7 +104,7 @@
           :closable="false"
           type="info"
           show-icon
-          title="提交后即时生效：工作项归属立即转移，在途审批将转交接收人继续处理。"
+          title="提交后即时生效，工作项归属立即转移，已完成的工作项默认只读展示归属变更。"
           style="margin-bottom: 16px"
         />
         <div v-for="rc in confirmReceivers" :key="rc.toMemberId" class="wt-receiver">
@@ -127,7 +137,9 @@
     <template #footer>
       <el-button @click="emit('update:visible', false)">取消</el-button>
       <el-button v-if="step === 2" @click="step = 1">上一步</el-button>
-      <el-button v-if="step === 1" type="primary" @click="goConfirm">下一步</el-button>
+      <el-button v-if="step === 1" class="btn-next-step" type="primary" @click="goConfirm">
+        下一步
+      </el-button>
       <el-button v-else type="primary" :loading="submitting" @click="handleSubmit">
         确认移交
       </el-button>
@@ -221,6 +233,11 @@
   // 批量指派：把当前 Tab 勾选项统一指派给批量接收人
   function applyBatch() {
     if (!batchReceiver.value) return
+    // 审批数据不可移交，禁止批量指派
+    if (activeTab.value === 'approval') {
+      ElMessage.warning('审批数据无法移交，需完成审批后再进行人员变更操作')
+      return
+    }
     const rows = selected[activeTab.value]
     if (rows.length === 0) {
       ElMessage.warning('请先在列表中勾选要指派的工作项')
@@ -230,10 +247,8 @@
     ElMessage.success(`已为 ${rows.length} 项指派接收人`)
   }
 
-  // 已勾选总数
-  const selectedCount = computed(
-    () => selected.item.length + selected.document.length + selected.approval.length
-  )
+  // 已勾选总数（审批数据不可移交，不计入）
+  const selectedCount = computed(() => selected.item.length + selected.document.length)
 
   const categoryLabelMap: Record<WorkCategory, string> = {
     item: '审计事项',
@@ -247,12 +262,8 @@
     return c === 'item' ? 'primary' : c === 'document' ? 'success' : 'warning'
   }
 
-  // 全部已指派的工作项（过滤出 assignMap 中有接收人的）
-  const allRows = computed<WorkloadItem[]>(() => [
-    ...workload.items,
-    ...workload.documents,
-    ...workload.approvals
-  ])
+  // 可移交的工作项（审批数据不可移交，排除在外）
+  const allRows = computed<WorkloadItem[]>(() => [...workload.items, ...workload.documents])
 
   // 按接收人维度汇总（确认页用）
   interface ReceiverGroup {
@@ -310,11 +321,13 @@
         category: r.category,
         refId: r.refId,
         refName: r.refName,
+        statusText: r.statusText,
         toMemberId: assignMap[r.refId]
       }))
 
-    const nameMap: Record<number, string> = {}
-    props.candidates.forEach((m) => (nameMap[m.id] = m.name))
+    // 成员ID -> {姓名, 角色} 映射，供移交记录展示原/新角色
+    const memberMap: Record<number, { name: string; role: string }> = {}
+    props.candidates.forEach((m) => (memberMap[m.id] = { name: m.name, role: m.role }))
 
     submitting.value = true
     try {
@@ -326,8 +339,9 @@
           items
         },
         props.fromMember.name,
+        props.fromMember.role,
         props.operatorName,
-        nameMap
+        memberMap
       )
       ElMessage.success('工作移交成功')
       emit('update:visible', false)
