@@ -6,7 +6,8 @@ import type {
   ProcessNode,
   NodeConfigForm,
   ApprovalFlowOption,
-  NodeTypeOption
+  NodeTypeOption,
+  ProgressNodeConfig
 } from '@/types/process-config'
 
 // 模拟接口延迟
@@ -51,6 +52,229 @@ const buildDefaultPermissions = () =>
     canIssue: false,
     canFeedback: false
   }))
+
+// 整改进展默认配置（与图中字段配置一致）
+const buildDefaultProgressConfig = (): ProgressNodeConfig => ({
+  // 问题来源
+  problemSource: ['整改方案'],
+  // 进展提交方式：按项目提交
+  submitMode: 'project',
+  // 非立行立改问题的进展填报频率：整改完成填报
+  reportFrequency: 'onComplete',
+  // 是否需要审批
+  needApproval: false,
+  // 是否需要整改成效（默认需要）
+  needEffect: true,
+  // 未整改字段
+  unrectifiedFields: [
+    {
+      key: 'unrectifiedReason',
+      label: '未整改原因',
+      enabled: true,
+      enabledDisabled: true,
+      displayName: '未整改原因',
+      maxLength: 100,
+      required: true,
+      requiredDisabled: true
+    },
+    {
+      key: 'measureStatus',
+      label: '措施完成状态',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'nextMeasure',
+      label: '下一步整改措施',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'planFinishTime',
+      label: '计划完成时间',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    }
+  ],
+  // 正在整改字段
+  rectifyingFields: [
+    {
+      key: 'progressDesc',
+      label: '整改进展情况',
+      enabled: true,
+      enabledDisabled: true,
+      displayName: '整改进展情况',
+      maxLength: 100,
+      required: true,
+      requiredDisabled: true
+    },
+    {
+      key: 'measureStatus',
+      label: '措施完成状态',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'nextMeasure',
+      label: '下一步整改措施',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'planFinishTime',
+      label: '计划完成时间',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'progressNum',
+      label: '整改进度（数字）',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false,
+      requiredDisabled: true,
+      hasTip: true
+    },
+    {
+      key: 'attachment',
+      label: '佐证附件',
+      enabled: true,
+      enabledDisabled: true,
+      displayName: '佐证附件',
+      maxLength: 100,
+      required: true,
+      requiredDisabled: true
+    }
+  ],
+  // 已整改字段
+  rectifiedFields: [
+    {
+      key: 'progressDesc',
+      label: '整改进展情况',
+      enabled: true,
+      enabledDisabled: true,
+      displayName: '整改进展情况',
+      maxLength: 100,
+      required: true,
+      requiredDisabled: true
+    },
+    {
+      key: 'measureStatus',
+      label: '措施完成状态',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false
+    },
+    {
+      key: 'progressNum',
+      label: '整改进度（数字）',
+      enabled: false,
+      displayName: '',
+      maxLength: 100,
+      required: false,
+      requiredDisabled: true,
+      hasTip: true
+    },
+    {
+      key: 'attachment',
+      label: '佐证附件',
+      enabled: true,
+      enabledDisabled: true,
+      displayName: '佐证附件',
+      maxLength: 100,
+      required: true,
+      requiredDisabled: true
+    }
+  ],
+  // 成效字段（全部勾选且必填）
+  effectFields: [
+    {
+      key: 'correctedAmount',
+      label: '已纠正违纪金（元）',
+      enabled: true,
+      displayName: '已纠正违纪金（元）',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'recoveredAmount',
+      label: '挽回损失金额（元）',
+      enabled: true,
+      displayName: '挽回损失金额（元）',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'auditReduceAmount',
+      label: '工程审减金额（元）',
+      enabled: true,
+      displayName: '工程审减金额（元）',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'otherSaveAmount',
+      label: '其他增收节支（元）',
+      enabled: true,
+      displayName: '其他增收节支（元）',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'totalAmount',
+      label: '合计金额（元）',
+      enabled: true,
+      displayName: '合计金额（元）',
+      maxLength: 100,
+      required: true
+    }
+  ],
+  // 销号方式：自动销号
+  cancelMode: 'auto',
+  // 销号表单设置字段（手动销号时使用）
+  cancelFormFields: [
+    {
+      key: 'checkTime',
+      label: '检查时间',
+      enabled: true,
+      displayName: '检查时间',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'checkMethod',
+      label: '检查方式',
+      enabled: true,
+      displayName: '检查方式',
+      maxLength: 100,
+      required: true
+    },
+    {
+      key: 'cancelDesc',
+      label: '销号说明',
+      enabled: true,
+      displayName: '销号说明',
+      maxLength: 100,
+      required: true
+    }
+  ],
+  // 销号是否需要审批
+  cancelNeedApproval: false
+})
 
 // 模拟初始流程方案数据（与图中保持一致，根节点"整改阶段"，下挂"整改清单/整改方案/整改进展"）
 const mockScheme: ProcessScheme = {
@@ -106,6 +330,31 @@ const mockScheme: ProcessScheme = {
           hasApproval: false,
           approvalFlowId: null,
           hasIssue: false
+        },
+        {
+          id: 103,
+          parentId: 100,
+          name: '整改进展',
+          nodeType: 3,
+          isStage: false,
+          hasCondition: false,
+          // 与图1权限一致：四类角色节点可见，且均勾选"导出列表为excel"
+          permissions: mockRoles.map((r) => ({
+            roleId: r.roleId,
+            roleName: r.roleName,
+            visible: true,
+            canMaintain: false,
+            canCancel: false,
+            canExport: r.roleId !== 5,
+            canSubmit: false,
+            canIssue: false,
+            canFeedback: false
+          })),
+          relatedForms: [],
+          hasApproval: false,
+          approvalFlowId: null,
+          // 整改进展专属配置
+          progressConfig: buildDefaultProgressConfig()
         }
       ]
     }

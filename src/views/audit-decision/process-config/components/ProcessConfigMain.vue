@@ -42,8 +42,18 @@
 
       <!-- 右侧节点配置表单 -->
       <div class="form-area">
+        <!-- 整改进展节点：专属配置表单 -->
+        <ProgressNodeConfigForm
+          v-if="selectedNode && !selectedNode.isStage && selectedNode.nodeType === 3"
+          :key="selectedNode.id"
+          :node="selectedNode"
+          :tree="scheme.tree"
+          :node-type-options="nodeTypeOptions"
+          @update="handleUpdateNode"
+        />
+        <!-- 其他节点：通用配置表单 -->
         <NodeConfigForm
-          v-if="selectedNode && !selectedNode.isStage"
+          v-else-if="selectedNode && !selectedNode.isStage"
           :key="selectedNode.id"
           :node="selectedNode"
           :tree="scheme.tree"
@@ -72,6 +82,7 @@
   import { ArrowLeft, Plus, Calendar, Document } from '@element-plus/icons-vue'
   import ProcessTreePanel from './ProcessTreePanel.vue'
   import NodeConfigForm from './NodeConfigForm.vue'
+  import ProgressNodeConfigForm from './ProgressNodeConfigForm.vue'
   import {
     getProcessScheme,
     saveProcessScheme,

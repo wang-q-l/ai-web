@@ -22,6 +22,56 @@ export interface NodePermission {
   canFeedback: boolean
 }
 
+// 整改进展字段项（未整改/正在整改/已整改/成效/销号表单 中的单行字段配置）
+export interface ProgressFieldItem {
+  // 字段唯一 key
+  key: string
+  // 字段名称（左侧勾选项文案）
+  label: string
+  // 是否启用该字段（左侧复选框）
+  enabled: boolean
+  // 复选框是否禁用（固定字段不可取消勾选）
+  enabledDisabled?: boolean
+  // 显示名（输入框内容）
+  displayName: string
+  // 显示名最大长度
+  maxLength?: number
+  // 是否必填
+  required: boolean
+  // 是否必填单选是否禁用（部分字段固定必填/固定非必填）
+  requiredDisabled?: boolean
+  // 字段名右侧是否带提示图标
+  hasTip?: boolean
+}
+
+// 整改进展节点专属配置
+export interface ProgressNodeConfig {
+  // 问题来源（可多选，存来源名称）
+  problemSource: string[]
+  // 进展提交方式：project=按项目提交 issue=按问题提交
+  submitMode: 'project' | 'issue'
+  // 非立行立改问题的进展填报频率：onComplete=整改完成填报 quarter=每季度填报一次 year=每年填报一次
+  reportFrequency: 'onComplete' | 'quarter' | 'year'
+  // 是否需要审批
+  needApproval: boolean
+  // 是否需要整改成效（默认 true；为 false 时成效字段无需勾选，可隐藏/灰显）
+  needEffect: boolean
+  // 未整改字段
+  unrectifiedFields: ProgressFieldItem[]
+  // 正在整改字段
+  rectifyingFields: ProgressFieldItem[]
+  // 已整改字段
+  rectifiedFields: ProgressFieldItem[]
+  // 成效字段
+  effectFields: ProgressFieldItem[]
+  // 销号方式：auto=自动销号 manual=手动销号
+  cancelMode: 'auto' | 'manual'
+  // 销号表单设置字段（仅手动销号时使用）
+  cancelFormFields: ProgressFieldItem[]
+  // 销号是否需要审批
+  cancelNeedApproval: boolean
+}
+
 // 流程节点
 export interface ProcessNode {
   // 节点 ID（前端临时 ID 或后端 ID）
@@ -46,6 +96,8 @@ export interface ProcessNode {
   approvalFlowId?: number | null
   // 是否下达（仅审计决定类型有效）
   hasIssue?: boolean
+  // 整改进展专属配置（仅 nodeType=3 时有效）
+  progressConfig?: ProgressNodeConfig
   // 子节点
   children?: ProcessNode[]
 }
@@ -77,6 +129,8 @@ export interface NodeConfigForm {
   hasApproval: boolean
   approvalFlowId?: number | null
   hasIssue?: boolean
+  // 整改进展专属配置（仅 nodeType=3 时有效）
+  progressConfig?: ProgressNodeConfig
 }
 
 // 审批流程选项
