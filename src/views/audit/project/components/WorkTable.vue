@@ -20,11 +20,15 @@
         <el-tag size="small" :type="statusTag(row.statusText)" effect="light">
           {{ row.statusText }}
         </el-tag>
-        <!-- 在途审批提示将转交 -->
-        <div v-if="approval && !row.finished" class="wt-transfer-hint">将转交接收人继续处理</div>
       </template>
     </el-table-column>
-    <el-table-column label="接收人" width="200">
+    <!-- 接收人列：审批数据不可移交，故审批 Tab 下不显示该列 -->
+    <el-table-column
+      v-if="!approval"
+      label="接收人"
+      width="200"
+      label-class-name="col-receiver-header"
+    >
       <template #default="{ row }">
         <el-select
           :model-value="modelAssign[row.refId]"
@@ -86,13 +90,6 @@
 <style scoped lang="scss">
   .wt-name {
     color: var(--el-color-primary);
-  }
-
-  // 在途审批的转交提示，弱化展示
-  .wt-transfer-hint {
-    margin-top: 2px;
-    font-size: 11px;
-    color: #e6a23c;
   }
 
   .wt-empty {

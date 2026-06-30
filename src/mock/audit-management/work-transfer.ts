@@ -17,6 +17,53 @@ import type {
 const workloadStore: Record<number, Record<number, MemberWorkload>> = {
   // 项目1（2024年度财务合规审计）成员：1张三(组长) 2李四(主审) 3王五(组员)
   1: {
+    // 张三(组长) 名下工作
+    1: {
+      items: [
+        {
+          refId: 91,
+          category: 'item',
+          refName: '审计方案编制',
+          statusText: '进行中',
+          finished: false
+        },
+        {
+          refId: 92,
+          category: 'item',
+          refName: '审计组工作统筹',
+          statusText: '进行中',
+          finished: false
+        }
+      ],
+      documents: [
+        {
+          refId: 191,
+          category: 'document',
+          refName: '审计实施方案',
+          refCode: 'FA-2024-001',
+          statusText: '审核中',
+          finished: false
+        },
+        {
+          refId: 192,
+          category: 'document',
+          refName: '审计通知书',
+          refCode: 'TZ-2024-001',
+          statusText: '已下达',
+          finished: true
+        }
+      ],
+      approvals: [
+        {
+          refId: 291,
+          category: 'approval',
+          refName: '审计方案审批',
+          refCode: 'SP-2024-001',
+          statusText: '审核中',
+          finished: false
+        }
+      ]
+    },
     // 李四(主审) 名下工作
     2: {
       items: [
@@ -154,12 +201,66 @@ const recordStore: Record<number, WorkTransferRecord[]> = {
       id: 1,
       projectId: 1,
       fromMemberName: '周八',
+      fromMemberRole: '组员',
       reason: '人员离职',
       operatorName: '张三',
       transferTime: '2025-01-05 14:30:00',
       itemCount: 5,
       receivers: [
-        { toMemberId: 2, toMemberName: '李四', itemCount: 2, documentCount: 2, approvalCount: 1 }
+        {
+          toMemberId: 2,
+          toMemberName: '李四',
+          toMemberRole: '主审',
+          itemCount: 2,
+          documentCount: 2,
+          approvalCount: 1,
+          items: [
+            { category: 'item', refName: '往来款项审计', statusText: '进行中' },
+            { category: 'item', refName: '存货监盘', statusText: '已完成' },
+            { category: 'document', refName: '往来款项取证单', statusText: '草稿' },
+            { category: 'document', refName: '存货监盘记录', statusText: '审核中' },
+            { category: 'approval', refName: '往来款项审计决定', statusText: '待下达' }
+          ]
+        }
+      ]
+    },
+    // 多接收人记录：吴九名下工作拆分移交给李四、王五两人
+    {
+      id: 2,
+      projectId: 1,
+      fromMemberName: '吴九',
+      fromMemberRole: '组员',
+      reason: '岗位调动',
+      operatorName: '张三',
+      transferTime: '2025-02-12 09:20:00',
+      itemCount: 6,
+      receivers: [
+        {
+          toMemberId: 2,
+          toMemberName: '李四',
+          toMemberRole: '主审',
+          itemCount: 2,
+          documentCount: 1,
+          approvalCount: 0,
+          items: [
+            { category: 'item', refName: '营业收入审计', statusText: '进行中' },
+            { category: 'item', refName: '成本费用审计', statusText: '待开始' },
+            { category: 'document', refName: '营业收入取证单', statusText: '草稿' }
+          ]
+        },
+        {
+          toMemberId: 3,
+          toMemberName: '王五',
+          toMemberRole: '组员',
+          itemCount: 1,
+          documentCount: 1,
+          approvalCount: 1,
+          items: [
+            { category: 'item', refName: '税费审计', statusText: '进行中' },
+            { category: 'document', refName: '税费核查记录', statusText: '审核中' },
+            { category: 'approval', refName: '税费审计决定', statusText: '审核中' }
+          ]
+        }
       ]
     }
   ]
@@ -187,15 +288,6 @@ export function getMemberWorkloadMock(projectId: number, memberId: number): Memb
     : emptyWorkload()
 }
 
-/**
- * 判断某成员名下是否还有未完结工作（用于移除前校验）
- */
-export function hasUnfinishedWorkMock(projectId: number, memberId: number): boolean {
-  const wl = workloadStore[projectId]?.[memberId]
-  if (!wl) return false
-  return [...wl.items, ...wl.documents, ...wl.approvals].some((i) => !i.finished)
-}
-
 /** 按类别取成员某类工作数组的引用 */
 function pickCategory(wl: MemberWorkload, category: WorkCategory): WorkloadItem[] {
   if (category === 'item') return wl.items
@@ -206,12 +298,14 @@ function pickCategory(wl: MemberWorkload, category: WorkCategory): WorkloadItem[
 /**
  * 提交工作移交（即时生效）
  * 逐项把工作从移出成员迁移到接收人，并生成移交记录
+ * @param memberMap 成员ID -> { name, role } 映射（用于记录展示）
  */
 export function submitWorkTransferMock(
   params: WorkTransferParams,
   fromMemberName: string,
+  fromMemberRole: string,
   operatorName: string,
-  memberNameMap: Record<number, string>
+  memberMap: Record<number, { name: string; role: string }>
 ): WorkTransferRecord {
   const { projectId, fromMemberId, reason, items } = params
   const fromWl = workloadStore[projectId]?.[fromMemberId]
@@ -238,20 +332,29 @@ export function submitWorkTransferMock(
       receiverMap[it.toMemberId] ||
       (receiverMap[it.toMemberId] = {
         toMemberId: it.toMemberId,
-        toMemberName: memberNameMap[it.toMemberId] || '',
+        toMemberName: memberMap[it.toMemberId]?.name || '',
+        toMemberRole: memberMap[it.toMemberId]?.role || '',
         itemCount: 0,
         documentCount: 0,
-        approvalCount: 0
+        approvalCount: 0,
+        items: []
       })
     if (it.category === 'item') r.itemCount++
     else if (it.category === 'document') r.documentCount++
     else r.approvalCount++
+    // 记录具体工作项明细，便于变更记录直观展示交接内容
+    r.items.push({
+      category: it.category,
+      refName: moved.refName,
+      statusText: moved.statusText
+    })
   })
 
   const record: WorkTransferRecord = {
     id: nextRecordId++,
     projectId,
     fromMemberName,
+    fromMemberRole,
     reason,
     operatorName,
     transferTime: new Date().toLocaleString('zh-CN', { hour12: false }),

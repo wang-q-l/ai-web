@@ -1,0 +1,59 @@
+{
+  "page": "/audit/workspace",
+  "title": "成员管理",
+  "updatedAt": "2026-06-25",
+  "annotations": [
+    {
+      "id": "ann-change-member-001",
+      "type": "selector",
+      "selector": ".btn-change-member",
+      "position": { "x": 0, "y": 0 },
+      "title": "变更操作权限说明",
+      "content": "只能由组长 / 主审在项目内对某成员发起变更操作。",
+      "category": "rule",
+      "container": "modal",
+      "offset": { "x": 16, "y": 0 },
+      "source": "用户补充说明",
+      "createdAt": "2026-06-25"
+    },
+    {
+      "id": "ann-receiver-scope-001",
+      "type": "selector",
+      "selector": ".col-receiver-header",
+      "position": { "x": 0, "y": 0 },
+      "title": "接收人范围说明",
+      "content": "接收人须为同项目内的成员。",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": -16, "y": 0 },
+      "source": "用户补充说明",
+      "createdAt": "2026-06-25"
+    },
+    {
+      "id": "ann-next-step-disabled-001",
+      "type": "selector",
+      "selector": ".btn-next-step",
+      "position": { "x": 0, "y": 0 },
+      "title": "下一步按钮置灰规则",
+      "content": "当存在未处理的审批数据时，下一步按钮灰显。",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": -34, "y": -34 },
+      "source": "用户补充说明",
+      "createdAt": "2026-06-25"
+    },
+    {
+      "id": "ann-approval-tip-visible-001",
+      "type": "selector",
+      "selector": ".alert-approval-tip .el-alert__icon",
+      "position": { "x": 0, "y": 0 },
+      "title": "审批提示显示规则",
+      "content": "当审批数据页签下有数据时显示，否则不显示该提示说明。",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": -8, "y": -28 },
+      "source": "用户补充说明",
+      "createdAt": "2026-06-25"
+    }
+  ]
+}
