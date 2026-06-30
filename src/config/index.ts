@@ -96,7 +96,7 @@ const appConfig: SystemConfig = {
   ],
   // 系统主色
   systemMainColor: [
-    '#165DFF',
+    '#1677FF', // Ant Design 5 主蓝(默认主色,生成全站按钮/链接/选中态)
     '#B48DF3',
     '#1D84FF',
     '#60C041',

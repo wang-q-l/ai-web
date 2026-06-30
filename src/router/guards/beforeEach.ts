@@ -26,76 +26,6 @@ const isRouteRegistered = ref(false)
 const pendingLoading = ref(false)
 
 /**
- * 从已注册的路由中构建菜单树
- * 用于 Mock 模式，从 router.getRoutes() 获取完整路径的路由
- */
-function buildMenuTreeFromRoutes(router: Router): AppRouteRecord[] {
-  const allRoutes = router.getRoutes()
-
-  // 静态路由名称列表（不应出现在菜单中的路由）
-  const staticRouteNames = ['Login', 'Exception403', 'Exception404', 'Exception500']
-
-  // 过滤出顶层菜单路由（排除静态路由和根路径）
-  const topLevelRoutes = allRoutes.filter((route) => {
-    // 排除静态路由
-    if (route.name && staticRouteNames.includes(route.name as string)) {
-      return false
-    }
-    // 排除根路径
-    if (route.path === '/') {
-      return false
-    }
-    // 只保留顶层路由（路径以 / 开头且没有父路由，或者是直接子路由）
-    const pathSegments = route.path.split('/').filter(Boolean)
-    return pathSegments.length === 1
-  })
-
-  // 构建路由树结构
-  const menuTree: AppRouteRecord[] = []
-
-  for (const route of topLevelRoutes) {
-    const menuItem = buildMenuItemFromRoute(route, allRoutes)
-    if (menuItem) {
-      menuTree.push(menuItem)
-    }
-  }
-
-  return menuTree
-}
-
-/**
- * 从路由记录构建菜单项
- */
-function buildMenuItemFromRoute(route: any, allRoutes: any[]): AppRouteRecord | null {
-  // 构建基本菜单项
-  const menuItem: AppRouteRecord = {
-    path: route.path,
-    name: route.name,
-    component: route.components?.default,
-    meta: route.meta || {}
-  }
-
-  // 查找子路由
-  const children = allRoutes.filter((r) => {
-    // 子路由的路径应该以父路径开头，且比父路径多一层
-    if (!r.path.startsWith(route.path + '/')) {
-      return false
-    }
-    const relativePath = r.path.substring(route.path.length + 1)
-    // 只取直接子路由（不包含更深层的路由）
-    return !relativePath.includes('/')
-  })
-
-  if (children.length > 0) {
-    menuItem.children = children
-      .map((child) => buildMenuItemFromRoute(child, allRoutes))
-      .filter(Boolean) as AppRouteRecord[]
-  }
-
-  return menuItem
-}
-
-/**
  * 设置路由全局前置守卫
  */
 export function setupBeforeEachGuard(router: Router): void {
@@ -426,15 +356,15 @@ export function resetRouterState(): void {
 function handleRootPathRedirect(to: RouteLocationNormalized, next: NavigationGuardNext): boolean {
   if (to.path === '/') {
     const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
+    const { homePath } = useCommon()
 
-    // Mock 模式：直接跳转到项目打卡
+    // Mock 模式：跳转到默认主页（项目工作台）
     if (USE_MOCK) {
-      next({ path: '/checkin', replace: true })
+      next({ path: homePath.value || '/audit/workspace', replace: true })
       return true
     }
 
     // 非 Mock 模式：使用动态首页路径
-    const { homePath } = useCommon()
     if (homePath.value && homePath.value !== '/') {
       next({ path: homePath.value, replace: true })
       return true

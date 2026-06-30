@@ -3,22 +3,22 @@
 
 :root {
   // 主题色彩 - 定义应用的核心颜色
-  --art-primary: 93, 135, 255; // 主色调 - 蓝色
-  --art-secondary: 73, 190, 255; // 次要色 - 浅蓝色
-  --art-error: 250, 137, 107; // 错误色 - 橙红色
+  --art-primary: 22, 119, 255; // 主色调 - Ant 主蓝
+  --art-secondary: 105, 177, 255; // 次要色 - Ant 浅蓝
+  --art-error: 255, 77, 79; // 错误色 - Ant 红
   --art-info: 107, 125, 155; // 信息色 - 灰蓝色
-  --art-success: 19, 222, 185; // 成功色 - 青绿色
-  --art-warning: 255, 174, 31; // 警告色 - 橙色
-  --art-danger: 255, 77, 79; // 危险色 - 红色
+  --art-success: 82, 196, 26; // 成功色 - Ant 绿
+  --art-warning: 250, 173, 20; // 警告色 - Ant 橙
+  --art-danger: 255, 77, 79; // 危险色 - Ant 红
 
   // 主题背景色 - 用于状态提示的背景色
-  --art-bg-primary: 236, 242, 255; // 主色背景
-  --art-bg-secondary: 232, 247, 255; // 次要色背景
-  --art-bg-success: 230, 255, 250; // 成功状态背景
-  --art-bg-error: 253, 237, 232; // 错误状态背景
+  --art-bg-primary: 230, 244, 255; // 主色背景 - Ant 蓝浅底
+  --art-bg-secondary: 230, 244, 255; // 次要色背景 - Ant 蓝浅底
+  --art-bg-success: 246, 255, 237; // 成功状态背景 - Ant 绿浅底
+  --art-bg-error: 255, 242, 240; // 错误状态背景 - Ant 红浅底
   --art-bg-info: 240, 242, 247; // 信息状态背景
-  --art-bg-warning: 254, 245, 229; // 警告状态背景
-  --art-bg-danger: 253, 237, 232; // 危险状态背景
+  --art-bg-warning: 255, 251, 230; // 警告状态背景 - Ant 橙浅底
+  --art-bg-danger: 255, 242, 240; // 危险状态背景 - Ant 红浅底
 
   --art-hoverColor: 246, 249, 252; // 悬停状态颜色
   --art-grey100: 242, 246, 250; // 灰色调100
@@ -85,13 +85,13 @@
 // 暗黑主题变量 - 当HTML根元素有dark类时生效
 html.dark {
   // 主题色彩 - 暗黑模式下保持相同的主题色
-  --art-primary: 93, 135, 255; // 主色调
-  --art-secondary: 73, 190, 255; // 次要色
-  --art-error: 250, 137, 107; // 错误色
+  --art-primary: 22, 119, 255; // 主色调 - Ant 主蓝
+  --art-secondary: 105, 177, 255; // 次要色 - Ant 浅蓝
+  --art-error: 255, 77, 79; // 错误色 - Ant 红
   --art-info: 107, 125, 155; // 信息色
-  --art-success: 19, 222, 185; // 成功色
-  --art-warning: 255, 174, 31; // 警告色
-  --art-danger: 255, 77, 79; // 危险色
+  --art-success: 82, 196, 26; // 成功色 - Ant 绿
+  --art-warning: 250, 173, 20; // 警告色 - Ant 橙
+  --art-danger: 255, 77, 79; // 危险色 - Ant 红
 
   // 暗黑模式主题背景色 - 适配暗色背景的状态色
   --art-bg-primary: 37, 54, 98; // 主色背景（暗色版）
