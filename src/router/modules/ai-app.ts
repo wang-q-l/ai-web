@@ -17,8 +17,8 @@ export const aiAppRoutes: AppRouteRecord = {
   },
   children: [
     {
-      // 智能撰写（沿用原路径，避免破坏已有书签）
-      path: '/intelligent-writing',
+      // 智能撰写
+      path: '/ai-app/intelligent-writing',
       name: 'IntelligentWriting',
       component: () => import('@/views/intelligent-writing/index.vue'),
       meta: {

@@ -24,9 +24,12 @@
           </div>
         </div>
 
-        <!-- 面包屑 -->
+        <!-- 面包屑（框架二不显示，内容区上方仅保留工作标签页） -->
         <ArtBreadcrumb
-          v-if="(shouldShowBreadcrumb && isLeftMenu) || (shouldShowBreadcrumb && isDualMenu)"
+          v-if="
+            !isFrameworkTwo &&
+            ((shouldShowBreadcrumb && isLeftMenu) || (shouldShowBreadcrumb && isDualMenu))
+          "
         />
 
         <!-- 顶部菜单 -->
@@ -190,6 +193,7 @@
 
   defineOptions({ name: 'ArtHeaderBar' })
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   // 检测操作系统类型
   const isWindows = navigator.userAgent.includes('Windows')
 

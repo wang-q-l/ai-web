@@ -28,10 +28,29 @@
       v-loading="loading"
       height="460"
       row-key="problemId"
-      @select="handleSelect"
-      @select-all="handleSelectAll"
+      :row-class-name="rowClassName"
     >
-      <el-table-column type="selection" :selectable="rowSelectable" width="50" />
+      <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+      <el-table-column label="序号" width="80" align="center">
+        <template #header>
+          <el-checkbox
+            :model-value="allChecked"
+            :indeterminate="isIndeterminate"
+            @change="handleCheckAll"
+          />
+        </template>
+        <template #default="{ row, $index }">
+          <div class="seq-cell">
+            <span class="seq-num">{{ $index + 1 }}</span>
+            <el-checkbox
+              class="seq-check"
+              :model-value="selectedIds.includes(row.problemId)"
+              :disabled="!rowSelectable(row)"
+              @change="(val) => handleCheckRow(row.problemId, !!val)"
+            />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="problemCode" label="问题编号" width="130" />
       <el-table-column prop="problemTitle" label="问题标题" min-width="200" show-overflow-tooltip />
       <el-table-column prop="projectName" label="所属项目" min-width="160" show-overflow-tooltip />
@@ -104,7 +123,14 @@
   const keyword = ref('')
   const filterProjectId = ref<number | null>(null)
   const rawList = ref<AdjustableProblem[]>([])
-  const selectedRows = ref<AdjustableProblem[]>([])
+
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 已勾选的行数据（用于确认提交和计数）
+  const selectedRows = computed(() =>
+    filteredList.value.filter((item) => selectedIds.value.includes(item.problemId))
+  )
 
   // 项目下拉选项（从问题列表去重生成）
   const projectOptions = computed(() => {
@@ -129,6 +155,34 @@
       })
   })
 
+  // 全选态：当前页全部可选行全部勾选时为 true
+  const allChecked = computed(
+    () => filteredList.value.length > 0 && selectedIds.value.length === filteredList.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < filteredList.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? filteredList.value.map((item) => item.problemId) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AdjustableProblem }) => {
+    return selectedIds.value.includes(row.problemId) ? 'row-checked' : ''
+  }
+
   // 当前生效的锁定项目：优先取父级传入，其次取弹窗内已勾选问题的项目
   const activeProjectId = computed<number | null>(() => {
     if (props.lockedProjectId != null) return props.lockedProjectId
@@ -147,7 +201,7 @@
   // 打开弹窗时加载数据
   const handleOpen = async () => {
     loading.value = true
-    selectedRows.value = []
+    selectedIds.value = []
     try {
       const res = await getAdjustableProblems()
       rawList.value = res.data.list as AdjustableProblem[]
@@ -156,16 +210,6 @@
     } finally {
       loading.value = false
     }
-  }
-
-  // 勾选单行
-  const handleSelect = (selection: AdjustableProblem[]) => {
-    selectedRows.value = selection
-  }
-
-  // 全选
-  const handleSelectAll = (selection: AdjustableProblem[]) => {
-    selectedRows.value = selection
   }
 
   // 确认选择
@@ -209,6 +253,39 @@
     .selected-count {
       font-size: 13px;
       color: #909399;
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

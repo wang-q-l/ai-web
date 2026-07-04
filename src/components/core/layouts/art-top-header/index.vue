@@ -5,7 +5,11 @@
       <!-- 左侧：系统Logo和标题 -->
       <div class="header-left">
         <div class="top-header" @click="toHome">
-          <ArtLogo class="logo" />
+          <!-- 九宫格应用图标块（对齐截图最左侧白色方点） -->
+          <div class="app-grid-icon">
+            <span v-for="n in 4" :key="n"></span>
+          </div>
+          <span class="title-divider"></span>
           <p>{{ AppConfig.systemInfo.name }}</p>
         </div>
 
@@ -20,82 +24,46 @@
         <ArtMixedMenu v-if="isTopLeftMenu" :list="menuList" class="framework-two-mixed-menu" />
       </div>
 
-      <!-- 右侧：工具栏 (从 ArtHeaderBar 复制) -->
+      <!-- 右侧：工具栏（按截图复刻：待办中心 / 消息 / 传输 / 机构下拉 / 用户） -->
       <div class="header-right">
-        <!-- 搜索 -->
-        <div class="search-wrap" v-if="shouldShowGlobalSearch">
-          <div class="search-input" @click="openSearchDialog">
-            <div class="left">
-              <i class="iconfont-sys">&#xe710;</i>
-              <span>{{ $t('topBar.search.title') }}</span>
-            </div>
-            <div class="search-keydown">
-              <i class="iconfont-sys" v-if="isWindows">&#xeeac;</i>
-              <i class="iconfont-sys" v-else>&#xe9ab;</i>
-              <span>k</span>
-            </div>
-          </div>
+        <!-- 待办中心（带未读角标） -->
+        <div class="entry-item" @click="toHome">
+          <ElBadge :value="22" :max="99" class="entry-badge">
+            <i class="iconfont-sys">&#xe6e9;</i>
+          </ElBadge>
+          <span class="entry-text">待办中心</span>
         </div>
 
-        <!-- 全屏按钮 -->
-        <div class="btn-box screen-box" v-if="shouldShowFullscreen" @click="toggleFullScreen">
-          <div
-            class="btn"
-            :class="{ 'full-screen-btn': !isFullscreen, 'exit-full-screen-btn': isFullscreen }"
-          >
-            <i class="iconfont-sys">{{ isFullscreen ? '&#xe62d;' : '&#xe8ce;' }}</i>
-          </div>
+        <!-- 消息 -->
+        <div class="entry-item" @click="toHome">
+          <i class="iconfont-sys">&#xe6c3;</i>
+          <span class="entry-text">消息</span>
         </div>
 
-        <!-- 语言 -->
-        <div class="btn-box" v-if="shouldShowLanguage">
-          <ElDropdown @command="changeLanguage" popper-class="langDropDownStyle">
-            <div class="btn language-btn">
-              <i class="iconfont-sys">&#xe611;</i>
+        <!-- 传输 -->
+        <div class="entry-item" @click="toHome">
+          <i class="iconfont-sys">&#xe70d;</i>
+          <span class="entry-text">传输</span>
+        </div>
+
+        <!-- 机构 / 主体下拉切换 -->
+        <div class="org-select">
+          <ElDropdown trigger="click" popper-class="org-dropdown-popper">
+            <div class="org-select-inner">
+              <span class="org-name">{{ currentOrg }}</span>
+              <i class="iconfont-sys arrow">&#xe625;</i>
             </div>
             <template #dropdown>
               <ElDropdownMenu>
-                <div v-for="item in languageOptions" :key="item.value" class="lang-btn-item">
-                  <ElDropdownItem
-                    :command="item.value"
-                    :class="{ 'is-selected': locale === item.value }"
-                  >
-                    <span class="menu-txt">{{ item.label }}</span>
-                    <i v-if="locale === item.value" class="iconfont-sys">&#xe621;</i>
-                  </ElDropdownItem>
-                </div>
+                <ElDropdownItem v-for="org in orgOptions" :key="org" @click="currentOrg = org">
+                  {{ org }}
+                </ElDropdownItem>
               </ElDropdownMenu>
             </template>
           </ElDropdown>
         </div>
 
-        <!-- 设置 -->
-        <div class="btn-box" v-if="shouldShowSettings" @click="openSetting">
-          <ElPopover :visible="showSettingGuide" placement="bottom-start" :width="190" :offset="0">
-            <template #reference>
-              <div class="btn setting-btn">
-                <i class="iconfont-sys">&#xe6d0;</i>
-              </div>
-            </template>
-            <template #default>
-              <p
-                >{{ $t('topBar.guide.title')
-                }}<span :style="{ color: systemThemeColor }"> {{ $t('topBar.guide.theme') }} </span
-                >、 <span :style="{ color: systemThemeColor }"> {{ $t('topBar.guide.menu') }} </span
-                >{{ $t('topBar.guide.description') }}</p
-              >
-            </template>
-          </ElPopover>
-        </div>
-
-        <!-- 切换主题 -->
-        <div class="btn-box" v-if="shouldShowThemeToggle" @click="themeAnimation">
-          <div class="btn theme-btn">
-            <i class="iconfont-sys">{{ isDark ? '&#xe6b5;' : '&#xe725;' }}</i>
-          </div>
-        </div>
-
-        <!-- 用户头像、菜单 -->
+        <!-- 用户头像、姓名、菜单 -->
         <div class="user">
           <ElPopover
             ref="userMenuPopover"
@@ -108,7 +76,10 @@
             popper-class="user-menu-popover"
           >
             <template #reference>
-              <img class="cover" src="@imgs/user/avatar.webp" alt="avatar" />
+              <div class="user-inner">
+                <img class="cover" src="@imgs/user/avatar.webp" alt="avatar" />
+                <span class="user-name">{{ userInfo.username || '王-W' }}</span>
+              </div>
             </template>
             <template #default>
               <div class="user-menu-box">
@@ -137,6 +108,7 @@
 </template>
 
 <script setup lang="ts">
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   import { ref, computed } from 'vue'
   import { useI18n } from 'vue-i18n'
   import { useRouter } from 'vue-router'
@@ -187,6 +159,10 @@
   // 本地状态
   const showNotice = ref(false)
   const userMenuPopover = ref()
+
+  // 机构 / 审计主体切换（静态展示，无真实业务接口）
+  const orgOptions = ['ZY股份——总部审计部', 'ZK科技——审计部', '马尾造船厂——审计部']
+  const currentOrg = ref(orgOptions[0])
 
   // 全屏相关
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen()
@@ -273,61 +249,94 @@
   .art-top-header {
     width: 100%;
     height: 60px;
+    // 蓝色渐变 + 淡科技线条纹理（纯 CSS，无需图片资源）
     background-color: var(--el-color-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-image:
+      // 右侧淡色电路/线条纹理
+
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='60' viewBox='0 0 400 60'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.08' stroke-width='1'%3E%3Cpath d='M0 15 H120 L140 30 H260 M300 8 H400 M180 50 H400 M60 45 H160 L180 30'/%3E%3Ccircle cx='140' cy='30' r='3'/%3E%3Ccircle cx='180' cy='30' r='3'/%3E%3Ccircle cx='300' cy='8' r='2.5'/%3E%3C/g%3E%3C/svg%3E"),
+      linear-gradient(90deg, #1677ff 0%, #2b7fff 55%, #3b8cff 100%);
+    background-repeat: no-repeat, no-repeat;
+    background-position:
+      right center,
+      center;
+    background-size:
+      auto 100%,
+      100% 100%;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 
     .header-container {
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      height: 100%;
       padding: 0 20px;
     }
 
     .header-left {
       display: flex;
-      align-items: center;
       flex: 1;
+      align-items: center;
       min-width: 0;
       overflow: hidden;
 
       .top-header {
         display: flex;
+        flex-shrink: 0;
+        gap: 10px;
         align-items: center;
-        gap: 12px;
         cursor: pointer;
         transition: opacity 0.3s;
-        flex-shrink: 0;
 
         &:hover {
-          opacity: 0.8;
+          opacity: 0.85;
         }
 
-        .logo {
-          width: 32px;
-          height: 32px;
+        // 九宫格应用图标块（2x2 白色圆点）
+        .app-grid-icon {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 3px;
+          width: 22px;
+          height: 22px;
+
+          span {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+          }
+        }
+
+        // Logo 与标题之间的竖线分隔
+        .title-divider {
+          width: 1px;
+          height: 22px;
+          background: rgb(255 255 255 / 35%);
         }
 
         p {
+          margin: 0;
           font-size: 18px;
           font-weight: 600;
-          color: #ffffff;
+          color: #fff;
+          letter-spacing: 1px;
           white-space: nowrap;
-          margin: 0;
         }
       }
 
       .framework-two-horizontal-menu {
         flex: 1;
+        max-width: calc(100% - 200px); // 限制最大宽度，为右侧工具栏留出空间
         margin-left: 20px;
         overflow: hidden;
-        max-width: calc(100% - 200px); // 限制最大宽度，为右侧工具栏留出空间
 
         // 通过 CSS 变量覆盖水平菜单的颜色
-        --el-menu-text-color: rgba(255, 255, 255, 0.85);
-        --el-menu-hover-text-color: #ffffff;
-        --el-menu-active-color: #ffffff;
-        --el-menu-hover-bg-color: rgba(255, 255, 255, 0.1);
+        --el-menu-text-color: rgb(255 255 255 / 85%);
+        --el-menu-hover-text-color: #fff;
+        --el-menu-active-color: #fff;
+        --el-menu-hover-bg-color: rgb(255 255 255 / 10%);
 
         :deep(.el-menu) {
           background-color: transparent !important;
@@ -335,41 +344,41 @@
         }
 
         :deep(.el-menu-item) {
-          color: rgba(255, 255, 255, 0.85) !important;
+          color: rgb(255 255 255 / 85%) !important;
           border-bottom: 2px solid transparent !important;
 
           &:hover {
-            color: #ffffff !important;
+            color: #fff !important;
             background-color: transparent !important;
           }
 
           &.is-active {
-            color: #ffffff !important;
+            color: #fff !important;
+            background-color: rgb(255 255 255 / 15%) !important;
             border-bottom-color: transparent !important;
-            background-color: rgba(255, 255, 255, 0.15) !important;
           }
         }
 
         :deep(.el-sub-menu__title) {
-          color: rgba(255, 255, 255, 0.85) !important;
-          border-bottom: 2px solid transparent !important;
           padding: 0 30px 0 10px !important;
+          color: rgb(255 255 255 / 85%) !important;
           border: 0 !important;
+          border-bottom: 2px solid transparent !important;
 
           &:hover {
-            color: #ffffff !important;
+            color: #fff !important;
             background-color: transparent !important;
           }
         }
 
         :deep(.el-sub-menu.is-active .el-sub-menu__title) {
-          color: #ffffff !important;
+          color: #fff !important;
+          background-color: rgb(255 255 255 / 15%) !important;
           border-bottom-color: transparent !important;
-          background-color: rgba(255, 255, 255, 0.15) !important;
         }
 
         :deep(.el-icon) {
-          color: rgba(255, 255, 255, 0.85) !important;
+          color: rgb(255 255 255 / 85%) !important;
         }
       }
 
@@ -379,44 +388,53 @@
         overflow: hidden;
 
         // 通过 CSS 变量覆盖混合菜单的颜色
-        --main-color: #ffffff;
-        --main-bg-color: rgba(255, 255, 255, 0.15);
-        --art-text-gray-600: rgba(255, 255, 255, 0.85);
-        --art-text-gray-700: rgba(255, 255, 255, 0.85);
-        --art-text-gray-900: #ffffff;
+        --main-color: #fff;
+        --main-bg-color: rgb(255 255 255 / 15%);
+        --art-text-gray-600: rgb(255 255 255 / 85%);
+        --art-text-gray-700: rgb(255 255 255 / 85%);
+        --art-text-gray-900: #fff;
         --art-gray-200-rgb: 255, 255, 255;
 
         :deep(.mixed-top-menu) {
           .scroll-bar {
             .item {
-              color: rgba(255, 255, 255, 0.85) !important;
+              color: rgb(255 255 255 / 85%) !important;
 
               i {
-                color: rgba(255, 255, 255, 0.85) !important;
+                color: rgb(255 255 255 / 85%) !important;
               }
 
               &:hover {
-                color: #ffffff !important;
+                color: #fff !important;
                 background-color: transparent !important;
               }
 
               &.active {
-                color: #ffffff !important;
-                background-color: rgba(255, 255, 255, 0.15) !important;
+                position: relative;
+                color: #fff !important;
+                background-color: transparent !important;
 
+                // 激活态：底部白色下划线指示条（对齐截图）
                 &::after {
-                  background-color: transparent !important;
+                  position: absolute !important;
+                  right: 10px !important;
+                  bottom: -2px !important;
+                  left: 10px !important;
+                  height: 3px !important;
+                  content: '' !important;
+                  background-color: #fff !important;
+                  border-radius: 2px 2px 0 0 !important;
                 }
               }
             }
           }
 
           .scroll-btn {
-            color: rgba(255, 255, 255, 0.85) !important;
+            color: rgb(255 255 255 / 85%) !important;
 
             &:hover {
-              color: #ffffff !important;
-              background-color: rgba(255, 255, 255, 0.1) !important;
+              color: #fff !important;
+              background-color: rgb(255 255 255 / 10%) !important;
             }
           }
         }
@@ -425,109 +443,118 @@
 
     .header-right {
       display: flex;
-      align-items: center;
-      gap: 8px;
       flex-shrink: 0;
+      gap: 4px;
+      align-items: center;
 
-      .search-wrap {
-        margin-right: 8px;
+      // 待办中心 / 消息 / 传输 入口按钮
+      .entry-item {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        height: 36px;
+        padding: 0 10px;
+        color: rgb(255 255 255 / 92%);
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.3s;
 
-        .search-input {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          min-width: 180px;
-          height: 36px;
-          padding: 0 12px;
-          background: rgba(255, 255, 255, 0.15);
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.3s;
+        &:hover {
+          background: rgb(255 255 255 / 15%);
+        }
 
-          &:hover {
-            background: rgba(255, 255, 255, 0.25);
-          }
+        i {
+          font-size: 18px;
+          color: #fff;
+        }
 
-          .left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .entry-text {
+          font-size: 14px;
+          white-space: nowrap;
+        }
 
-            i {
-              color: #ffffff;
-              font-size: 16px;
-            }
+        // 角标定位在图标右上角
+        .entry-badge {
+          line-height: 1;
 
-            span {
-              color: #ffffff;
-              font-size: 14px;
-            }
-          }
-
-          .search-keydown {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-
-            i,
-            span {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-width: 20px;
-              height: 20px;
-              padding: 0 4px;
-              background: rgba(255, 255, 255, 0.2);
-              border-radius: 4px;
-              color: #ffffff;
-              font-size: 12px;
-              font-style: normal;
-            }
+          :deep(.el-badge__content) {
+            border: none;
           }
         }
       }
 
-      .btn-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      // 机构 / 审计主体下拉
+      .org-select {
+        margin: 0 4px 0 8px;
 
-        .btn {
-          width: 36px;
-          height: 36px;
+        .org-select-inner {
           display: flex;
+          gap: 6px;
           align-items: center;
-          justify-content: center;
-          border-radius: 6px;
+          max-width: 200px;
+          height: 32px;
+          padding: 0 10px;
           cursor: pointer;
-          transition: all 0.3s;
+          background: rgb(255 255 255 / 15%);
+          border: 1px solid rgb(255 255 255 / 25%);
+          border-radius: 4px;
+          transition: background 0.3s;
 
           &:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgb(255 255 255 / 25%);
           }
 
-          i {
-            color: #ffffff;
-            font-size: 18px;
+          .org-name {
+            overflow: hidden;
+            font-size: 13px;
+            color: #fff;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .arrow {
+            font-size: 12px;
+            color: rgb(255 255 255 / 85%);
           }
         }
       }
 
       .user {
-        margin-left: 8px;
+        display: flex;
+        align-items: center;
+        margin-left: 4px;
         cursor: pointer;
 
-        .cover {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          transition: all 0.3s;
+        .user-inner {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          height: 40px;
+          padding: 0 8px;
+          border-radius: 6px;
+          transition: background 0.3s;
 
           &:hover {
-            border-color: rgba(255, 255, 255, 0.6);
+            background: rgb(255 255 255 / 15%);
           }
+        }
+
+        .cover {
+          width: 32px;
+          height: 32px;
+          object-fit: cover;
+          border: 2px solid rgb(255 255 255 / 40%);
+          border-radius: 50%;
+          transition: all 0.3s;
+        }
+
+        .user-name {
+          max-width: 80px;
+          overflow: hidden;
+          font-size: 14px;
+          color: #fff;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
@@ -539,31 +566,31 @@
 
       .framework-two-horizontal-menu {
         :deep(.el-menu-item) {
-          color: rgba(255, 255, 255, 0.85) !important;
+          color: rgb(255 255 255 / 85%) !important;
 
           &:hover {
-            color: #ffffff !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            background-color: rgb(255 255 255 / 10%) !important;
           }
 
           &.is-active {
-            color: #ffffff !important;
-            border-bottom-color: #ffffff !important;
+            color: #fff !important;
+            border-bottom-color: #fff !important;
           }
         }
 
         :deep(.el-sub-menu__title) {
-          color: rgba(255, 255, 255, 0.85) !important;
+          color: rgb(255 255 255 / 85%) !important;
 
           &:hover {
-            color: #ffffff !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            background-color: rgb(255 255 255 / 10%) !important;
           }
         }
 
         :deep(.el-sub-menu.is-active .el-sub-menu__title) {
-          color: #ffffff !important;
-          border-bottom-color: #ffffff !important;
+          color: #fff !important;
+          border-bottom-color: #fff !important;
         }
       }
 
@@ -571,34 +598,42 @@
         :deep(.mixed-top-menu) {
           .scroll-bar {
             .item {
-              color: rgba(255, 255, 255, 0.85) !important;
+              color: rgb(255 255 255 / 85%) !important;
 
               i {
-                color: rgba(255, 255, 255, 0.85) !important;
+                color: rgb(255 255 255 / 85%) !important;
               }
 
               &:hover {
-                color: #ffffff !important;
-                background-color: rgba(255, 255, 255, 0.1) !important;
+                color: #fff !important;
+                background-color: rgb(255 255 255 / 10%) !important;
               }
 
               &.active {
-                color: #ffffff !important;
-                background-color: rgba(255, 255, 255, 0.15) !important;
+                position: relative;
+                color: #fff !important;
+                background-color: transparent !important;
 
                 &::after {
-                  background-color: #ffffff !important;
+                  position: absolute !important;
+                  right: 10px !important;
+                  bottom: -2px !important;
+                  left: 10px !important;
+                  height: 3px !important;
+                  content: '' !important;
+                  background-color: #fff !important;
+                  border-radius: 2px 2px 0 0 !important;
                 }
               }
             }
           }
 
           .scroll-btn {
-            color: rgba(255, 255, 255, 0.85) !important;
+            color: rgb(255 255 255 / 85%) !important;
 
             &:hover {
-              color: #ffffff !important;
-              background-color: rgba(255, 255, 255, 0.1) !important;
+              color: #fff !important;
+              background-color: rgb(255 255 255 / 10%) !important;
             }
           }
         }
@@ -722,34 +757,34 @@
   // 框架二混合菜单白色样式（非 scoped，使用最高优先级强制覆盖）
   .art-top-header .header-left .framework-two-mixed-menu {
     // 覆盖 CSS 变量
-    --main-color: #ffffff;
-    --main-bg-color: rgba(255, 255, 255, 0.15);
-    --art-text-gray-600: rgba(255, 255, 255, 0.85);
-    --art-text-gray-700: rgba(255, 255, 255, 0.85);
-    --art-text-gray-900: #ffffff;
+    --main-color: #fff;
+    --main-bg-color: rgb(255 255 255 / 15%);
+    --art-text-gray-600: rgb(255 255 255 / 85%);
+    --art-text-gray-700: rgb(255 255 255 / 85%);
+    --art-text-gray-900: #fff;
     --art-gray-200-rgb: 255, 255, 255;
   }
 
   // 强制覆盖所有混合菜单元素的颜色
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item i {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item span {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item:hover {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 10%) !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item:hover i {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .art-top-header
@@ -759,12 +794,13 @@
     .scroll-bar
     .item:hover
     span {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item.active {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    position: relative;
+    color: #fff !important;
+    background-color: transparent !important;
   }
 
   .art-top-header
@@ -774,7 +810,7 @@
     .scroll-bar
     .item.active
     i {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .art-top-header
@@ -784,7 +820,7 @@
     .scroll-bar
     .item.active
     span {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .art-top-header
@@ -793,34 +829,41 @@
     .mixed-top-menu
     .scroll-bar
     .item.active::after {
-    background-color: transparent !important;
+    position: absolute !important;
+    right: 10px !important;
+    bottom: -2px !important;
+    left: 10px !important;
+    height: 3px !important;
+    content: '' !important;
+    background-color: #fff !important;
+    border-radius: 2px 2px 0 0 !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-btn {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-btn:hover {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 10%) !important;
   }
 
   // 暗黑模式
   .dark .art-top-header .header-left .framework-two-mixed-menu {
-    --main-color: #ffffff;
-    --main-bg-color: rgba(255, 255, 255, 0.15);
-    --art-text-gray-600: rgba(255, 255, 255, 0.85);
-    --art-text-gray-700: rgba(255, 255, 255, 0.85);
-    --art-text-gray-900: #ffffff;
+    --main-color: #fff;
+    --main-bg-color: rgb(255 255 255 / 15%);
+    --art-text-gray-600: rgb(255 255 255 / 85%);
+    --art-text-gray-700: rgb(255 255 255 / 85%);
+    --art-text-gray-900: #fff;
     --art-gray-200-rgb: 255, 255, 255;
   }
 
   .dark .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .dark .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-bar .item i {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .dark
@@ -831,7 +874,7 @@
     .scroll-bar
     .item
     span {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .dark
@@ -841,8 +884,8 @@
     .mixed-top-menu
     .scroll-bar
     .item:hover {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 10%) !important;
   }
 
   .dark
@@ -853,7 +896,7 @@
     .scroll-bar
     .item:hover
     i {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .dark
@@ -864,7 +907,7 @@
     .scroll-bar
     .item:hover
     span {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .dark
@@ -874,8 +917,9 @@
     .mixed-top-menu
     .scroll-bar
     .item.active {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    position: relative;
+    color: #fff !important;
+    background-color: transparent !important;
   }
 
   .dark
@@ -886,7 +930,7 @@
     .scroll-bar
     .item.active
     i {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .dark
@@ -897,7 +941,7 @@
     .scroll-bar
     .item.active
     span {
-    color: #ffffff !important;
+    color: #fff !important;
   }
 
   .dark
@@ -907,15 +951,22 @@
     .mixed-top-menu
     .scroll-bar
     .item.active::after {
-    background-color: transparent !important;
+    position: absolute !important;
+    right: 10px !important;
+    bottom: -2px !important;
+    left: 10px !important;
+    height: 3px !important;
+    content: '' !important;
+    background-color: #fff !important;
+    border-radius: 2px 2px 0 0 !important;
   }
 
   .dark .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-btn {
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgb(255 255 255 / 85%) !important;
   }
 
   .dark .art-top-header .header-left .framework-two-mixed-menu .mixed-top-menu .scroll-btn:hover {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 10%) !important;
   }
 </style>

@@ -25,11 +25,18 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="160">
           <template #default="{ row }">
             <el-button class="btn-change-member" link type="primary" @click="emit('change', row)">
               变更
             </el-button>
+            <el-button
+              v-if="row.role !== '组长' && row.role !== '主审'"
+              link
+              type="primary"
+              @click="handleAdd(row)"
+              >添加</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -48,7 +55,7 @@
             <span v-else class="mm-empty">未设置</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" align="center">
+        <el-table-column label="操作" width="160">
           <template #default>
             <el-button link type="primary">选择</el-button>
           </template>
@@ -79,6 +86,8 @@
     'update:visible': [v: boolean]
     /** 发起变更（打开工作移交向导） */
     change: [member: AuditProjectMember]
+    /** 添加同角色成员 */
+    add: [member: AuditProjectMember]
     /** 打开变更记录 */
     'open-records': []
   }>()
@@ -87,6 +96,11 @@
 
   // 单位默认收件人（示例占位，纯权限位）
   const recipientRows = computed(() => [{ unit: 'ZY股份', name: '单位经办人员（ZY股份）' }])
+
+  // 添加同角色成员
+  const handleAdd = (row: AuditProjectMember) => {
+    emit('add', row)
+  }
 </script>
 
 <style scoped lang="scss">

@@ -1,0 +1,20 @@
+{
+  "page": "/audit-decision/rectification-unit/report-fill",
+  "title": "填报整改",
+  "updatedAt": "2026-07-04",
+  "annotations": [
+    {
+      "id": "ann-history-order-rule-001",
+      "type": "selector",
+      "selector": ".js-anno-first-record",
+      "position": { "x": 0, "y": 0 },
+      "title": "整改历史展示规则",
+      "content": "整改历史按提交时间倒序，默认展开最新提交的进展详情，其他期默认收起。",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": 8, "y": -14 },
+      "source": "用户说明",
+      "createdAt": "2026-07-04"
+    }
+  ]
+}

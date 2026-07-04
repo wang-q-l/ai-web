@@ -108,5 +108,11 @@ export const staticRoutes: AppRouteRecordRaw[] = [
     name: 'OperationCockpitFull',
     component: () => import('@views/operation-cockpit/index.vue'),
     meta: { title: 'menus.operationCockpit.title', isHideTab: true, isFullPage: true, isHide: true }
+  },
+  {
+    // 旧路径兼容重定向：/intelligent-writing → /ai-app/intelligent-writing
+    path: '/intelligent-writing',
+    redirect: '/ai-app/intelligent-writing',
+    meta: { isHide: true }
   }
 ]

@@ -1,0 +1,19 @@
+{
+  "page": "/plan-management/adjustment/apply",
+  "title": "申请调整",
+  "updatedAt": "2026-07-02",
+  "annotations": [
+    {
+      "id": "ann-001",
+      "type": "selector",
+      "selector": ".sub-table-label",
+      "position": { "x": 0, "y": 0 },
+      "offset": { "x": 6, "y": -20 },
+      "title": "单位用户权限说明",
+      "content": "如当前用户为非年度填报任务的单位用户，只能新增「调增项目」，调减项目和要素调整选择时无对应数据。",
+      "category": "rule",
+      "source": "",
+      "createdAt": "2026-07-02"
+    }
+  ]
+}

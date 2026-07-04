@@ -42,14 +42,29 @@
 
     <!-- 表格区域 -->
     <div class="table-section">
-      <el-table
-        :data="tableData"
-        height="100%"
-        v-loading="loading"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column type="index" label="序号" width="80" />
+      <el-table :data="tableData" height="100%" v-loading="loading" :row-class-name="rowClassName">
+        <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+        <el-table-column label="序号" width="80" align="center">
+          <template #header>
+            <el-checkbox
+              :model-value="allChecked"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAll"
+            />
+          </template>
+          <template #default="{ row, $index }">
+            <div class="seq-cell">
+              <span class="seq-num">{{
+                (queryParams.page - 1) * queryParams.pageSize + $index + 1
+              }}</span>
+              <el-checkbox
+                class="seq-check"
+                :model-value="selectedIds.includes(row.id)"
+                @change="(val) => handleCheckRow(row.id, !!val)"
+              />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="decisionName"
           label="审计决定文书名称"
@@ -216,7 +231,7 @@
    * 决定列表组件
    * 作为整改项目详情页的右侧内容区
    */
-  import { ref, onMounted } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import type { AuditDecision, AuditDecisionQuery } from '@/types/audit-decision'
@@ -270,11 +285,41 @@
   const drawerVisible = ref(false)
   const currentDecisionId = ref<number | undefined>(undefined)
 
-  // 表格选中行
-  const selectedRows = ref<AuditDecision[]>([])
-  const handleSelectionChange = (rows: AuditDecision[]) => {
-    selectedRows.value = rows
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => tableData.value.length > 0 && selectedIds.value.length === tableData.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < tableData.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? tableData.value.map((item) => item.id) : []
   }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AuditDecision }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
+
+  // 已勾选的行对象（用于批量操作）
+  const selectedRows = computed(() =>
+    tableData.value.filter((item) => selectedIds.value.includes(item.id))
+  )
 
   // 批量提交批注
   const batchSubmitTipVisible = ref(false)
@@ -312,6 +357,7 @@
       const res = await getAuditDecisionList(queryParams.value)
       tableData.value = res.data.list
       total.value = res.data.total
+      selectedIds.value = []
     } catch {
       ElMessage.error('获取决定列表失败')
     } finally {
@@ -554,5 +600,38 @@
     display: flex;
     justify-content: flex-end;
     padding-top: 16px;
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
   }
 </style>

@@ -377,7 +377,6 @@
       <div class="header-content">
         <div class="header-left">
           <div class="page-title">报告库</div>
-          <div class="page-desc">集中管理审计报告，支持分类组织、收藏、在线预览与从项目引入</div>
         </div>
         <div class="header-actions">
           <el-button @click="handleOpenImport">
@@ -632,11 +631,12 @@
 
   .header-card {
     flex-shrink: 0;
+    border: none; // 去掉卡片边框
     border-radius: 8px;
   }
 
   .header-card :deep(.el-card__body) {
-    padding: 16px 20px;
+    padding: 10px 20px;
     overflow: visible;
   }
 
@@ -675,6 +675,7 @@
     flex-direction: column;
     flex-shrink: 0;
     width: 280px;
+    border: none; // 去掉卡片边框
     border-radius: 8px;
   }
 
@@ -823,6 +824,7 @@
     flex: 1;
     flex-direction: column;
     overflow: hidden;
+    border: none; // 去掉卡片边框
     border-radius: 8px;
   }
 

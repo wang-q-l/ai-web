@@ -160,9 +160,28 @@
           :data="currentRecommendations"
           style="width: 100%; margin-top: 20px"
           max-height="500"
-          @selection-change="handleSelectionChange"
+          :row-class-name="rowClassName"
         >
-          <el-table-column type="selection" width="55" />
+          <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+          <el-table-column label="序号" width="80" align="center">
+            <template #header>
+              <el-checkbox
+                :model-value="allChecked"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAll"
+              />
+            </template>
+            <template #default="{ row, $index }">
+              <div class="seq-cell">
+                <span class="seq-num">{{ $index + 1 }}</span>
+                <el-checkbox
+                  class="seq-check"
+                  :model-value="selectedIds.includes(row.id)"
+                  @change="(val) => handleCheckRow(row.id, !!val)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="优先级" width="100" align="center">
             <template #default="{ row }">
               <el-tag :type="getPriorityType(row.priority)" size="small">
@@ -257,8 +276,44 @@
   // 表格引用
   const tableRef = ref()
 
-  // 选中的推荐项
-  const selectedRecommendations = ref<RecommendationItem[]>([])
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // selectedRecommendations 保持对外接口不变，由 selectedIds 派生
+  const selectedRecommendations = computed(() =>
+    currentRecommendations.value.filter((item) => selectedIds.value.includes(item.id))
+  )
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () =>
+      currentRecommendations.value.length > 0 &&
+      selectedIds.value.length === currentRecommendations.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () =>
+      selectedIds.value.length > 0 && selectedIds.value.length < currentRecommendations.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? currentRecommendations.value.map((item) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: RecommendationItem }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 当前推荐列表
   const currentRecommendations = ref<RecommendationItem[]>([])
@@ -380,11 +435,8 @@
   }
 
   /**
-   * 表格选择变化
+   * 表格选择变化（已由 selectedIds 自行管理，此处不再需要）
    */
-  const handleSelectionChange = (selection: RecommendationItem[]) => {
-    selectedRecommendations.value = selection
-  }
 
   /**
    * 全部列入计划
@@ -429,7 +481,7 @@
       .then(() => {
         // TODO: 调用后端接口将选中的推荐项目列入计划
         ElMessage.success(`已将 ${selectedRecommendations.value.length} 个项目列入审计计划`)
-        selectedRecommendations.value = []
+        selectedIds.value = []
       })
       .catch(() => {
         // 取消操作
@@ -479,6 +531,8 @@
         // 保存推荐列表
         if (recommendations && recommendations.length > 0) {
           currentRecommendations.value = recommendations
+          // 刷新数据时清空勾选态
+          selectedIds.value = []
         }
 
         // 显示思考步骤（临时动画）
@@ -915,17 +969,50 @@
     .dialog-content {
       .statistics-info {
         display: flex;
-        gap: 12px;
         flex-wrap: wrap;
+        gap: 12px;
         margin-bottom: 20px;
       }
 
       .dialog-actions {
         display: flex;
         gap: 12px;
-        margin-top: 20px;
         justify-content: center;
+        margin-top: 20px;
       }
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

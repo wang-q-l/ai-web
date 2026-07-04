@@ -11,7 +11,7 @@ import { headerBarConfig } from './headerBar'
 const appConfig: SystemConfig = {
   // 系统信息
   systemInfo: {
-    name: '产品经理WEB端AI原型框架' // 系统名称
+    name: '内审标准版审计系统' // 系统名称
   },
   // 系统主题
   systemThemeStyles: {

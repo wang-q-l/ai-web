@@ -95,11 +95,12 @@
         </div>
 
         <ElMenu
+          :key="menuKey"
           :class="'el-menu-' + getMenuTheme.theme"
           :collapse="!menuOpen"
           :default-active="routerPath"
           :text-color="getMenuTheme.textColor"
-          :unique-opened="uniqueOpened"
+          :unique-opened="false"
           :background-color="getMenuTheme.background"
           :default-openeds="defaultOpenedMenus"
           :popper-class="`menu-left-${getMenuTheme.theme}-popper`"
@@ -136,6 +137,7 @@
   import { handleMenuJump } from '@/utils/navigation'
   import SidebarSubmenu from './widget/SidebarSubmenu.vue'
   import { useCommon } from '@/composables/useCommon'
+  import type { AppRouteRecord } from '@/types/router'
 
   defineOptions({ name: 'ArtSidebarMenu' })
 
@@ -147,18 +149,10 @@
   const router = useRouter()
   const settingStore = useSettingStore()
 
-  const {
-    getMenuOpenWidth,
-    menuType,
-    uniqueOpened,
-    dualMenuShowText,
-    menuOpen,
-    getMenuTheme,
-    frameworkType
-  } = storeToRefs(settingStore)
+  const { getMenuOpenWidth, menuType, dualMenuShowText, menuOpen, getMenuTheme, frameworkType } =
+    storeToRefs(settingStore)
 
   // 组件内部状态
-  const defaultOpenedMenus = ref<string[]>([])
   const isMobileMode = ref(false)
   const showMobileModal = ref(false)
   const currentScreenWidth = ref(0)
@@ -209,6 +203,27 @@
     const currentMenu = allMenus.find((menu) => menu.path === currentTopPath)
     return currentMenu?.children ?? []
   })
+
+  // 进入某一级菜单时，默认展开其下所有含子菜单的项（收集各层级的可见父级路径作为 ElSubMenu 的 index）
+  const defaultOpenedMenus = computed<string[]>(() => {
+    const paths: string[] = []
+    const collect = (items: AppRouteRecord[]) => {
+      items.forEach((item) => {
+        if (item.meta?.isHide) return
+        const visibleChildren = (item.children || []).filter((c) => !c.meta?.isHide)
+        if (visibleChildren.length) {
+          // 与 SidebarSubmenu 中 ElSubMenu 的 index 取值保持一致
+          paths.push(item.path || (item.meta?.title as string))
+          collect(item.children as AppRouteRecord[])
+        }
+      })
+    }
+    collect(menuList.value)
+    return paths
+  })
+
+  // 一级菜单切换时用作 ElMenu 的 key，强制重挂载以重新应用「默认全部展开」
+  const menuKey = computed(() => `/${route.path.split('/')[1] || ''}`)
 
   /**
    * 检查是否为移动端屏幕

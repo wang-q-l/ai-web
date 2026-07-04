@@ -25,13 +25,13 @@ export const auditRoutes: AppRouteRecord = {
       }
     },
     {
-      // 项目工作台：默认主页，承载顶部「项目成员」人员变更交互入口
-      path: '/audit/workspace',
-      name: 'AuditWorkspace',
-      component: () => import('@/views/audit/workspace/index.vue'),
+      // 审计项目列表（二级菜单）
+      path: '/audit/audit-project',
+      name: 'AuditProjectList',
+      component: () => import('@/views/audit/audit-project/index.vue'),
       meta: {
-        title: 'menus.audit.workspace',
-        keepAlive: true
+        title: 'menus.audit.auditProject',
+        keepAlive: false
       }
     },
     {
@@ -85,6 +85,40 @@ export const auditRoutes: AppRouteRecord = {
       meta: {
         title: 'menus.audit.reportLibrary',
         keepAlive: true
+      }
+    },
+    {
+      // 审计项目详情页（标准三卡片布局，进入方式：点击项目名称）
+      path: '/audit/audit-project/work',
+      name: 'AuditProjectWorkPage',
+      component: () => import('@/views/audit/audit-project/work.vue'),
+      meta: {
+        title: '项目详情',
+        isHide: true,
+        hideSidebar: true,
+        activePath: '/audit/audit-project'
+      }
+    },
+    {
+      // 项目打卡
+      path: '/audit/checkin',
+      name: 'AuditCheckin',
+      component: () => import('@/views/checkin/statistics.vue'),
+      meta: {
+        title: 'menus.checkin.title',
+        keepAlive: true
+      }
+    },
+    {
+      // 项目打卡 - 现场打卡（详情页，不在菜单中显示）
+      path: '/audit/checkin/submit/new',
+      name: 'AuditCheckinSubmit',
+      component: () => import('@/views/checkin/submit.vue'),
+      meta: {
+        title: 'menus.checkin.submit',
+        keepAlive: false,
+        isHide: true,
+        activePath: '/audit/checkin'
       }
     }
   ]

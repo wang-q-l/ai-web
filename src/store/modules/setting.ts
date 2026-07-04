@@ -23,8 +23,8 @@ export const useSettingStore = defineStore(
   'settingStore',
   () => {
     // 菜单相关设置
-    /** 菜单类型 */
-    const menuType = ref(MenuTypeEnum.LEFT)
+    /** 菜单类型（默认混合菜单：顶部一级 + 左侧二级，配合框架二） */
+    const menuType = ref(MenuTypeEnum.TOP_LEFT)
     /** 菜单展开宽度 */
     const menuOpenWidth = ref(defaultMenuWidth)
     /** 菜单是否展开 */
@@ -33,16 +33,16 @@ export const useSettingStore = defineStore(
     const dualMenuShowText = ref(false)
 
     // 框架布局设置
-    /** 框架类型 */
-    const frameworkType = ref(FrameworkTypeEnum.FRAMEWORK_ONE)
+    /** 框架类型（默认框架二：顶部蓝条 + 左侧子菜单） */
+    const frameworkType = ref(FrameworkTypeEnum.FRAMEWORK_TWO)
 
     // 主题相关设置
     /** 系统主题类型 */
     const systemThemeType = ref(SystemThemeEnum.AUTO)
     /** 系统主题模式 */
     const systemThemeMode = ref(SystemThemeEnum.AUTO)
-    /** 菜单主题类型 */
-    const menuThemeType = ref(MenuThemeEnum.DESIGN)
+    /** 菜单主题类型（默认 Light 风格：白底侧边栏 + 蓝色选中条） */
+    const menuThemeType = ref(MenuThemeEnum.LIGHT)
     /** 系统主题颜色 */
     const systemThemeColor = ref(AppConfig.systemMainColor[0])
 
@@ -440,7 +440,19 @@ export const useSettingStore = defineStore(
   {
     persist: {
       key: 'setting',
-      storage: localStorage
+      storage: localStorage,
+      // 数据恢复后执行：把老用户本地存储里的旧框架/菜单类型强制迁移为新默认
+      // （只迁移一次，标记写入 localStorage 后不再覆盖，之后用户仍可在设置面板手动切换）
+      afterHydrate: (ctx) => {
+        const MIGRATION_KEY = 'layout-migrated-v1'
+        if (localStorage.getItem(MIGRATION_KEY)) return
+        const store = ctx.store as ReturnType<typeof useSettingStore>
+        // 强制使用框架二 + 混合菜单 + Light 菜单风格
+        store.frameworkType = FrameworkTypeEnum.FRAMEWORK_TWO
+        store.menuType = MenuTypeEnum.TOP_LEFT
+        store.menuThemeType = MenuThemeEnum.LIGHT
+        localStorage.setItem(MIGRATION_KEY, '1')
+      }
     }
   }
 )

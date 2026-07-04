@@ -107,6 +107,14 @@
   inset: 0;
   overflow: hidden; // 防止整个页面滚动
 
+  // 默认背景图（淡蓝工程蓝图纹理），铺满视口、固定不随内容滚动
+  background-color: #eef3fb;
+  background-image: url('@imgs/common/layout-bg.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+
   .app-top-header {
     position: fixed;
     top: 0;
@@ -127,9 +135,35 @@
     // 框架二侧边栏高度自适应容器，避免 100vh 溢出裁剪
     .layout-sidebar {
       height: 100%;
+      border-right: none !important; // 去掉右侧分隔边框
 
-      .menu-left {
+      :deep(.menu-left) {
         height: 100%;
+      }
+
+      // 去掉白色底框 + 右侧分隔线：菜单容器透明，露出页面背景纹理
+      :deep(.menu-left),
+      :deep(.el-menu),
+      :deep(.el-menu-item),
+      :deep(.el-sub-menu__title) {
+        background: transparent !important;
+        background-color: transparent !important;
+      }
+
+      // 选中项：从左到右的渐变框（左深右浅，对齐截图）
+      :deep(.el-menu-item.is-active) {
+        background: linear-gradient(
+          90deg,
+          rgb(var(--art-primary), 0.18) 0%,
+          rgb(var(--art-primary), 0.08) 55%,
+          rgb(var(--art-primary), 0) 100%
+        ) !important;
+        border-radius: 8px;
+
+        // 隐藏 Light 风格默认的左侧竖条
+        &::before {
+          display: none !important;
+        }
       }
     }
   }
@@ -156,7 +190,7 @@
 
         .art-page-view {
           box-sizing: border-box;
-          height: calc(100% - 60px); // 减去工作标签页的高度
+          height: 100%; // 已移除工作标签页栏，内容区占满高度
           padding-bottom: 20px;
         }
       }

@@ -42,6 +42,8 @@ export interface RouteMeta extends Record<string | number | symbol, unknown> {
   activePath?: string
   /** 是否为全屏页面 */
   isFullPage?: boolean
+  /** 是否隐藏左侧导航（二级页面全宽展示时使用） */
+  hideSidebar?: boolean
   /** 是否为权限按钮行 */
   isAuthButton?: boolean
   /** 权限标识 */

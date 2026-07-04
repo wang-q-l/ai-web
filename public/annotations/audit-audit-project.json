@@ -1,0 +1,46 @@
+{
+  "page": "/audit/audit-project",
+  "title": "审计项目",
+  "updatedAt": "2026-07-03",
+  "annotations": [
+    {
+      "id": "ann-tab-rule-001",
+      "type": "selector",
+      "selector": ".el-tabs__item[id*='tab-doubt']",
+      "position": { "x": 0, "y": 0 },
+      "title": "交接内容页签显示规则",
+      "content": "本次变更功能的交接内容先实现事项、文书、迎审清单和审计疑点这四类节点",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": 20, "y": -8 },
+      "source": "用户说明",
+      "createdAt": "2026-07-03"
+    },
+    {
+      "id": "ann-change-permission-001",
+      "type": "selector",
+      "selector": ".wt-to",
+      "position": { "x": 0, "y": 0 },
+      "title": "变更操作权限与数据权限规则",
+      "content": "**一、变更操作权限**\n\n继承项目的人员管理操作权限\n\n**二、人员变更后各节点类型的数据权限规则说明：**\n\n（各节点的操作权限还是根据节点中角色的权限为准）\n\n1. **文书类**：创建人不变，接收人默认可查看，接收人对文书的修改体现在版本记录的更新人；\n2. **迎审清单**：已完成确认的不需要交接，未完成确认的清单交接后，接收人直接替换原确认人；\n3. **审计事项**：变更后直接由接收人替换原事项负责人；\n4. **审计疑点**：疑点的负责人由接收人替换原负责人；\n5. **问题清单**：创建人不变，接收人可查看变更前人员创建的数据；\n6. **缺陷清单**：创建人不变，接收人可查看变更前人员创建的数据；\n7. **评价节点**：涉及复核打分的，由接收人复核。",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": 20, "y": 0 },
+      "source": "用户说明",
+      "createdAt": "2026-07-03"
+    },
+    {
+      "id": "ann-next-step-disabled-001",
+      "type": "selector",
+      "selector": ".wt-approval-alert",
+      "position": { "x": 0, "y": 0 },
+      "title": "确认移交按钮禁用规则",
+      "content": "当变更人有在途审批数据时，【下一步】按钮禁用",
+      "category": "rule",
+      "container": "drawer",
+      "offset": { "x": -90, "y": 0 },
+      "source": "用户说明",
+      "createdAt": "2026-07-03"
+    }
+  ]
+}

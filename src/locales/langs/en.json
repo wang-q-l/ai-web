@@ -245,6 +245,7 @@
     },
     "audit": {
       "title": "Project Management",
+      "auditProject": "Audit Project",
       "workspace": "Member Management",
       "project": "Project Management",
       "detail": "Project Detail",
@@ -256,6 +257,14 @@
       "suggestionLibrary": "Suggestion Library",
       "suggestionLibraryImport": "Import from Problems",
       "reportLibrary": "Report Library"
+    },
+    "planManagement": {
+      "title": "Plan Management",
+      "notification": "Fill Notification",
+      "report": "Plan Report",
+      "coordination": "Plan Coordination",
+      "adjustment": "Plan Adjustment",
+      "config": "Plan Config"
     },
     "auditRecommendation": {
       "title": "Project Recommendation"

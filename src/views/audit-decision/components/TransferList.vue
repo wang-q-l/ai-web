@@ -59,10 +59,30 @@
       :data="tableData"
       v-loading="loading"
       style="margin-top: 16px"
-      @selection-change="handleSelectionChange"
+      :row-class-name="rowClassName"
     >
-      <el-table-column type="selection" width="55" />
-      <el-table-column type="index" label="序号" width="60" />
+      <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+      <el-table-column label="序号" width="80" align="center">
+        <template #header>
+          <el-checkbox
+            :model-value="allChecked"
+            :indeterminate="isIndeterminate"
+            @change="handleCheckAll"
+          />
+        </template>
+        <template #default="{ row, $index }">
+          <div class="seq-cell">
+            <span class="seq-num">{{
+              (queryParams.page - 1) * queryParams.pageSize + $index + 1
+            }}</span>
+            <el-checkbox
+              class="seq-check"
+              :model-value="selectedIds.includes(row.id)"
+              @change="(val) => handleCheckRow(row.id, !!val)"
+            />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="transferName"
         label="移送文书名称"
@@ -216,7 +236,7 @@
    * 移送清单组件
    * 在项目详情页面中展示该项目的审计移送列表
    */
-  import { ref, onMounted } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import type { AuditTransfer, AuditTransferQuery } from '@/types/audit-transfer'
   import {
@@ -286,11 +306,41 @@
   const feedbackDrawerVisible = ref(false)
   const feedbackTransferId = ref<number>()
 
-  // 表格选中行
-  const selectedRows = ref<AuditTransfer[]>([])
-  const handleSelectionChange = (rows: AuditTransfer[]) => {
-    selectedRows.value = rows
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => tableData.value.length > 0 && selectedIds.value.length === tableData.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < tableData.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? tableData.value.map((item) => item.id) : []
   }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AuditTransfer }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
+
+  // 已勾选的完整行数据（批量提交使用）
+  const selectedRows = computed(() =>
+    tableData.value.filter((item) => selectedIds.value.includes(item.id))
+  )
 
   // 批量提交批注（项目详情页第 4 个批注）
   const batchSubmitTipVisible = ref(false)
@@ -343,6 +393,7 @@
       const res = await getAuditTransferList(queryParams.value)
       tableData.value = res.data.list
       total.value = res.data.total
+      selectedIds.value = []
     } catch {
       ElMessage.error('获取列表失败')
     } finally {
@@ -574,5 +625,38 @@
     background: #1677ff;
     border-radius: 50%;
     box-shadow: 0 2px 6px rgb(22 119 255 / 40%);
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
   }
 </style>

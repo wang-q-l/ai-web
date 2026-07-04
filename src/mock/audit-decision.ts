@@ -15,6 +15,7 @@ import type {
   RectificationProgressItem,
   RectificationProgressQuery,
   RectificationReportDetail,
+  RectificationHistoryDetail,
   ProblemDetail,
   RectificationAdjustment,
   AdjustmentItem,
@@ -990,6 +991,78 @@ export const saveRectificationReport = async (data: RectificationReportDetail) =
     item.processStatus = data.rectificationStatus
   }
   return { code: 200, message: '保存成功', data: true }
+}
+
+// 整改历史快照（按 problemId），只读展示历次已提交的填报内容（按提交时间倒序由前端排序）
+const mockHistoryDetails: Record<number, RectificationHistoryDetail[]> = {
+  1: [
+    {
+      // 最新一期提交
+      problemId: 1,
+      rectificationStatus: 2,
+      measures: [
+        {
+          id: 1,
+          measure: sampleMeasureText,
+          responsible: '赵六',
+          finishStatus: 3,
+          progressDesc:
+            '完成该措施，加大了银行账户资金的监管力度，增强法律观念和责任意识，确保公共资金安全。'
+        },
+        {
+          id: 2,
+          measure: sampleMeasureText,
+          responsible: '赵六',
+          finishStatus: 1,
+          progressDesc: '完成了部分整改'
+        }
+      ],
+      attachments: [{ name: '通用文件.docx', url: '#' }],
+      correctedAmount: 0,
+      recoveredAmount: 0,
+      auditReducedAmount: 0,
+      otherSavingAmount: 0,
+      systemRecords: [],
+      processRecords: [],
+      reportTime: '2026-06-28 15:30:00'
+    },
+    {
+      // 历史一期提交（较早）
+      problemId: 1,
+      rectificationStatus: 2,
+      measures: [
+        {
+          id: 1,
+          measure: sampleMeasureText,
+          responsible: '赵六',
+          finishStatus: 1,
+          progressDesc: '已制定整改方案，正在推进银行账户资金监管措施的落实。'
+        },
+        {
+          id: 2,
+          measure: sampleMeasureText,
+          responsible: '赵六',
+          finishStatus: 1,
+          progressDesc: '尚未开始，计划下阶段完成。'
+        }
+      ],
+      attachments: [{ name: '整改方案.docx', url: '#' }],
+      correctedAmount: 0,
+      recoveredAmount: 0,
+      auditReducedAmount: 0,
+      otherSavingAmount: 0,
+      systemRecords: [],
+      processRecords: [],
+      reportTime: '2026-05-20 10:00:00'
+    }
+  ]
+}
+
+/** 获取整改历史列表（按 problemId），返回历次已提交的填报快照（只读） */
+export const getRectificationHistoryDetail = async (problemId: number) => {
+  await delay()
+  const list = mockHistoryDetails[problemId] || mockHistoryDetails[1]
+  return { code: 200, message: '成功', data: list }
 }
 
 // ==================== 问题详情大弹窗（填报进展页）====================

@@ -114,9 +114,30 @@
           v-loading="loading"
           :data="tableData"
           height="100%"
-          @selection-change="handleSelectionChange"
+          :row-class-name="rowClassName"
         >
-          <el-table-column type="selection" width="50" />
+          <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+          <el-table-column label="序号" width="80" align="center">
+            <template #header>
+              <el-checkbox
+                :model-value="allChecked"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAll"
+              />
+            </template>
+            <template #default="{ row, $index }">
+              <div class="seq-cell">
+                <span class="seq-num">{{
+                  (queryParams.page - 1) * queryParams.pageSize + $index + 1
+                }}</span>
+                <el-checkbox
+                  class="seq-check"
+                  :model-value="selectedIds.includes(row.id)"
+                  @change="(val) => handleCheckRow(row.id, !!val)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="transferName"
             label="移送文书名称"
@@ -193,7 +214,7 @@
    * 审计移送列表页面
    * 展示审计移送记录，支持筛选、新增、编辑、删除、查看详情、反馈等操作
    */
-  import { ref, reactive, onMounted } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import {
     Search,
@@ -232,8 +253,36 @@
   const tableData = ref<AuditTransfer[]>([])
   const total = ref(0)
 
-  // 选中的行
-  const selectedRows = ref<AuditTransfer[]>([])
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => tableData.value.length > 0 && selectedIds.value.length === tableData.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < tableData.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? tableData.value.map((item) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AuditTransfer }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 获取列表数据
   const fetchList = async () => {
@@ -251,6 +300,8 @@
       const res = await getAuditTransferList(queryParams)
       tableData.value = res.data.list
       total.value = res.data.total
+      // 刷新数据时清空选中状态
+      selectedIds.value = []
     } catch {
       ElMessage.error('获取列表失败')
     } finally {
@@ -318,11 +369,6 @@
   // 导出
   const handleExport = () => {
     ElMessage.info('导出功能开发中')
-  }
-
-  // 表格选择变化
-  const handleSelectionChange = (rows: AuditTransfer[]) => {
-    selectedRows.value = rows
   }
 
   // 初始化
@@ -400,6 +446,39 @@
     :deep(.el-pagination) {
       justify-content: flex-end;
       margin-top: 16px;
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

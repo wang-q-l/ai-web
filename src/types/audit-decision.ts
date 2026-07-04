@@ -403,6 +403,34 @@ export interface RectificationReportDetail {
   processRecords: ProcessRecord[] // 累计完善优化业务流程
 }
 
+/**
+ * 整改历史附件（只读展示）
+ */
+export interface RectificationHistoryAttachment {
+  name: string // 文件名
+  url?: string // 文件地址（用于查看/下载）
+}
+
+/**
+ * 整改历史详情（只读）
+ * 展示某个问题某一轮已提交的填报快照，结构与填报详情一致但均为只读
+ */
+export interface RectificationHistoryDetail {
+  problemId: number
+  // 整改状态：1-未整改，2-正在整改，3-已整改
+  rectificationStatus: number
+  measures: RectificationMeasure[] // 整改进展情况表（只读）
+  attachments: RectificationHistoryAttachment[] // 佐证附件（只读）
+  // 整改成效——整改金额（单位：元）
+  correctedAmount: number // 已纠正违纪金
+  recoveredAmount: number // 挽回损失金额
+  auditReducedAmount: number // 工程审减金额
+  otherSavingAmount: number // 其他增收节支
+  systemRecords: SystemRecord[] // 累计出台、修订制度
+  processRecords: ProcessRecord[] // 累计完善优化业务流程
+  reportTime?: string // 本轮填报时间
+}
+
 // ==================== 问题详情大弹窗（填报进展页）====================
 
 /**

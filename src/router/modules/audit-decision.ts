@@ -16,8 +16,20 @@ export const auditDecisionRoutes: AppRouteRecord = {
   },
   children: [
     {
-      // 整改项目列表（原默认入口）
-      path: '/audit-decision',
+      // 隐藏索引页：承载 /audit-decision 默认落地，避免二级菜单因首个可见叶子与父级同路径而无法展开
+      path: '',
+      name: 'AuditDecisionIndex',
+      component: () => import('@/views/audit-decision/project-list.vue'),
+      meta: {
+        title: '整改项目',
+        keepAlive: true,
+        isHide: true,
+        activePath: '/audit-decision/project'
+      }
+    },
+    {
+      // 整改项目列表（二级菜单，使用独立子路径以正确展开左侧菜单）
+      path: '/audit-decision/project',
       name: 'AuditDecisionProjectList',
       component: () => import('@/views/audit-decision/project-list.vue'),
       meta: {

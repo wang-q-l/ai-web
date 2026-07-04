@@ -110,7 +110,6 @@
       <div class="header-content">
         <div class="header-left">
           <div class="page-title">法规推荐策略</div>
-          <div class="page-desc">配置审计问题推荐法规依据时使用的打分权重与最低推荐阈值</div>
         </div>
         <el-button type="primary" @click="handleOpenExperiment">
           <el-icon><MagicStick /></el-icon>
@@ -197,7 +196,7 @@
   }
 
   .header-card :deep(.el-card__body) {
-    padding: 16px 20px;
+    padding: 10px 20px;
     overflow: visible;
   }
 

@@ -91,7 +91,6 @@
       <div class="header-content">
         <div class="header-left">
           <div class="page-title">法规推荐</div>
-          <div class="page-desc">点击右侧按钮可重新打开「问题新增」抽屉</div>
         </div>
         <el-button type="primary" @click="handleOpen">
           <el-icon><Plus /></el-icon>
@@ -136,6 +135,10 @@
   .header-card,
   .placeholder-card {
     border-radius: 8px;
+  }
+
+  .header-card :deep(.el-card__body) {
+    padding: 10px 20px;
   }
 
   .header-content {

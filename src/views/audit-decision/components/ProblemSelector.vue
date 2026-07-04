@@ -51,15 +51,31 @@
         :data="tableData"
         height="500px"
         v-loading="loading"
-        @selection-change="handleSelectionChange"
+        :row-class-name="rowClassName"
       >
-        <!-- 已关联的问题禁用复选框，避免重复关联 -->
-        <el-table-column
-          type="selection"
-          width="55"
-          :reserve-selection="true"
-          :selectable="isSelectable"
-        />
+        <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+        <el-table-column label="序号" width="80" align="center">
+          <template #header>
+            <el-checkbox
+              :model-value="allChecked"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAll"
+            />
+          </template>
+          <template #default="{ row, $index }">
+            <div class="seq-cell">
+              <span class="seq-num">{{
+                (queryParams.page - 1) * queryParams.pageSize + $index + 1
+              }}</span>
+              <el-checkbox
+                class="seq-check"
+                :model-value="checkedIds.includes(row.id)"
+                :disabled="!isSelectable(row)"
+                @change="(val) => handleCheckRow(row.id, !!val)"
+              />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="problemTitle"
           label="问题标题"
@@ -125,8 +141,8 @@
    * 关联问题清单选择弹窗组件
    * 支持多选问题、筛选查询、分页
    */
-  import { ref, reactive, watch } from 'vue'
-  import { ElMessage, type ElTable } from 'element-plus'
+  import { ref, reactive, computed, watch } from 'vue'
+  import { ElMessage } from 'element-plus'
   import type { RelatedProblem, RelatedProblemQuery } from '@/types/audit-decision'
   import { getAvailableProblems } from '@/api/audit-decision'
   import AnnotationPanel from '@/components/Annotation/AnnotationPanel.vue'
@@ -179,10 +195,43 @@
   const tableData = ref<RelatedProblem[]>([])
   const total = ref(0)
   const loading = ref(false)
-  const tableRef = ref<InstanceType<typeof ElTable>>()
+  const tableRef = ref()
 
-  // 已选择的问题
-  const selectedProblems = ref<RelatedProblem[]>([])
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态；内部命名 checkedIds 以区分同名 prop）
+  const checkedIds = ref<(number | string)[]>([])
+
+  // 已选择的问题（供确认操作使用）
+  const selectedProblems = computed(() =>
+    tableData.value.filter((item) => checkedIds.value.includes(item.id))
+  )
+
+  // 全选态：当前页全部可选行全部勾选时为 true
+  const allChecked = computed(
+    () => tableData.value.length > 0 && checkedIds.value.length === tableData.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => checkedIds.value.length > 0 && checkedIds.value.length < tableData.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    checkedIds.value = val ? tableData.value.map((item) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!checkedIds.value.includes(id)) checkedIds.value.push(id)
+    } else {
+      checkedIds.value = checkedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: RelatedProblem }) => {
+    return checkedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 监听 modelValue 变化
   watch(
@@ -210,6 +259,8 @@
       const res = await getAvailableProblems(queryParams)
       tableData.value = res.data.list
       total.value = res.data.total
+      // 切换分页时清空选中态
+      checkedIds.value = []
     } catch {
       ElMessage.error('获取数据失败')
     } finally {
@@ -236,11 +287,6 @@
     fetchData()
   }
 
-  // 选择变化
-  const handleSelectionChange = (selection: RelatedProblem[]) => {
-    selectedProblems.value = selection
-  }
-
   // 确定
   const handleConfirm = () => {
     if (selectedProblems.value.length === 0) {
@@ -255,8 +301,7 @@
   const handleClose = () => {
     visible.value = false
     // 清空选择
-    tableRef.value?.clearSelection()
-    selectedProblems.value = []
+    checkedIds.value = []
   }
 </script>
 
@@ -309,6 +354,39 @@
     .selected-info {
       font-size: 14px;
       color: #606266;
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

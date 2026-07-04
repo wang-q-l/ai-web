@@ -77,9 +77,30 @@
               ref="tableRef"
               v-loading="loading"
               :data="tableData"
-              @selection-change="handleSelectionChange"
+              :row-class-name="rowClassName"
             >
-              <ElTableColumn type="selection" width="55" fixed="left" />
+              <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+              <ElTableColumn label="序号" width="80" align="center" fixed="left">
+                <template #header>
+                  <el-checkbox
+                    :model-value="allChecked"
+                    :indeterminate="isIndeterminate"
+                    @change="handleCheckAll"
+                  />
+                </template>
+                <template #default="{ row, $index }">
+                  <div class="seq-cell">
+                    <span class="seq-num">{{
+                      (pagination.page - 1) * pagination.pageSize + $index + 1
+                    }}</span>
+                    <el-checkbox
+                      class="seq-check"
+                      :model-value="selectedIds.includes(row.id)"
+                      @change="(val) => handleCheckRow(row.id, !!val)"
+                    />
+                  </div>
+                </template>
+              </ElTableColumn>
               <ElTableColumn prop="nickname" label="姓名" width="120" fixed="left" />
               <ElTableColumn prop="username" label="账号" width="120" />
               <ElTableColumn prop="departmentPath" label="所属部门" min-width="200" />
@@ -226,7 +247,42 @@
   const tableRef = ref()
   const loading = ref(false)
   const tableData = ref<AdminUser[]>([])
-  const selectedRows = ref<AdminUser[]>([])
+
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => tableData.value.length > 0 && selectedIds.value.length === tableData.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < tableData.value.length
+  )
+
+  // selectedRows 供批量操作（删除/设置岗位/设置角色）使用
+  const selectedRows = computed(() =>
+    tableData.value.filter((item) => selectedIds.value.includes(item.id))
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? tableData.value.map((item) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AdminUser }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 筛选表单
   const filterForm = reactive({
@@ -328,6 +384,8 @@
       })
       tableData.value = res.data.list || []
       pagination.total = res.data.total || 0
+      // 切换页面时清空勾选
+      selectedIds.value = []
     } catch (error: any) {
       ElMessage.error(error.message || '加载用户列表失败')
     } finally {
@@ -353,13 +411,6 @@
 
   function handlePageChange() {
     loadUserList()
-  }
-
-  /**
-   * 表格选择变化
-   */
-  function handleSelectionChange(selection: AdminUser[]) {
-    selectedRows.value = selection
   }
 
   /**
@@ -594,21 +645,21 @@
       overflow: hidden;
 
       .dept-tree-card {
-        width: 280px;
-        flex-shrink: 0;
-        border-radius: 12px;
-        border: none !important;
-        box-shadow: none !important;
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
+        width: 280px;
         overflow: hidden;
+        border: none !important;
+        border-radius: 12px;
+        box-shadow: none !important;
 
         :deep(.el-card__body) {
-          flex: 1;
           display: flex;
+          flex: 1;
           flex-direction: column;
-          overflow: hidden;
           padding: 20px;
+          overflow: hidden;
         }
 
         .tree-header {
@@ -631,26 +682,26 @@
       }
 
       .user-content {
-        flex: 1;
         display: flex;
+        flex: 1;
         flex-direction: column;
         overflow: hidden;
 
         .filter-card {
-          border-radius: 12px;
-          border: none !important;
-          box-shadow: none !important;
-          margin-bottom: 16px;
           flex-shrink: 0;
+          margin-bottom: 16px;
+          border: none !important;
+          border-radius: 12px;
+          box-shadow: none !important;
 
           :deep(.el-card__body) {
             padding: 12px 20px;
           }
 
           .filter-form {
-            margin-bottom: 0;
             display: flex;
             align-items: center;
+            margin-bottom: 0;
 
             :deep(.el-form-item) {
               margin-bottom: 0;
@@ -659,26 +710,26 @@
         }
 
         .table-card {
-          border-radius: 12px;
-          border: none !important;
-          box-shadow: none !important;
-          flex: 1;
           display: flex;
+          flex: 1;
           flex-direction: column;
           overflow: hidden;
+          border: none !important;
+          border-radius: 12px;
+          box-shadow: none !important;
 
           :deep(.el-card__body) {
-            flex: 1;
             display: flex;
+            flex: 1;
             flex-direction: column;
-            overflow: hidden;
             padding: 20px;
+            overflow: hidden;
           }
 
           .table-header {
             display: flex;
-            margin-bottom: 16px;
             flex-shrink: 0;
+            margin-bottom: 16px;
 
             .el-button:not(:first-child) {
               margin-left: 12px;
@@ -692,12 +743,45 @@
 
           .pagination-container {
             display: flex;
+            flex-shrink: 0;
             justify-content: flex-end;
             margin-top: 16px;
-            flex-shrink: 0;
           }
         }
       }
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

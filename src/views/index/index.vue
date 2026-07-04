@@ -32,9 +32,6 @@
     </aside>
 
     <main id="app-main" class="framework-two-main">
-      <div class="app-header">
-        <ArtHeaderBar />
-      </div>
       <div class="app-content">
         <ArtPageContent />
       </div>
@@ -104,6 +101,9 @@
   // 判断框架二是否显示侧边栏
   const showSidebarInFrameworkTwo = computed(() => {
     if (!isFrameworkTwo.value) return false
+
+    // 当前路由标记了隐藏侧边栏（二级全宽页面）
+    if (route.meta?.hideSidebar) return false
 
     // 水平菜单时不显示侧边栏
     if (isTopMenu.value) return false

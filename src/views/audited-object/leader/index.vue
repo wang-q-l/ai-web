@@ -283,8 +283,32 @@
             </el-input>
 
             <!-- 表格 -->
-            <el-table :data="attachmentList" v-loading="attachmentLoading" stripe>
-              <el-table-column type="selection" width="50" />
+            <el-table
+              :data="attachmentList"
+              v-loading="attachmentLoading"
+              stripe
+              :row-class-name="attachmentRowClassName"
+            >
+              <!-- 序号/勾选合并列：hover 时显示勾选框，默认显示序号 -->
+              <el-table-column width="50" align="center">
+                <template #header>
+                  <el-checkbox
+                    v-model="attachmentAllChecked"
+                    :indeterminate="attachmentIsIndeterminate"
+                    @change="handleAttachmentCheckAll"
+                  />
+                </template>
+                <template #default="{ row, $index }">
+                  <div class="seq-cell">
+                    <span class="seq-num">{{ $index + 1 }}</span>
+                    <el-checkbox
+                      class="seq-check"
+                      :model-value="attachmentSelectedIds.includes(row.id)"
+                      @change="(val) => handleAttachmentCheckRow(val, row)"
+                    />
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column prop="fileName" label="附件名称" min-width="200" />
               <el-table-column prop="size" label="大小" width="120" />
               <el-table-column prop="remark" label="备注" min-width="160" />
@@ -507,6 +531,39 @@
     fetchAttachmentList()
   }
 
+  // ==================== 附件勾选 ====================
+  // 已选附件 ID 集合
+  const attachmentSelectedIds = ref<number[]>([])
+  // 全选状态
+  const attachmentAllChecked = ref(false)
+  // 半选状态
+  const attachmentIsIndeterminate = ref(false)
+
+  // 全选/取消全选
+  const handleAttachmentCheckAll = (val: boolean) => {
+    attachmentSelectedIds.value = val ? attachmentList.value.map((r) => r.id) : []
+    attachmentAllChecked.value = val
+    attachmentIsIndeterminate.value = false
+  }
+
+  // 单行勾选切换
+  const handleAttachmentCheckRow = (val: boolean, row: AuditAttachment) => {
+    if (val) {
+      attachmentSelectedIds.value = [...attachmentSelectedIds.value, row.id]
+    } else {
+      attachmentSelectedIds.value = attachmentSelectedIds.value.filter((id) => id !== row.id)
+    }
+    const total = attachmentList.value.length
+    const selected = attachmentSelectedIds.value.length
+    attachmentAllChecked.value = selected === total && total > 0
+    attachmentIsIndeterminate.value = selected > 0 && selected < total
+  }
+
+  // 已勾选行附加 row-checked class
+  const attachmentRowClassName = ({ row }: { row: AuditAttachment }) => {
+    return attachmentSelectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
+
   // ==================== 目录锚点 ====================
   const scrollRef = ref<HTMLElement>()
   const activeAnchor = ref('section-basic')
@@ -721,6 +778,39 @@
   }
 
   /* STYLE_CHUNK_4 */
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
+  }
 
   /* 右侧目录锚点 */
   .catalog {

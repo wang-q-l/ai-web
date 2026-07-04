@@ -78,10 +78,24 @@ $hover-bg-color: rgba(var(--art-gray-200-rgb), 0.8); // 鼠标移入背景色
       }
     }
 
-    // 选中颜色
+    // 选中颜色（浅蓝底 + 主蓝字 + 左侧高亮条，对齐截图）
     .el-menu-item.is-active {
+      position: relative;
+      font-weight: 500;
       color: var(--main-color) !important;
       background-color: var(--el-color-primary-light-9);
+
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 3px;
+        height: 60%;
+        content: '';
+        background: var(--main-color);
+        border-radius: 0 3px 3px 0;
+        transform: translateY(-50%);
+      }
     }
 
     // 鼠标移入背景色

@@ -66,9 +66,16 @@
       .filter((year) => (year.children?.length ?? 0) > 0)
   })
 
-  // 已勾选的报告附件（跨项目累加，key=附件 id）
-  const selectedMap = ref<Map<string, ProjectReportAttachment>>(new Map())
-  const selectedCount = computed(() => selectedMap.value.size)
+  // 已勾选的报告附件（跨项目累加，以 selectedIds 为源，按 attachments 全集查找行数据）
+  const selectedMap = computed(() => {
+    const map = new Map<string, ProjectReportAttachment>()
+    // 遍历所有已加载附件，将 id 在 selectedIds 中的条目收录
+    for (const a of attachments.value) {
+      if (selectedIds.value.includes(a.id)) map.set(a.id, a)
+    }
+    return map
+  })
+  const selectedCount = computed(() => selectedIds.value.length)
 
   // 已存在于库中的报告标识键集合（跨项目累加）——已引入过的在第一步即不可选
   const existingKeys = ref<Set<string>>(new Set())
@@ -86,7 +93,51 @@
     return result
   })
 
-  const tableRef = ref()
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部可选行全部勾选时为 true
+  const allChecked = computed(
+    () =>
+      filteredAttachments.value.length > 0 &&
+      filteredAttachments.value
+        .filter((a) => isSelectable(a))
+        .every((a) => selectedIds.value.includes(a.id))
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () =>
+      selectedIds.value.length > 0 &&
+      !filteredAttachments.value
+        .filter((a) => isSelectable(a))
+        .every((a) => selectedIds.value.includes(a.id))
+  )
+
+  // 表头全选/取消全选（仅操作当前视图中可选行）
+  const handleCheckAll = (val: boolean | string | number) => {
+    const selectableIds = filteredAttachments.value.filter((a) => isSelectable(a)).map((a) => a.id)
+    if (val) {
+      selectableIds.forEach((id) => {
+        if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+      })
+    } else {
+      selectedIds.value = selectedIds.value.filter((id) => !selectableIds.includes(id))
+    }
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: ProjectReportAttachment }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 加载项目树
   const loadProjectTree = async () => {
@@ -110,24 +161,6 @@
       }
     } finally {
       attachmentLoading.value = false
-    }
-    // 切换项目后，恢复表格选中状态（与 selectedMap 同步）
-    setTimeout(() => {
-      filteredAttachments.value.forEach((a) => {
-        if (selectedMap.value.has(a.id)) {
-          tableRef.value?.toggleRowSelection(a, true)
-        }
-      })
-    }, 50)
-  }
-
-  // 表格行勾选变化：双向维护 selectedMap（跨项目累加的关键）
-  const handleSelectionChange = (rows: ProjectReportAttachment[]) => {
-    for (const a of attachments.value) {
-      selectedMap.value.delete(a.id)
-    }
-    for (const r of rows) {
-      selectedMap.value.set(r.id, r)
     }
   }
 
@@ -278,7 +311,7 @@
   // 重置弹窗内部状态（每次打开都从第一步、空选择开始）
   const resetState = () => {
     step.value = 1
-    selectedMap.value = new Map()
+    selectedIds.value = []
     existingKeys.value = new Set()
     attachments.value = []
     currentProjectId.value = ''
@@ -386,16 +419,34 @@
             </div>
           </div>
           <el-table
-            ref="tableRef"
             v-loading="attachmentLoading"
             :data="filteredAttachments"
             empty-text="左侧选择项目后查看报告清单"
             row-key="id"
             class="attachment-table"
-            @selection-change="handleSelectionChange"
+            :row-class-name="rowClassName"
           >
-            <el-table-column type="selection" width="50" :selectable="isSelectable" />
-            <el-table-column type="index" label="#" width="60" />
+            <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+            <el-table-column label="序号" width="80" align="center">
+              <template #header>
+                <el-checkbox
+                  :model-value="allChecked"
+                  :indeterminate="isIndeterminate"
+                  @change="handleCheckAll"
+                />
+              </template>
+              <template #default="{ row, $index }">
+                <div class="seq-cell">
+                  <span class="seq-num">{{ $index + 1 }}</span>
+                  <el-checkbox
+                    class="seq-check"
+                    :model-value="selectedIds.includes(row.id)"
+                    :disabled="!isSelectable(row)"
+                    @change="(val) => handleCheckRow(row.id, !!val)"
+                  />
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column prop="name" label="报告名称" min-width="240" show-overflow-tooltip>
               <template #default="{ row }">
                 {{ row.name }}
@@ -669,6 +720,39 @@
     .footer-actions {
       display: flex;
       gap: 8px;
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

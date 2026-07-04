@@ -55,8 +55,27 @@
             <el-button type="primary" :icon="Plus">新增</el-button>
           </div>
         </div>
-        <el-table :data="[]" class="content-table">
-          <el-table-column type="selection" width="48" />
+        <el-table :data="[]" class="content-table" :row-class-name="rowClassName">
+          <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+          <el-table-column label="序号" width="80" align="center">
+            <template #header>
+              <el-checkbox
+                :model-value="allChecked"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAll"
+              />
+            </template>
+            <template #default="{ row, $index }">
+              <div class="seq-cell">
+                <span class="seq-num">{{ $index + 1 }}</span>
+                <el-checkbox
+                  class="seq-check"
+                  :model-value="selectedIds.includes(row.id)"
+                  @change="(val) => handleCheckRow(row.id, !!val)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="编号" prop="code" width="160" />
           <el-table-column label="名称" prop="name" />
           <el-table-column label="审核状态" prop="reviewStatus" width="120" />
@@ -190,6 +209,38 @@
   }
 
   onMounted(loadData)
+
+  // ==================== 勾选列与序号列合并 ====================
+  // 已勾选的行ID（自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => ([] as any[]).length > 0 && selectedIds.value.length === ([] as any[]).length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < ([] as any[]).length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? ([] as any[]).map((item: any) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: any }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 </script>
 
 <style scoped lang="scss">
@@ -341,6 +392,39 @@
 
     .content-table {
       flex: 1;
+    }
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
     }
   }
 </style>

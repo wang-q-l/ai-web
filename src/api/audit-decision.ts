@@ -16,6 +16,7 @@ import type {
   RectificationProgressItem,
   RectificationProgressQuery,
   RectificationReportDetail,
+  RectificationHistoryDetail,
   ProblemDetail,
   RectificationAdjustment,
   AdjustApprovalRecord,
@@ -306,6 +307,16 @@ export const saveRectificationReport = (data: RectificationReportDetail) => {
   return request.post<boolean>({
     url: '/api/audit-decision/rectification-unit/report-save',
     data
+  })
+}
+
+/** 获取整改历史列表（按问题ID），返回历次已提交的填报快照，用于填报页「整改历史」抽屉 */
+export const getRectificationHistoryDetail = (problemId: number) => {
+  if (USE_MOCK) {
+    return import('@/mock/audit-decision').then((m) => m.getRectificationHistoryDetail(problemId))
+  }
+  return request.get<RectificationHistoryDetail[]>({
+    url: `/api/audit-decision/rectification-unit/report-history/${problemId}`
   })
 }
 

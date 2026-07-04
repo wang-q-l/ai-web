@@ -5,8 +5,48 @@
  * 审批数据分项指派给同项目其他成员，提交即时生效。
  */
 
-/** 移交工作项类别：事项 / 文书 / 审批 */
-export type WorkCategory = 'item' | 'document' | 'approval'
+/** 移交工作项类别（与向导页签一一对应） */
+export type WorkCategory =
+  | 'item' // 审计事项
+  | 'document' // 审计文书
+  | 'approval' // 审批数据
+  | 'reception' // 迎审清单
+  | 'doubt' // 审计疑点
+  | 'issue' // 问题清单
+  | 'defect' // 缺陷清单
+  | 'evaluate' // 评价节点
+
+/** 迎审清单项（工作移交中需交接的迎审确认单） */
+export interface ReceptionItem {
+  /** 清单ID */
+  id: number
+  /** 清单名称 */
+  name: string
+  /** 状态（待确认 / 已确认） */
+  status: string
+}
+
+/** 问题清单项（工作移交中需交接的问题记录） */
+export interface IssueItem {
+  /** 问题ID */
+  id: number
+  /** 问题标题 */
+  title: string
+  /** 问题表述 */
+  description: string
+}
+
+/** 审计疑点（工作移交中需交接的疑点数据） */
+export interface DoubtItem {
+  /** 疑点ID */
+  id: number
+  /** 疑点名称 */
+  name: string
+  /** 疑点关联数据数量 */
+  dataCount: number
+  /** 核实结果 */
+  verifyResult: string
+}
 
 /** 单条工作项（归集某成员名下待移交的工作时返回） */
 export interface WorkloadItem {
@@ -24,7 +64,7 @@ export interface WorkloadItem {
   finished: boolean
 }
 
-/** 某成员在本项目的工作归集结果（分三类） */
+/** 某成员在本项目的工作归集结果（分类） */
 export interface MemberWorkload {
   /** 审计事项 */
   items: WorkloadItem[]
@@ -32,6 +72,12 @@ export interface MemberWorkload {
   documents: WorkloadItem[]
   /** 审批数据 */
   approvals: WorkloadItem[]
+  /** 迎审清单 */
+  receptions: ReceptionItem[]
+  /** 问题清单 */
+  issues: IssueItem[]
+  /** 审计疑点 */
+  doubts: DoubtItem[]
 }
 
 /** 单条移交明细：一个工作项 → 一个接收人 */

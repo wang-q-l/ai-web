@@ -369,7 +369,6 @@
       <div class="header-content">
         <div class="header-left">
           <div class="page-title">大模型厂商管理</div>
-          <div class="page-desc">管理接入的大模型厂商、模型，以及平台内置与自建的智能体</div>
         </div>
       </div>
     </el-card>
@@ -677,7 +676,7 @@
   }
 
   .header-card :deep(.el-card__body) {
-    padding: 16px 20px;
+    padding: 10px 20px;
   }
 
   .header-content {

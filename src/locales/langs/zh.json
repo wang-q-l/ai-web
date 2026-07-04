@@ -245,6 +245,7 @@
     },
     "audit": {
       "title": "项目管理",
+      "auditProject": "审计项目",
       "workspace": "成员管理",
       "project": "项目管理",
       "detail": "项目详情",
@@ -256,6 +257,14 @@
       "suggestionLibrary": "管理建议库",
       "suggestionLibraryImport": "从问题清单引入",
       "reportLibrary": "报告库"
+    },
+    "planManagement": {
+      "title": "计划管理",
+      "notification": "填报通知",
+      "report": "计划填报",
+      "coordination": "计划统筹",
+      "adjustment": "计划调整",
+      "config": "计划配置"
     },
     "auditRecommendation": {
       "title": "项目推荐"

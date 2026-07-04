@@ -7,6 +7,9 @@
 import type {
   MemberWorkload,
   WorkloadItem,
+  ReceptionItem,
+  IssueItem,
+  DoubtItem,
   WorkTransferParams,
   WorkTransferRecord,
   WorkTransferReceiver,
@@ -62,7 +65,10 @@ const workloadStore: Record<number, Record<number, MemberWorkload>> = {
           statusText: '审核中',
           finished: false
         }
-      ]
+      ],
+      receptions: [],
+      issues: [],
+      doubts: []
     },
     // 李四(主审) 名下工作
     2: {
@@ -132,7 +138,27 @@ const workloadStore: Record<number, Record<number, MemberWorkload>> = {
           statusText: '待反馈',
           finished: false
         }
-      ]
+      ],
+      receptions: [
+        { id: 2001, name: '财务报表审计迎审清单', status: '待确认' },
+        { id: 2002, name: '收入确认专项迎审清单', status: '待确认' }
+      ] as ReceptionItem[],
+      issues: [
+        {
+          id: 3001,
+          title: '预付款项余额异常',
+          description: '存在大额预付款项长期挂账，未见对应合同或验收凭证，涉及金额约 320 万元'
+        },
+        {
+          id: 3002,
+          title: '收入确认时点不当',
+          description: '部分收入在合同签订时即确认，与实际商品交付及服务完成时点不符'
+        }
+      ] as IssueItem[],
+      doubts: [
+        { id: 1001, name: '预付款项真实性疑点', dataCount: 2, verifyResult: '待核实' },
+        { id: 1002, name: '收入确认时点合规性疑点', dataCount: 3, verifyResult: '待核实' }
+      ] as DoubtItem[]
     },
     // 王五(组员) 名下工作
     3: {
@@ -155,7 +181,10 @@ const workloadStore: Record<number, Record<number, MemberWorkload>> = {
           finished: false
         }
       ],
-      approvals: []
+      approvals: [],
+      receptions: [],
+      issues: [],
+      doubts: []
     }
   },
   // 项目2（供应链管理专项审计）成员：1张三(组长) 4赵六(主审) 5项目经理A 6中介人员B
@@ -189,7 +218,10 @@ const workloadStore: Record<number, Record<number, MemberWorkload>> = {
           statusText: '待下达',
           finished: false
         }
-      ]
+      ],
+      receptions: [],
+      issues: [],
+      doubts: []
     }
   }
 }
@@ -213,52 +245,41 @@ const recordStore: Record<number, WorkTransferRecord[]> = {
           toMemberRole: '主审',
           itemCount: 2,
           documentCount: 2,
-          approvalCount: 1,
+          approvalCount: 0,
           items: [
             { category: 'item', refName: '往来款项审计', statusText: '进行中' },
             { category: 'item', refName: '存货监盘', statusText: '已完成' },
             { category: 'document', refName: '往来款项取证单', statusText: '草稿' },
             { category: 'document', refName: '存货监盘记录', statusText: '审核中' },
-            { category: 'approval', refName: '往来款项审计决定', statusText: '待下达' }
+            { category: 'reception', refName: '往来款项迎审确认单', statusText: '待确认' },
+            { category: 'doubt', refName: '往来款项真实性疑点', statusText: '待核实' }
           ]
         }
       ]
     },
-    // 多接收人记录：吴九名下工作拆分移交给李四、王五两人
+    // 单接收人记录：王五名下工作移交给张三
     {
-      id: 2,
+      id: 3,
       projectId: 1,
-      fromMemberName: '吴九',
+      fromMemberName: '王五',
       fromMemberRole: '组员',
-      reason: '岗位调动',
+      reason: '工作调整，原组员转岗，相关审计工作由组长接手统筹。',
       operatorName: '张三',
-      transferTime: '2025-02-12 09:20:00',
-      itemCount: 6,
+      transferTime: '2025-06-15 10:45:00',
+      itemCount: 3,
       receivers: [
         {
-          toMemberId: 2,
-          toMemberName: '李四',
-          toMemberRole: '主审',
-          itemCount: 2,
+          toMemberId: 1,
+          toMemberName: '张三',
+          toMemberRole: '组长',
+          itemCount: 1,
           documentCount: 1,
           approvalCount: 0,
           items: [
-            { category: 'item', refName: '营业收入审计', statusText: '进行中' },
-            { category: 'item', refName: '成本费用审计', statusText: '待开始' },
-            { category: 'document', refName: '营业收入取证单', statusText: '草稿' }
-          ]
-        },
-        {
-          toMemberId: 3,
-          toMemberName: '王五',
-          toMemberRole: '组员',
-          itemCount: 1,
-          documentCount: 1,
-          approvalCount: 1,
-          items: [
-            { category: 'item', refName: '税费审计', statusText: '进行中' },
-            { category: 'document', refName: '税费核查记录', statusText: '审核中' },
-            { category: 'approval', refName: '税费审计决定', statusText: '审核中' }
+            { category: 'item', refName: '费用支出审计', statusText: '进行中' },
+            { category: 'document', refName: '费用支出取证单', statusText: '草稿' },
+            { category: 'reception', refName: '费用支出迎审确认单', statusText: '已确认' },
+            { category: 'doubt', refName: '费用报销合规性疑点', statusText: '待核实' }
           ]
         }
       ]
@@ -270,7 +291,7 @@ let nextRecordId = 100
 
 /** 空归集结果 */
 function emptyWorkload(): MemberWorkload {
-  return { items: [], documents: [], approvals: [] }
+  return { items: [], documents: [], approvals: [], receptions: [], issues: [], doubts: [] }
 }
 
 /**
@@ -283,7 +304,10 @@ export function getMemberWorkloadMock(projectId: number, memberId: number): Memb
     ? {
         items: wl.items.map((i) => ({ ...i })),
         documents: wl.documents.map((i) => ({ ...i })),
-        approvals: wl.approvals.map((i) => ({ ...i }))
+        approvals: wl.approvals.map((i) => ({ ...i })),
+        receptions: (wl.receptions || []).map((r) => ({ ...r })),
+        issues: (wl.issues || []).map((i) => ({ ...i })),
+        doubts: (wl.doubts || []).map((d) => ({ ...d }))
       }
     : emptyWorkload()
 }
@@ -315,19 +339,7 @@ export function submitWorkTransferMock(
   const receiverMap: Record<number, WorkTransferReceiver> = {}
 
   items.forEach((it) => {
-    const fromArr = pickCategory(fromWl, it.category)
-    const idx = fromArr.findIndex((w) => w.refId === it.refId)
-    if (idx === -1) return // 已被移走，跳过
-
-    const [moved] = fromArr.splice(idx, 1)
-
-    // 追加到接收人名下（接收人无归集结构时初始化）
-    workloadStore[projectId] = workloadStore[projectId] || {}
-    const toWl = workloadStore[projectId][it.toMemberId] || emptyWorkload()
-    pickCategory(toWl, it.category).push(moved)
-    workloadStore[projectId][it.toMemberId] = toWl
-
-    // 汇总
+    // 初始化接收人汇总条目
     const r =
       receiverMap[it.toMemberId] ||
       (receiverMap[it.toMemberId] = {
@@ -339,15 +351,34 @@ export function submitWorkTransferMock(
         approvalCount: 0,
         items: []
       })
+
+    workloadStore[projectId] = workloadStore[projectId] || {}
+    const toWl = workloadStore[projectId][it.toMemberId] || emptyWorkload()
+    workloadStore[projectId][it.toMemberId] = toWl
+
+    if (it.category === 'doubt') {
+      // 疑点使用 id 字段，单独从 doubts 数组中移走
+      const fromDoubts = fromWl.doubts || []
+      const idx = fromDoubts.findIndex((d) => d.id === it.refId)
+      if (idx === -1) return
+      const [moved] = fromDoubts.splice(idx, 1)
+      if (!toWl.doubts) toWl.doubts = []
+      toWl.doubts.push(moved)
+      r.items.push({ category: 'doubt', refName: moved.name, statusText: moved.verifyResult })
+      return
+    }
+
+    // 审计事项 / 文书 / 审批：通用处理
+    const fromArr = pickCategory(fromWl, it.category)
+    const idx = fromArr.findIndex((w) => w.refId === it.refId)
+    if (idx === -1) return // 已被移走，跳过
+    const [moved] = fromArr.splice(idx, 1)
+    pickCategory(toWl, it.category).push(moved)
     if (it.category === 'item') r.itemCount++
     else if (it.category === 'document') r.documentCount++
     else r.approvalCount++
     // 记录具体工作项明细，便于变更记录直观展示交接内容
-    r.items.push({
-      category: it.category,
-      refName: moved.refName,
-      statusText: moved.statusText
-    })
+    r.items.push({ category: it.category, refName: moved.refName, statusText: moved.statusText })
   })
 
   const record: WorkTransferRecord = {

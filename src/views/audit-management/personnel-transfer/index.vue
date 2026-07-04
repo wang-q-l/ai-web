@@ -100,14 +100,27 @@
           </p>
         </div>
 
-        <el-table
-          ref="documentTableRef"
-          :data="documentList"
-          @selection-change="handleDocumentSelectionChange"
-          style="margin-top: 16px"
-        >
-          <el-table-column type="selection" width="55" />
-          <el-table-column type="index" label="序号" width="60" />
+        <el-table :data="documentList" :row-class-name="rowClassName" style="margin-top: 16px">
+          <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+          <el-table-column label="序号" width="80" align="center">
+            <template #header>
+              <el-checkbox
+                :model-value="allChecked"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAll"
+              />
+            </template>
+            <template #default="{ row, $index }">
+              <div class="seq-cell">
+                <span class="seq-num">{{ $index + 1 }}</span>
+                <el-checkbox
+                  class="seq-check"
+                  :model-value="selectedIds.includes(row.id)"
+                  @change="(val) => handleCheckRow(row.id, !!val)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="文书名称" min-width="200" />
           <el-table-column prop="type" label="文书类型" width="120" />
           <el-table-column prop="createTime" label="创建时间" width="180" />
@@ -308,7 +321,7 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue'
-  import { ElMessage, ElMessageBox, type ElTable } from 'element-plus'
+  import { ElMessage, ElMessageBox } from 'element-plus'
   import type {
     Personnel,
     Document,
@@ -352,8 +365,42 @@
 
   // 文书列表
   const documentList = ref<Document[]>([])
-  const selectedDocuments = ref<Document[]>([])
-  const documentTableRef = ref<InstanceType<typeof ElTable>>()
+
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // selectedDocuments 由 selectedIds 派生，供后续步骤使用
+  const selectedDocuments = computed(() =>
+    documentList.value.filter((item) => selectedIds.value.includes(item.id))
+  )
+
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => documentList.value.length > 0 && selectedIds.value.length === documentList.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < documentList.value.length
+  )
+
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? documentList.value.map((item) => item.id) : []
+  }
+
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: Document }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
 
   // 移交原因
   const transferReason = ref('')
@@ -417,15 +464,12 @@
     try {
       const res = await getPersonnelDocuments(row.id)
       documentList.value = res.data
+      // 切换人员时清空已选文书
+      selectedIds.value = []
       currentStep.value = 1
     } catch {
       ElMessage.error('加载文书列表失败')
     }
-  }
-
-  // 文书选择变化
-  const handleDocumentSelectionChange = (selection: Document[]) => {
-    selectedDocuments.value = selection
   }
 
   // 加载接收人员列表
@@ -552,7 +596,7 @@
     selectedFromPerson.value = undefined
     selectedToPerson.value = undefined
     documentList.value = []
-    selectedDocuments.value = []
+    selectedIds.value = []
     transferReason.value = ''
     loadPersonnelList()
   }
@@ -713,8 +757,40 @@
     border-top: 1px solid #ebeef5;
   }
 
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
+  }
+
   .records-card {
-    flex-shrink: 0;
     border: none !important;
     border-radius: 12px;
     box-shadow: none !important;

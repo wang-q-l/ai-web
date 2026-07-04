@@ -96,6 +96,67 @@
 
   const tableRef = ref()
 
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+
+  // 全选态：当前页全部可选行全部勾选时为 true
+  const allChecked = computed(
+    () =>
+      filteredProblems.value.length > 0 &&
+      filteredProblems.value.filter(isSelectable).every((p) => selectedIds.value.includes(p.id))
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () =>
+      selectedIds.value.length > 0 &&
+      !filteredProblems.value.filter(isSelectable).every((p) => selectedIds.value.includes(p.id))
+  )
+
+  // 表头全选/取消全选（仅操作可选行）
+  const handleCheckAll = (val: boolean | string | number) => {
+    const selectableIds = filteredProblems.value.filter(isSelectable).map((p) => p.id)
+    if (val) {
+      // 合并已选与当前页可选
+      const merged = new Set([...selectedIds.value, ...selectableIds])
+      selectedIds.value = Array.from(merged)
+    } else {
+      // 移除当前页可选行
+      const selectableSet = new Set(selectableIds)
+      selectedIds.value = selectedIds.value.filter((id) => !selectableSet.has(id))
+    }
+    // 同步 selectedMap
+    syncSelectedMap()
+  }
+
+  // 单行勾选/取消，同步 selectedMap
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+    syncSelectedMap()
+  }
+
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: AuditProblem }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
+
+  // 将 selectedIds 同步回 selectedMap（跨项目累加的关键）
+  const syncSelectedMap = () => {
+    // 先移除当前项目的所有 key
+    for (const p of problems.value) {
+      selectedMap.value.delete(p.id)
+    }
+    // 再把当前项目中被勾选的加回
+    for (const p of problems.value) {
+      if (selectedIds.value.includes(p.id)) {
+        selectedMap.value.set(p.id, p)
+      }
+    }
+  }
+
   // 加载项目树
   const loadProjectTree = async () => {
     const res = await getAuditProjectTree()
@@ -121,26 +182,8 @@
     } finally {
       problemLoading.value = false
     }
-    // 切换项目后，恢复表格选中状态（与 selectedMap 同步）
-    setTimeout(() => {
-      filteredProblems.value.forEach((p) => {
-        if (selectedMap.value.has(p.id)) {
-          tableRef.value?.toggleRowSelection(p, true)
-        }
-      })
-    }, 50)
-  }
-
-  // 表格行勾选变化：双向维护 selectedMap（跨项目累加的关键）
-  const handleSelectionChange = (rows: AuditProblem[]) => {
-    // 把当前项目下的所有问题先从 map 移除
-    for (const p of problems.value) {
-      selectedMap.value.delete(p.id)
-    }
-    // 再把勾选的加回
-    for (const r of rows) {
-      selectedMap.value.set(r.id, r)
-    }
+    // 切换项目后，从 selectedMap 恢复当前页的 selectedIds
+    selectedIds.value = problems.value.filter((p) => selectedMap.value.has(p.id)).map((p) => p.id)
   }
 
   // ==================== 第二步：引入预览 ====================
@@ -294,6 +337,7 @@
   const resetState = () => {
     step.value = 1
     selectedMap.value = new Map()
+    selectedIds.value = []
     existingContents.value = new Set()
     problems.value = []
     currentProjectId.value = ''
@@ -401,10 +445,29 @@
             empty-text="左侧选择项目后查看问题清单"
             row-key="id"
             class="problem-table"
-            @selection-change="handleSelectionChange"
+            :row-class-name="rowClassName"
           >
-            <el-table-column type="selection" width="50" :selectable="isSelectable" />
-            <el-table-column type="index" label="#" width="60" />
+            <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+            <el-table-column label="序号" width="80" align="center">
+              <template #header>
+                <el-checkbox
+                  :model-value="allChecked"
+                  :indeterminate="isIndeterminate"
+                  @change="handleCheckAll"
+                />
+              </template>
+              <template #default="{ row, $index }">
+                <div class="seq-cell">
+                  <span class="seq-num">{{ $index + 1 }}</span>
+                  <el-checkbox
+                    class="seq-check"
+                    :model-value="selectedIds.includes(row.id)"
+                    :disabled="!isSelectable(row)"
+                    @change="(val) => handleCheckRow(row.id, !!val)"
+                  />
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column prop="title" label="问题标题" min-width="180" show-overflow-tooltip>
               <template #default="{ row }">
                 {{ row.title }}
@@ -666,6 +729,39 @@
   .dup-text {
     font-style: italic;
     color: var(--el-text-color-placeholder);
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
   }
 
   /* 底部操作栏 */

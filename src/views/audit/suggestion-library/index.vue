@@ -174,7 +174,36 @@
   const list = ref<Suggestion[]>([])
   const listLoading = ref(false)
   const total = ref(0)
-  const selectedRows = ref<Suggestion[]>([])
+  // 已勾选的行ID（勾选列与序号列合并，自行管理选中态）
+  const selectedIds = ref<(number | string)[]>([])
+  // 批量操作仍使用 selectedRows，由 selectedIds 派生
+  const selectedRows = computed(() =>
+    list.value.filter((item) => selectedIds.value.includes(item.id))
+  )
+  // 全选态：当前页全部勾选时为 true
+  const allChecked = computed(
+    () => list.value.length > 0 && selectedIds.value.length === list.value.length
+  )
+  // 半选态：部分勾选
+  const isIndeterminate = computed(
+    () => selectedIds.value.length > 0 && selectedIds.value.length < list.value.length
+  )
+  // 表头全选/取消全选
+  const handleCheckAll = (val: boolean | string | number) => {
+    selectedIds.value = val ? list.value.map((item) => item.id) : []
+  }
+  // 单行勾选/取消
+  const handleCheckRow = (id: number | string, val: boolean) => {
+    if (val) {
+      if (!selectedIds.value.includes(id)) selectedIds.value.push(id)
+    } else {
+      selectedIds.value = selectedIds.value.filter((item) => item !== id)
+    }
+  }
+  // 已勾选的行加类名，使其序号列常驻显示勾选框
+  const rowClassName = ({ row }: { row: Suggestion }) => {
+    return selectedIds.value.includes(row.id) ? 'row-checked' : ''
+  }
   const listQuery = reactive<SuggestionListQuery>({
     page: 1,
     pageSize: 10,
@@ -192,6 +221,8 @@
       })
       list.value = res.data?.list ?? []
       total.value = res.data?.total ?? 0
+      // 刷新数据时清空勾选
+      selectedIds.value = []
     } finally {
       listLoading.value = false
     }
@@ -212,11 +243,6 @@
     listQuery.pageSize = size
     listQuery.page = 1
     loadList()
-  }
-
-  // 表格选中变化
-  const handleSelectionChange = (rows: Suggestion[]) => {
-    selectedRows.value = rows
   }
 
   // 引用量分档显示（0 / 1-9 / ≥10）
@@ -266,7 +292,7 @@
       const res = await batchDeleteSuggestion(ids)
       if (res.code === 200) {
         ElMessage.success(res.message)
-        selectedRows.value = []
+        selectedIds.value = []
         await loadList()
         await loadCategoryTree()
       }
@@ -280,7 +306,7 @@
     moveDialogOpen.value = true
   }
   const handleMoveSuccess = async () => {
-    selectedRows.value = []
+    selectedIds.value = []
     await loadList()
     await loadCategoryTree()
   }
@@ -318,7 +344,6 @@
       <div class="header-content">
         <div class="header-left">
           <div class="page-title">管理建议库</div>
-          <div class="page-desc">集中管理审计建议，支持分类组织、批量引入与引用统计</div>
         </div>
         <div class="header-actions">
           <el-button @click="handleOpenImport">
@@ -451,10 +476,30 @@
           v-loading="listLoading"
           :data="list"
           empty-text="暂无建议"
-          @selection-change="handleSelectionChange"
+          :row-class-name="rowClassName"
         >
-          <el-table-column type="selection" width="50" />
-          <el-table-column type="index" label="#" width="60" />
+          <!-- 勾选列与序号列合并：默认显示序号，行 hover 或已勾选时显示勾选框 -->
+          <el-table-column label="序号" width="80" align="center">
+            <template #header>
+              <el-checkbox
+                :model-value="allChecked"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAll"
+              />
+            </template>
+            <template #default="{ row, $index }">
+              <div class="seq-cell">
+                <span class="seq-num">{{
+                  (listQuery.page - 1) * listQuery.pageSize + $index + 1
+                }}</span>
+                <el-checkbox
+                  class="seq-check"
+                  :model-value="selectedIds.includes(row.id)"
+                  @change="(val) => handleCheckRow(row.id, !!val)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="content" label="建议内容" min-width="380" show-overflow-tooltip />
           <el-table-column label="引用量" width="120">
             <template #header>
@@ -531,7 +576,7 @@
   }
 
   .header-card :deep(.el-card__body) {
-    padding: 16px 20px;
+    padding: 10px 20px;
     overflow: visible;
   }
 
@@ -754,5 +799,38 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 12px;
+  }
+
+  /* 勾选框 / 序号 合并单元格：默认显示序号，hover 行或已勾选时显示勾选框 */
+  .seq-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+
+    .seq-num {
+      color: #606266;
+    }
+
+    /* 勾选框默认覆盖在序号位置但隐藏 */
+    .seq-check {
+      position: absolute;
+      display: none;
+      height: auto;
+    }
+  }
+
+  /* 行 hover 或已勾选：隐藏序号，显示勾选框 */
+  :deep(.el-table__row:hover) .seq-cell,
+  :deep(.el-table__row.row-checked) .seq-cell {
+    .seq-num {
+      display: none;
+    }
+
+    .seq-check {
+      display: inline-flex;
+    }
   }
 </style>

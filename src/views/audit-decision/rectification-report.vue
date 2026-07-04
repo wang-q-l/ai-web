@@ -64,7 +64,11 @@
 
           <!-- 整改进展情况表 -->
           <div class="field-block">
-            <div class="field-label">整改进展情况</div>
+            <!-- 表格右上角「整改历史」按钮：抽屉展示历史填报快照 -->
+            <div class="field-block-header">
+              <div class="field-label">整改进展情况</div>
+              <el-button link type="primary" @click="handleOpenHistory">整改历史</el-button>
+            </div>
             <el-table :data="form.measures" border class="measure-table">
               <el-table-column type="index" label="序号" width="70" align="center" />
               <el-table-column label="具体措施（目标）" min-width="320">
@@ -220,6 +224,9 @@
 
     <!-- 问题详情大弹窗 -->
     <ProblemDetailDialog v-model="detailVisible" :problem-id="detailProblemId" />
+
+    <!-- 整改历史抽屉：只读展示当前问题最近一轮已提交的填报快照 -->
+    <RectificationHistoryDrawer v-model="historyVisible" :problem-id="activeProblemId" />
   </div>
 </template>
 
@@ -245,6 +252,7 @@
     saveRectificationReport
   } from '@/api/audit-decision'
   import ProblemDetailDialog from './components/ProblemDetailDialog.vue'
+  import RectificationHistoryDrawer from './components/RectificationHistoryDrawer.vue'
 
   const router = useRouter()
   const route = useRoute()
@@ -255,6 +263,9 @@
   // 问题详情弹窗状态
   const detailVisible = ref(false)
   const detailProblemId = ref(0)
+
+  // 整改历史抽屉显隐
+  const historyVisible = ref(false)
 
   // 左侧问题列表
   const problemList = ref<RectificationProgressItem[]>([])
@@ -338,6 +349,11 @@
   const handleViewProblem = (id: number) => {
     detailProblemId.value = id
     detailVisible.value = true
+  }
+
+  // 打开整改历史抽屉
+  const handleOpenHistory = () => {
+    historyVisible.value = true
   }
 
   // 佐证附件变更
@@ -583,6 +599,20 @@
       color: #f56c6c;
       content: '*';
     }
+  }
+
+  /* 字段块头部：左侧标签 + 右侧「整改历史」按钮 */
+  .field-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .field-label {
+      margin-bottom: 0;
+    }
+
+    /* 抵消子标签清零后的下间距，保持与表格的间隔 */
+    margin-bottom: 12px;
   }
 
   /* 措施表格内文本 */

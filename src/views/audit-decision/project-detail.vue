@@ -215,9 +215,9 @@
     }
   }
 
-  // 返回列表
+  // 返回列表（使用二级菜单独立子路径，确保左侧菜单正常展开）
   const handleBack = () => {
-    router.push('/audit-decision')
+    router.push('/audit-decision/project')
   }
 
   // 初始化
